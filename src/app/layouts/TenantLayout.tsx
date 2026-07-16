@@ -1,7 +1,18 @@
 import { Outlet, useParams } from "react-router-dom";
 import { Suspense } from "react";
 import { useTranslation } from "react-i18next";
-import { ChartBar as BarChart3, Flag, Heart, LayoutDashboard, MessagesSquare, Settings, ShieldAlert, Sparkles, Users } from "lucide-react";
+import {
+  ChartBar as BarChart3,
+  ClipboardList,
+  Flag,
+  Heart,
+  LayoutDashboard,
+  MessagesSquare,
+  Settings,
+  ShieldAlert,
+  Sparkles,
+  Users,
+} from "lucide-react";
 import { SidebarNav, type SidebarNavItem } from "./SidebarNav";
 import { TopBar } from "./TopBar";
 import { LoadingState } from "@/components/common/LoadingState";
@@ -25,6 +36,7 @@ export function TenantLayout() {
     { to: `${base}/subscriptions`, icon: Sparkles, label: t("nav.subscriptions") },
     { to: `${base}/analytics`, icon: BarChart3, label: t("nav.analytics") },
     { to: `${base}/settings`, icon: Settings, label: t("nav.settings") },
+    { to: `${base}/audit`, icon: ClipboardList, label: t("nav.audit") },
   ];
 
   return (

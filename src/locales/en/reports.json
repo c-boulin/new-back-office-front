@@ -1,0 +1,49 @@
+{
+  "title": "Reports",
+  "description": "User-submitted abuse, spam, and harassment reports.",
+  "filters": {
+    "status": "Status",
+    "reason": "Reason",
+    "allStatuses": "All statuses",
+    "allReasons": "All reasons",
+    "search": "Search by name"
+  },
+  "statuses": {
+    "open": "Open",
+    "investigating": "Investigating",
+    "resolved": "Resolved",
+    "dismissed": "Dismissed"
+  },
+  "reasons": {
+    "harassment": "Harassment",
+    "spam": "Spam",
+    "fake_profile": "Fake profile",
+    "inappropriate_content": "Inappropriate content",
+    "underage": "Underage",
+    "scam": "Scam",
+    "other": "Other"
+  },
+  "actions": {
+    "resolve": "Resolve",
+    "dismiss": "Dismiss",
+    "investigate": "Investigate"
+  },
+  "confirm": {
+    "resolveTitle": "Resolve this report?",
+    "resolveDescription": "The report will be marked as resolved.",
+    "dismissTitle": "Dismiss this report?",
+    "dismissDescription": "This report will be dismissed without action."
+  },
+  "empty": {
+    "title": "No reports",
+    "description": "There are no reports matching your filters."
+  },
+  "columns": {
+    "reporter": "Reporter",
+    "target": "Target",
+    "reason": "Reason",
+    "status": "Status",
+    "createdAt": "Created",
+    "actions": "Actions"
+  }
+}

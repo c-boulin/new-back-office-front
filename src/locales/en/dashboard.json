@@ -1,0 +1,11 @@
+{
+  "title": "Dashboard",
+  "description": "Real-time overview of activity, growth, and safety.",
+  "activity": {
+    "title": "Recent activity",
+    "empty": "No recent activity to show."
+  },
+  "engagement": {
+    "title": "Engagement over time"
+  }
+}

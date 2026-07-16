@@ -1,0 +1,35 @@
+{
+  "title": "Settings",
+  "description": "Configure tenant preferences, moderation policies, and feature flags.",
+  "tabs": {
+    "general": "General",
+    "moderation": "Moderation",
+    "notifications": "Notifications",
+    "flags": "Feature flags"
+  },
+  "general": {
+    "name": "Tenant name",
+    "slug": "Slug",
+    "contactEmail": "Contact email",
+    "timezone": "Timezone"
+  },
+  "moderation": {
+    "threshold": "Auto-flag threshold",
+    "thresholdHint": "Number of reports before auto-flagging",
+    "photoVerification": "Require photo verification",
+    "anonymousReports": "Allow anonymous reports"
+  },
+  "notifications": {
+    "newReport": "Email on new report",
+    "escalation": "Email on escalation",
+    "weeklyDigest": "Weekly digest"
+  },
+  "flags": {
+    "title": "Feature flags",
+    "description": "Toggle features for this tenant."
+  },
+  "actions": {
+    "save": "Save changes"
+  },
+  "success": "Settings saved successfully."
+}

@@ -1,0 +1,46 @@
+{
+  "title": "Moderation",
+  "description": "Review and act on flagged content across this tenant.",
+  "filters": {
+    "type": "Type",
+    "status": "Status",
+    "allTypes": "All types",
+    "allStatuses": "All statuses"
+  },
+  "types": {
+    "photo": "Photo",
+    "bio": "Bio",
+    "message": "Message",
+    "profile": "Profile"
+  },
+  "statuses": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "escalated": "Escalated"
+  },
+  "actions": {
+    "approve": "Approve",
+    "reject": "Reject",
+    "escalate": "Escalate"
+  },
+  "confirm": {
+    "rejectTitle": "Reject this item?",
+    "rejectDescription": "The content will be removed and the user notified.",
+    "escalateTitle": "Escalate this item?",
+    "escalateDescription": "This will be sent to senior moderators for review."
+  },
+  "empty": {
+    "title": "Queue is clear",
+    "description": "No items require moderation at this time."
+  },
+  "columns": {
+    "user": "User",
+    "type": "Type",
+    "content": "Content",
+    "reason": "Reason",
+    "status": "Status",
+    "reportedAt": "Reported",
+    "actions": "Actions"
+  }
+}

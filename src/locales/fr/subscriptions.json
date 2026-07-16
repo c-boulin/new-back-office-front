@@ -1,0 +1,59 @@
+{
+  "title": "Abonnements",
+  "description": "Gérer les forfaits, les abonnés et la facturation.",
+  "overview": {
+    "revenue": "Revenu total",
+    "active": "Abonnés actifs",
+    "churn": "Taux de désabonnement"
+  },
+  "plans": {
+    "title": "Forfaits",
+    "monthly": "{{amount}}/mois",
+    "yearly": "{{amount}}/an"
+  },
+  "subscribers": {
+    "title": "Abonnés",
+    "search": "Rechercher par nom ou email"
+  },
+  "filters": {
+    "status": "Statut",
+    "tier": "Forfait",
+    "allStatuses": "Tous les statuts",
+    "allTiers": "Tous les forfaits"
+  },
+  "statuses": {
+    "active": "Actif",
+    "cancelled": "Annulé",
+    "expired": "Expiré",
+    "trial": "Essai"
+  },
+  "tiers": {
+    "free": "Gratuit",
+    "basic": "Basique",
+    "premium": "Premium",
+    "vip": "VIP"
+  },
+  "actions": {
+    "refund": "Rembourser",
+    "cancel": "Annuler"
+  },
+  "confirm": {
+    "refundTitle": "Rembourser cet abonnement ?",
+    "refundDescription": "L'abonné sera remboursé et l'abonnement annulé.",
+    "cancelTitle": "Annuler cet abonnement ?",
+    "cancelDescription": "L'abonné perdra l'accès à la fin de sa période."
+  },
+  "columns": {
+    "user": "Abonné",
+    "plan": "Forfait",
+    "status": "Statut",
+    "started": "Début",
+    "expires": "Expiration",
+    "amount": "Montant",
+    "actions": "Actions"
+  },
+  "empty": {
+    "title": "Aucun abonné",
+    "description": "Aucun abonné ne correspond aux filtres actuels."
+  }
+}

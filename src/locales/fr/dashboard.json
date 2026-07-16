@@ -1,0 +1,11 @@
+{
+  "title": "Tableau de bord",
+  "description": "Vue d'ensemble en temps réel de l'activité, la croissance et la sécurité.",
+  "activity": {
+    "title": "Activité récente",
+    "empty": "Aucune activité récente à afficher."
+  },
+  "engagement": {
+    "title": "Engagement dans le temps"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "title": "Matches",
+  "description": "Browse all mutual matches and conversation metrics.",
+  "filters": {
+    "search": "Search by name",
+    "active": "Status",
+    "allStatuses": "All",
+    "activeOnly": "Active",
+    "inactiveOnly": "Inactive"
+  },
+  "columns": {
+    "users": "Matched users",
+    "matchedAt": "Matched",
+    "firstMessage": "First message",
+    "messages": "Messages",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "empty": {
+    "title": "No matches",
+    "description": "No matches found for the current filters."
+  },
+  "actions": {
+    "viewConversation": "View conversation"
+  }
+}

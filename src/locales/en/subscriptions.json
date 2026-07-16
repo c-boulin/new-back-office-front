@@ -1,0 +1,59 @@
+{
+  "title": "Subscriptions",
+  "description": "Manage plans, subscribers, and billing.",
+  "overview": {
+    "revenue": "Total revenue",
+    "active": "Active subscribers",
+    "churn": "Churn rate"
+  },
+  "plans": {
+    "title": "Plans",
+    "monthly": "{{amount}}/mo",
+    "yearly": "{{amount}}/yr"
+  },
+  "subscribers": {
+    "title": "Subscribers",
+    "search": "Search by name or email"
+  },
+  "filters": {
+    "status": "Status",
+    "tier": "Plan",
+    "allStatuses": "All statuses",
+    "allTiers": "All plans"
+  },
+  "statuses": {
+    "active": "Active",
+    "cancelled": "Cancelled",
+    "expired": "Expired",
+    "trial": "Trial"
+  },
+  "tiers": {
+    "free": "Free",
+    "basic": "Basic",
+    "premium": "Premium",
+    "vip": "VIP"
+  },
+  "actions": {
+    "refund": "Refund",
+    "cancel": "Cancel"
+  },
+  "confirm": {
+    "refundTitle": "Refund this subscription?",
+    "refundDescription": "The subscriber will be refunded and the subscription cancelled.",
+    "cancelTitle": "Cancel this subscription?",
+    "cancelDescription": "The subscriber will lose access at the end of their period."
+  },
+  "columns": {
+    "user": "Subscriber",
+    "plan": "Plan",
+    "status": "Status",
+    "started": "Started",
+    "expires": "Expires",
+    "amount": "Amount",
+    "actions": "Actions"
+  },
+  "empty": {
+    "title": "No subscribers",
+    "description": "No subscribers match the current filters."
+  }
+}

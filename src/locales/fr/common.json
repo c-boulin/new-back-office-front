@@ -10,7 +10,7 @@
     "back": "Retour"
   },
   "confirm": {
-    "typePrompt": "Saisissez {{value}} pour confirmer"
+    "typePrompt": "Tapez {{value}} pour confirmer"
   },
   "empty": {
     "title": "Aucun résultat",
@@ -30,11 +30,12 @@
     "users": "Utilisateurs",
     "moderation": "Modération",
     "reports": "Signalements",
-    "matches": "Matches",
+    "matches": "Matchs",
     "messages": "Messages",
     "subscriptions": "Abonnements",
     "analytics": "Analytique",
     "settings": "Paramètres",
+    "audit": "Journal d'audit",
     "superAdmin": "Super admin",
     "tenants": "Tenants"
   },

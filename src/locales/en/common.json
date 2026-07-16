@@ -35,6 +35,7 @@
     "subscriptions": "Subscriptions",
     "analytics": "Analytics",
     "settings": "Settings",
+    "audit": "Audit log",
     "superAdmin": "Super admin",
     "tenants": "Tenants"
   },

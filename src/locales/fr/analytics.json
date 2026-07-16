@@ -1,0 +1,33 @@
+{
+  "title": "Analytique",
+  "description": "Rétention par cohorte, entonnoirs et distribution géographique.",
+  "range": {
+    "7d": "7 jours",
+    "30d": "30 jours",
+    "90d": "90 jours"
+  },
+  "summary": {
+    "totalUsers": "Utilisateurs totaux",
+    "dau": "DAU",
+    "wau": "WAU",
+    "mau": "MAU",
+    "avgSession": "Session moy."
+  },
+  "engagement": {
+    "title": "Engagement quotidien"
+  },
+  "cohorts": {
+    "title": "Rétention par cohorte",
+    "week": "Semaine {{n}}"
+  },
+  "funnel": {
+    "title": "Entonnoir d'activation"
+  },
+  "geo": {
+    "title": "Distribution géographique"
+  },
+  "empty": {
+    "title": "Pas de données analytiques",
+    "description": "Les analyses apparaîtront à mesure que l'utilisation augmentera."
+  }
+}

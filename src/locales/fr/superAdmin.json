@@ -1,0 +1,30 @@
+{
+  "title": "Super Admin",
+  "dashboard": {
+    "title": "Vue d'ensemble de la plateforme",
+    "description": "Métriques inter-tenants et santé du système."
+  },
+  "tenants": {
+    "title": "Tenants",
+    "description": "Gérer toutes les instances de tenant.",
+    "create": "Créer un tenant",
+    "edit": "Modifier le tenant",
+    "columns": {
+      "name": "Nom",
+      "slug": "Slug",
+      "status": "Statut",
+      "users": "Utilisateurs",
+      "created": "Créé",
+      "actions": "Actions"
+    }
+  },
+  "admins": {
+    "title": "Administrateurs plateforme",
+    "description": "Gérer les administrateurs de la plateforme.",
+    "invite": "Inviter un admin"
+  },
+  "audit": {
+    "title": "Journal d'audit global",
+    "description": "Actions administratives à l'échelle de la plateforme."
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "title": "Analytics",
+  "description": "Cohort retention, funnels, and geographic distribution.",
+  "range": {
+    "7d": "7 days",
+    "30d": "30 days",
+    "90d": "90 days"
+  },
+  "summary": {
+    "totalUsers": "Total users",
+    "dau": "DAU",
+    "wau": "WAU",
+    "mau": "MAU",
+    "avgSession": "Avg. session"
+  },
+  "engagement": {
+    "title": "Daily engagement"
+  },
+  "cohorts": {
+    "title": "Cohort retention",
+    "week": "Week {{n}}"
+  },
+  "funnel": {
+    "title": "Activation funnel"
+  },
+  "geo": {
+    "title": "Geographic distribution"
+  },
+  "empty": {
+    "title": "No analytics data",
+    "description": "Analytics will appear as usage grows."
+  }
+}

@@ -6,10 +6,20 @@ export const PERMISSIONS = {
   USERS_MODERATE: "users.moderate",
   MODERATION_READ: "moderation.read",
   MODERATION_ACT: "moderation.act",
+  REPORTS_READ: "reports.read",
+  REPORTS_RESOLVE: "reports.resolve",
+  MATCHES_READ: "matches.read",
+  MESSAGES_READ: "messages.read",
+  MESSAGES_FLAG: "messages.flag",
   ANALYTICS_READ: "analytics.read",
   SUBSCRIPTIONS_READ: "subscriptions.read",
   SUBSCRIPTIONS_WRITE: "subscriptions.write",
+  SUBSCRIPTIONS_REFUND: "subscriptions.refund",
+  SETTINGS_READ: "settings.read",
   SETTINGS_WRITE: "settings.write",
+  FLAGS_READ: "flags.read",
+  FLAGS_WRITE: "flags.write",
+  AUDIT_READ: "audit.read",
 } as const;
 
 export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];

@@ -1,0 +1,35 @@
+{
+  "title": "Messages",
+  "description": "Monitor conversations and flagged messages.",
+  "filters": {
+    "search": "Search participants",
+    "flagged": "Filter",
+    "all": "All conversations",
+    "flaggedOnly": "Flagged only",
+    "cleanOnly": "Clean only"
+  },
+  "columns": {
+    "participants": "Participants",
+    "lastMessage": "Last message",
+    "messages": "Messages",
+    "flags": "Flags",
+    "date": "Date",
+    "actions": "Actions"
+  },
+  "actions": {
+    "viewThread": "View thread",
+    "flag": "Flag message"
+  },
+  "thread": {
+    "title": "Conversation",
+    "empty": "No messages in this conversation."
+  },
+  "flag": {
+    "title": "Flag this message?",
+    "description": "This message will be added to the moderation queue."
+  },
+  "empty": {
+    "title": "No conversations",
+    "description": "No conversations match your filters."
+  }
+}

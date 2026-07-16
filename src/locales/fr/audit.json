@@ -1,0 +1,19 @@
+{
+  "title": "Journal d'audit",
+  "description": "Toutes les actions administratives enregistrées pour la conformité.",
+  "filters": {
+    "action": "Action",
+    "allActions": "Toutes les actions",
+    "search": "Rechercher par acteur ou entité"
+  },
+  "columns": {
+    "actor": "Acteur",
+    "action": "Action",
+    "entity": "Entité",
+    "occurredAt": "Quand"
+  },
+  "empty": {
+    "title": "Aucun événement",
+    "description": "Aucune action n'a encore été enregistrée."
+  }
+}
