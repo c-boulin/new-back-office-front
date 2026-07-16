@@ -1,0 +1,50 @@
+{
+  "actions": {
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "retry": "Réessayer",
+    "search": "Rechercher",
+    "close": "Fermer",
+    "back": "Retour"
+  },
+  "confirm": {
+    "typePrompt": "Saisissez {{value}} pour confirmer"
+  },
+  "empty": {
+    "title": "Aucun résultat",
+    "description": "Il n'y a rien à afficher pour le moment."
+  },
+  "errors": {
+    "title": "Une erreur est survenue",
+    "description": "Impossible de charger ce contenu. Veuillez réessayer."
+  },
+  "menu": {
+    "profile": "Profil",
+    "superAdmin": "Console super admin",
+    "logout": "Se déconnecter"
+  },
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "users": "Utilisateurs",
+    "moderation": "Modération",
+    "reports": "Signalements",
+    "matches": "Matches",
+    "messages": "Messages",
+    "subscriptions": "Abonnements",
+    "analytics": "Analytique",
+    "settings": "Paramètres",
+    "superAdmin": "Super admin",
+    "tenants": "Tenants"
+  },
+  "pagination": {
+    "page": "Page {{page}} sur {{total}}",
+    "previous": "Précédent",
+    "next": "Suivant"
+  },
+  "skipToContent": "Aller au contenu principal",
+  "connectivity": {
+    "offline": "Vous êtes hors ligne. Certaines fonctionnalités peuvent être indisponibles."
+  }
+}

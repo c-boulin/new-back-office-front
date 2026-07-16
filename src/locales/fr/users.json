@@ -1,0 +1,38 @@
+{
+  "list": {
+    "title": "Utilisateurs",
+    "description": "Recherchez, examinez et modérez tous les comptes de ce tenant.",
+    "search": "Rechercher par nom ou e-mail",
+    "columns": {
+      "user": "Utilisateur",
+      "status": "Statut",
+      "reports": "Signalements",
+      "matches": "Matches",
+      "joined": "Inscrit le",
+      "lastActive": "Dernière activité",
+      "actions": "Actions"
+    },
+    "filters": {
+      "status": "Statut",
+      "all": "Tous les statuts"
+    }
+  },
+  "status": {
+    "active": "Actif",
+    "banned": "Banni",
+    "shadow_banned": "Shadow ban",
+    "unverified": "Non vérifié",
+    "deleted": "Supprimé"
+  },
+  "actions": {
+    "verify": "Vérifier",
+    "ban": "Bannir",
+    "unban": "Débannir",
+    "view": "Voir le profil"
+  },
+  "ban": {
+    "title": "Bannir cet utilisateur ?",
+    "description": "L'utilisateur perdra l'accès immédiatement. L'action est enregistrée dans le journal d'audit.",
+    "confirm": "Bannir l'utilisateur"
+  }
+}

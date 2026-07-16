@@ -1,0 +1,31 @@
+{
+  "chooser": {
+    "title": "Choose a tenant",
+    "description": "Pick the product you want to administer.",
+    "search": "Search tenants",
+    "empty": "No tenants match your search.",
+    "role": "Role",
+    "lastAccessed": "Last accessed"
+  },
+  "switcher": {
+    "placeholder": "Switch tenant",
+    "search": "Search tenants",
+    "empty": "No tenants found"
+  },
+  "list": {
+    "title": "Tenants",
+    "description": "Manage every product that runs on this platform.",
+    "create": "New tenant",
+    "columns": {
+      "name": "Tenant",
+      "status": "Status",
+      "users": "Users",
+      "created": "Created"
+    }
+  },
+  "status": {
+    "active": "Active",
+    "suspended": "Suspended",
+    "provisioning": "Provisioning"
+  }
+}

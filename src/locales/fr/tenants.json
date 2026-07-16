@@ -1,0 +1,31 @@
+{
+  "chooser": {
+    "title": "Choisissez un tenant",
+    "description": "Sélectionnez le produit que vous souhaitez administrer.",
+    "search": "Rechercher un tenant",
+    "empty": "Aucun tenant ne correspond à votre recherche.",
+    "role": "Rôle",
+    "lastAccessed": "Dernier accès"
+  },
+  "switcher": {
+    "placeholder": "Changer de tenant",
+    "search": "Rechercher un tenant",
+    "empty": "Aucun tenant trouvé"
+  },
+  "list": {
+    "title": "Tenants",
+    "description": "Gérez tous les produits opérés sur cette plateforme.",
+    "create": "Nouveau tenant",
+    "columns": {
+      "name": "Tenant",
+      "status": "Statut",
+      "users": "Utilisateurs",
+      "created": "Créé le"
+    }
+  },
+  "status": {
+    "active": "Actif",
+    "suspended": "Suspendu",
+    "provisioning": "En cours de création"
+  }
+}

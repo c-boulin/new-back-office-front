@@ -1,0 +1,50 @@
+{
+  "actions": {
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "retry": "Retry",
+    "search": "Search",
+    "close": "Close",
+    "back": "Back"
+  },
+  "confirm": {
+    "typePrompt": "Type {{value}} to confirm"
+  },
+  "empty": {
+    "title": "No results",
+    "description": "There is nothing to show here yet."
+  },
+  "errors": {
+    "title": "Something went wrong",
+    "description": "We could not load this content. Please try again."
+  },
+  "menu": {
+    "profile": "Profile",
+    "superAdmin": "Super admin console",
+    "logout": "Sign out"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "moderation": "Moderation",
+    "reports": "Reports",
+    "matches": "Matches",
+    "messages": "Messages",
+    "subscriptions": "Subscriptions",
+    "analytics": "Analytics",
+    "settings": "Settings",
+    "superAdmin": "Super admin",
+    "tenants": "Tenants"
+  },
+  "pagination": {
+    "page": "Page {{page}} of {{total}}",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "skipToContent": "Skip to main content",
+  "connectivity": {
+    "offline": "You are offline. Some features may be unavailable."
+  }
+}

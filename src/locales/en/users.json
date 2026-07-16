@@ -1,0 +1,38 @@
+{
+  "list": {
+    "title": "Users",
+    "description": "Search, review, and moderate every account on this tenant.",
+    "search": "Search by name or email",
+    "columns": {
+      "user": "User",
+      "status": "Status",
+      "reports": "Reports",
+      "matches": "Matches",
+      "joined": "Joined",
+      "lastActive": "Last active",
+      "actions": "Actions"
+    },
+    "filters": {
+      "status": "Status",
+      "all": "All statuses"
+    }
+  },
+  "status": {
+    "active": "Active",
+    "banned": "Banned",
+    "shadow_banned": "Shadow banned",
+    "unverified": "Unverified",
+    "deleted": "Deleted"
+  },
+  "actions": {
+    "verify": "Verify",
+    "ban": "Ban",
+    "unban": "Unban",
+    "view": "View profile"
+  },
+  "ban": {
+    "title": "Ban this user?",
+    "description": "The user will lose access immediately. This action is logged in the audit trail.",
+    "confirm": "Ban user"
+  }
+}
