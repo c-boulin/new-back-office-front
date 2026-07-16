@@ -1,14 +1,20 @@
 # Admin Panel Architecture
 
 A production-grade, multi-tenant admin console for dating products. Pure React
-frontend that speaks to one external backend API. This document is the source
-of truth for architectural rules — read it before adding anything that touches
-routing, state, data, or design.
+frontend that speaks to one external backend API.
+
+**Precedence.** `docs/BEST_PRACTICES.md` is the source of truth for all
+engineering rules. This document exists only to describe how those rules are
+wired into this codebase — routing, state boundaries, auth pipeline, folder
+map, feature workflow. If anything here appears to conflict with
+`BEST_PRACTICES.md`, `BEST_PRACTICES.md` wins.
 
 ## Golden rules
 
 1. **Async / server state → React Query.** Never fetch in `useEffect` and store
-   in `useState`. `useSuspenseQuery` is preferred at the route level.
+   in `useState`. `useSuspenseQuery` is preferred at the route level; a Suspense
+   boundary renders `LoadingState` instead of per-component `isPending &&`
+   branches.
 2. **Global client state → Zustand.** Only auth session, active tenant, and UI
    preferences. **Do not mirror server data in stores.**
 3. **Local UI state → `useState`.** For UI concerns confined to one component.
@@ -18,8 +24,9 @@ routing, state, data, or design.
    `storage` events, `matchMedia`, keyboard shortcuts, WebSocket / SSE.
 6. **No duplicated state.** Derive from a single source. If two variables can
    drift, one of them is a bug.
-7. **Small, single-responsibility components.** Extract logic to hooks when a
-   component grows a second concern.
+7. **Small, single-responsibility components.** Split when a component grows a
+   second concern or roughly 200 lines. Extract complex logic to hooks in
+   `src/hooks/` or a feature-local `hooks/` folder.
 8. **Design system before business logic.** Use `shadcn/ui` primitives; compose
    them in `src/components/common`; never recreate a primitive.
 9. **Validate every server payload with Zod, then adapt to a domain model.**
@@ -36,14 +43,22 @@ routing, state, data, or design.
 - **UI primitives:** shadcn/ui on top of Radix + Tailwind. **Never recreate a
   primitive shadcn ships** (Button, Dialog, Table, Sheet, Tabs, DropdownMenu,
   Command, Popover, Select, Checkbox, Switch, Avatar, Badge, Alert, Skeleton,
-  Tooltip, Separator, ScrollArea).
+  Tooltip, Separator, ScrollArea). Discipline:
+  - No competing UI kits — no MUI, Chakra, Ant, Mantine, Headless UI.
+  - No direct Radix imports inside a feature — consume through the shadcn
+    primitive in `src/components/ui/`.
+  - `ui/` stays pure — no i18n, no stores, no feature imports, no business
+    logic. `common/` composes primitives with i18n and stores.
+  - Styling only through Tailwind + shadcn tokens + `cn()`
+    (`src/lib/utils.ts`). No inline `style` for design values.
+  - Icons: `lucide-react` only. No emoji.
 - **Server state:** `@tanstack/react-query` v5.
 - **Global client state:** `zustand` with `immer` + `persist`.
 - **Forms:** `react-hook-form` + `@hookform/resolvers` + `zod`.
 - **Validation:** `zod` for every schema; sanitization via `dompurify`.
 - **HTTP:** `axios` with a single client, interceptors for auth + tenant + refresh.
-- **Auth:** `oidc-client-ts` (generic OIDC PKCE). Internal SSO only, no
-  password, no bypass — including super-admins.
+- **Auth:** `oidc-client-ts` for SSO (OIDC + PKCE); dedicated password endpoints
+  for username/password. Both methods are supported and selectable via env.
 - **i18n:** `react-i18next` + `i18next-browser-languagedetector`. English and
   French; per-feature namespaces.
 - **Tables:** `@tanstack/react-table` on top of shadcn Table.
@@ -55,7 +70,8 @@ routing, state, data, or design.
 - A **membership** links a user to a tenant with a role and a permission set.
 - **Super admins** are outside the tenant scope. They manage tenants
   themselves.
-- **Post-login routing** (`PostLoginRouter`):
+- **Post-login routing** (`PostLoginRouter`) is method-agnostic — both SSO and
+  password logins land here:
   - `isSuperAdmin` → `/admin`
   - `memberships.length === 0` → `/access-denied`
   - `memberships.length === 1` → auto-select, `/t/:slug`
@@ -80,15 +96,31 @@ routing, state, data, or design.
 
 ## Authentication
 
-- Global, mandatory internal SSO via OIDC + PKCE. `oidcClient` in
-  `src/lib/oidcClient.ts`.
-- `LoginPage` shows one button: **Continue with SSO**. There is no password
-  form anywhere, including for super-admins.
+Two supported methods, both first-class:
+
+- **Internal SSO** — OIDC + PKCE via `oidc-client-ts` (`src/lib/oidcClient.ts`).
+- **Username / password** — dedicated endpoints under
+  `src/features/auth/password/{api,schemas,adaptors,types}.ts`. Credentials are
+  validated with Zod on submit; the server returns the same session shape as
+  SSO.
+
+Which methods are enabled is controlled by `env.auth.ssoEnabled` and
+`env.auth.passwordEnabled` in `src/lib/env.ts`. At least one must be enabled;
+`LoginPage` renders only the flows that are on.
+
+Shared pipeline — every method must respect it:
+
+- `authStore.method: "sso" | "password"` discriminates the active session.
+  Both methods produce the same session shape, expose the same `accessToken`
+  under the same `Authorization: Bearer` header, and use the same tenant +
+  permission model.
 - `AuthProvider` boots the session, listens for `userLoaded`,
   `accessTokenExpired`, `silentRenewError`, and cross-tab `storage` events.
-- `httpClient` interceptor refreshes silently on 401 with a single-flight
-  promise; on failure it flips `authStore.status` to `expired` and
-  `SessionExpiredDialog` prompts a fresh sign-in.
+- `httpClient` interceptors refresh silently on 401 with a single-flight
+  promise, selecting `refreshSsoSession` or `refreshPasswordSession` based on
+  `authStore.method`. On failure it flips `authStore.status` to `expired` and
+  `SessionExpiredDialog` prompts a fresh sign-in — the same recovery path for
+  both methods.
 
 ## Data flow (Validator-Adaptor)
 
@@ -129,7 +161,8 @@ Components must never touch raw payloads.
 
 Every data view must handle **four** branches explicitly:
 
-- **Loading:** `<LoadingState />` or a component-specific `Skeleton`.
+- **Loading:** `<LoadingState />` inside a Suspense boundary (preferred) or a
+  component-specific `Skeleton`.
 - **Empty:** `<EmptyState title description icon action />`.
 - **Error:** `<ErrorState onRetry={refetch} />`.
 - **Success:** the real content.
@@ -139,18 +172,37 @@ Do not conflate "loading" and "empty". A pending query is not an empty state.
 ## Accessibility
 
 - Every interactive element is keyboard reachable; focus styles come from
-  shadcn — do not remove them.
+  shadcn/Radix — do not remove or override them.
 - Every form control has a `<label>` and (when in error) `aria-invalid`.
 - Every dialog / sheet has a `DialogTitle` (even if visually hidden).
 - Skip-to-content link in every layout (`#main`).
 - Live regions for async status where meaningful (see `LoadingState`).
+- Colour is never the only signal for state — pair with icon or text.
+- No `autoFocus` — manage focus explicitly when needed.
 
 ## Responsiveness
 
-- Mobile-first. Layouts use CSS grid + flex.
-- Sidebar collapses into a `Sheet` on `md-`.
-- `DataTable` becomes a card list on narrow screens (per feature).
+Mobile, tablet, and desktop each get their own **purpose-built** layout,
+navigation, information density, and interactions. Scaling a desktop layout
+down or a mobile one up is not acceptable. Verify at `sm`, `md`, and `lg`.
+
+- Tailwind breakpoints, mobile-first authoring.
+- Navigation is designed per form factor: bottom bar / sheet on mobile, rail
+  or drawer on tablet, persistent sidebar on desktop.
+- Tabular data uses card / stack layouts on mobile with different actions and
+  emphasis, not a horizontally-scrolled desktop table.
 - Never rely on hover for a critical action — provide a tap target.
+
+## Lint / typecheck / build hygiene
+
+Per `BEST_PRACTICES.md` §8:
+
+- Never weaken `eslint.config.js` or `.prettierrc.json` to unblock work — fix
+  the code.
+- Never disable a lint rule inline without a comment stating why.
+- `npm run lint`, `npm run typecheck`, and `npm run build:development` must
+  all exit clean before a feature is declared done.
+- Imports use the `@/` alias and follow the import plugin's ordering.
 
 ## Folder map
 
@@ -204,8 +256,14 @@ src/
 6. Add a locale namespace in `en` and `fr` and import it in `src/lib/i18n.ts`.
 7. Add the route (lazy) in `src/app/router.tsx`.
 8. Update the sidebar in `TenantLayout` or `SuperAdminLayout`.
-9. Handle loading/empty/error explicitly.
+9. Handle loading / empty / error explicitly.
 10. Add permission gates on destructive actions.
+11. Verify no cross-feature imports — shared code lives in `common/`, `hooks/`,
+    or `lib/`.
+12. Verify no direct Radix imports inside the feature — consume through `ui/`.
+13. Verify a purpose-built layout at `sm`, `md`, and `lg` — not a resized copy.
+14. Run `npm run lint`, `npm run typecheck`, and `npm run build:development`
+    clean.
 
 ## Anti-patterns (do NOT do)
 
@@ -213,8 +271,31 @@ src/
 - Storing server data in Zustand. **Use React Query.**
 - Duplicating a piece of state across two hooks. **Derive.**
 - Rebuilding a shadcn primitive. **Compose it.**
+- Importing Radix packages directly inside a feature. **Consume through the
+  shadcn primitive in `ui/`.**
+- Installing a competing UI kit (MUI, Chakra, Ant, Mantine, Headless UI).
+  **shadcn/ui only.**
+- Using emoji as icons. **`lucide-react` only.**
+- Cross-feature imports. **Promote shared code to `common/`, `hooks/`, or
+  `lib/`.**
 - Hardcoding colors in components. **Use theme tokens.**
-- Putting a password form anywhere. **SSO only, always.**
+- Bypassing the shared auth pipeline. **Every method must produce the same
+  session shape in `authStore` and go through `httpClient` interceptors.
+  Never store credentials in state; never call the backend outside
+  `passwordLogin` / `passwordRefresh` / `oidcClient`.**
 - Skipping Zod on a response because "the backend is trusted". **Every response
   is validated at the edge.**
 - Rendering user-provided HTML directly. **`sanitizeHtml` first.**
+- Reusing a single base design across breakpoints as a resized variant.
+  **Mobile, tablet, and desktop each get their own purpose-built design.**
+
+## Change log
+
+- 2026-07-16 — Aligned with `BEST_PRACTICES.md`: declared it the source of
+  truth in conflicts, removed the SSO-only clauses, documented password auth
+  alongside SSO, rewrote Responsiveness as per-device purpose-built layouts,
+  added shadcn discipline (no competing UI kits, no direct Radix imports,
+  `ui/` purity, icons via `lucide-react`, no emoji), added accessibility
+  items (no `autoFocus`, colour is never the only signal), added the
+  lint / typecheck / build hygiene section, and extended the feature
+  checklist to match.
