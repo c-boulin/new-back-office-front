@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Loader2 } from "lucide-react";
+import { Loader as Loader2 } from "lucide-react";
 import { oidcClient } from "@/lib/oidcClient";
 import { useAuthStore } from "@/stores/authStore";
 import { ErrorState } from "@/components/common/ErrorState";

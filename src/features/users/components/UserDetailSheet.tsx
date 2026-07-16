@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
-import { CheckCircle2, ShieldOff, Undo2 } from "lucide-react";
+import { CircleCheck as CheckCircle2, ShieldOff, Undo2 } from "lucide-react";
 import {
   Sheet,
   SheetContent,

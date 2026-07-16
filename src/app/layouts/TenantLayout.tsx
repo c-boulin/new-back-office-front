@@ -1,17 +1,7 @@
 import { Outlet, useParams } from "react-router-dom";
 import { Suspense } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  BarChart3,
-  Flag,
-  Heart,
-  LayoutDashboard,
-  MessagesSquare,
-  Settings,
-  ShieldAlert,
-  Sparkles,
-  Users,
-} from "lucide-react";
+import { ChartBar as BarChart3, Flag, Heart, LayoutDashboard, MessagesSquare, Settings, ShieldAlert, Sparkles, Users } from "lucide-react";
 import { SidebarNav, type SidebarNavItem } from "./SidebarNav";
 import { TopBar } from "./TopBar";
 import { LoadingState } from "@/components/common/LoadingState";
