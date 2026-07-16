@@ -249,7 +249,7 @@ Each section states the rule verbatim, a short "Why", and "How it applies here" 
 - **Loading states** — render `LoadingState` on pending queries; never leave a screen blank.
 - **Empty states** — render `EmptyState` when a list is empty; explain what to do next.
 - **Edge cases** — banned users, missing tenant, expired session, offline, permission-denied, validation failure, and network error each get an explicit branch. `ErrorState` handles the recoverable ones; `SessionExpiredDialog` handles auth.
-- **Responsive design** — Tailwind breakpoints, mobile-first, verified at `sm`, `md`, and `lg`.
+- **Responsive design** — Tailwind breakpoints, mobile-first, verified at `sm`, `md`, and `lg`. **Every device must have its own design.** Do not reuse the base design as a smaller or bigger version depending on screen size — mobile, tablet, and desktop each get layouts, navigation, information density, and interactions purpose-built for that form factor. Scaling a desktop layout down (or a mobile one up) is not acceptable.
 - **Accessibility** — see section 15.
 - **Component reusability** — see section 13.
 - **Clean developer experience** — small files, descriptive names, predictable imports, no dead code, no commented-out blocks, no orphaned files after a rename.
@@ -267,7 +267,7 @@ Run through this before declaring any feature done:
 - [ ] Server data flows through Zod schema + adaptor via `validateAndAdapt`.
 - [ ] Forms validated with Zod; user HTML sanitized via `sanitize.ts`.
 - [ ] Loading, empty, and error states all present on data views.
-- [ ] Responsive at `sm`, `md`, `lg`; keyboard-navigable; screen-reader labelled.
+- [ ] Responsive at `sm`, `md`, `lg` with a **purpose-built layout per device** (mobile, tablet, desktop) — no simple up/down scaling of a single base design; keyboard-navigable; screen-reader labelled.
 - [ ] Complex logic extracted into hooks.
 - [ ] `npm run lint`, `npm run typecheck`, and `npm run build:development` all clean.
 
@@ -276,3 +276,4 @@ Run through this before declaring any feature done:
 ## Change log
 
 - 2026-07-16 — Initial version.
+- 2026-07-16 — Responsive rule tightened: each device (mobile, tablet, desktop) must have its own purpose-built design; base design must not be reused as a resized variant.
