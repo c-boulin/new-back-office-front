@@ -6,6 +6,7 @@ import { SuperAdminLayout } from "./layouts/SuperAdminLayout";
 import { RequireAuth } from "./guards/RequireAuth";
 import { RequireSuperAdmin } from "./guards/RequireSuperAdmin";
 import { RequireTenant } from "./guards/RequireTenant";
+import { RouteErrorFallback } from "@/components/common/RouteErrorFallback";
 
 const LoginPage = lazy(() =>
   import("@/features/auth/pages/LoginPage").then((m) => ({ default: m.LoginPage })),
@@ -74,6 +75,7 @@ const PlatformAdminsPage = lazy(() =>
 export const router = createBrowserRouter([
   {
     element: <AuthLayout />,
+    errorElement: <RouteErrorFallback />,
     children: [
       { path: "/login", element: <LoginPage /> },
       { path: "/auth/callback", element: <CallbackPage /> },
@@ -91,6 +93,7 @@ export const router = createBrowserRouter([
         children: [
           {
             element: <SuperAdminLayout />,
+            errorElement: <RouteErrorFallback />,
             children: [
               { index: true, element: <SuperAdminDashboardPage /> },
               { path: "tenants", element: <TenantsListPage /> },
@@ -105,6 +108,7 @@ export const router = createBrowserRouter([
         children: [
           {
             element: <TenantLayout />,
+            errorElement: <RouteErrorFallback />,
             children: [
               { index: true, element: <TenantDashboardPage /> },
               { path: "users", element: <UsersListPage /> },

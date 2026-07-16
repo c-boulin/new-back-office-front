@@ -18,7 +18,8 @@
   },
   "errors": {
     "title": "Something went wrong",
-    "description": "We could not load this content. Please try again."
+    "description": "We could not load this content. Please try again.",
+    "routeTitle": "This page failed to load"
   },
   "menu": {
     "profile": "Profile",

@@ -18,7 +18,8 @@
   },
   "errors": {
     "title": "Une erreur est survenue",
-    "description": "Impossible de charger ce contenu. Veuillez réessayer."
+    "description": "Impossible de charger ce contenu. Veuillez réessayer.",
+    "routeTitle": "Cette page n'a pas pu être chargée"
   },
   "menu": {
     "profile": "Profil",
