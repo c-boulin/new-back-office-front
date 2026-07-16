@@ -21,6 +21,10 @@ export const env = {
     ssoEnabled,
     mocked: import.meta.env.VITE_AUTH_MOCK === "true",
   },
+  mock: {
+    api: import.meta.env.VITE_MOCK_API === "true",
+    persist: import.meta.env.VITE_MOCK_PERSIST === "true",
+  },
   flags: {
     enableMsw: import.meta.env.VITE_ENABLE_MSW === "true",
   },

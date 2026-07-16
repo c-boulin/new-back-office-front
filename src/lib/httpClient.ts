@@ -43,6 +43,14 @@ export const httpClient: AxiosInstance = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
+if (env.mock.api) {
+  const adapterPromise = import("@/mocks").then((m) => m.mockAdapter);
+  httpClient.interceptors.request.use(async (config) => {
+    config.adapter = await adapterPromise;
+    return config;
+  });
+}
+
 httpClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = useAuthStore.getState().accessToken;
   const tenantId = useTenantStore.getState().activeTenantId;
