@@ -55,9 +55,6 @@ const AnalyticsPage = lazy(() =>
 const SettingsPage = lazy(() =>
   import("@/features/settings/pages/SettingsPage").then((m) => ({ default: m.SettingsPage })),
 );
-const AuditPage = lazy(() =>
-  import("@/features/audit/pages/AuditPage").then((m) => ({ default: m.AuditPage })),
-);
 const TenantsListPage = lazy(() =>
   import("@/features/superAdmin/pages/TenantsListPage").then((m) => ({
     default: m.TenantsListPage,
@@ -98,7 +95,6 @@ export const router = createBrowserRouter([
               { index: true, element: <SuperAdminDashboardPage /> },
               { path: "tenants", element: <TenantsListPage /> },
               { path: "admins", element: <PlatformAdminsPage /> },
-              { path: "audit", element: <AuditPage /> },
             ],
           },
         ],
@@ -119,7 +115,6 @@ export const router = createBrowserRouter([
               { path: "subscriptions", element: <SubscriptionsPage /> },
               { path: "analytics", element: <AnalyticsPage /> },
               { path: "settings", element: <SettingsPage /> },
-              { path: "audit", element: <AuditPage /> },
             ],
           },
         ],

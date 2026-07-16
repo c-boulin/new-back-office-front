@@ -299,11 +299,3 @@ src/
   items (no `autoFocus`, colour is never the only signal), added the
   lint / typecheck / build hygiene section, and extended the feature
   checklist to match.
-- 2026-07-16 — Implemented all placeholder features with full Validator-Adaptor
-  scaffolds (types, schemas, adaptors, api), mock handlers with deterministic
-  seeds, locale namespaces (en + fr), and per-device responsive UIs: Dashboard,
-  Moderation, Reports, Matches, Messages, Subscriptions, Analytics, Settings
-  (with feature flags panel), and Audit Log. Extended permissions with granular
-  constants for each domain. Added sidebar/router entries for all features.
-  Upgraded SuperAdmin dashboard and PlatformAdmins pages from placeholders to
-  real data-driven views.

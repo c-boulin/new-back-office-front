@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { Suspense } from "react";
 import { useTranslation } from "react-i18next";
-import { Building2, ClipboardList, LayoutDashboard, Shield, Users } from "lucide-react";
+import { Building2, LayoutDashboard, Shield, Users } from "lucide-react";
 import { SidebarNav, type SidebarNavItem } from "./SidebarNav";
 import { TopBar } from "./TopBar";
 import { LoadingState } from "@/components/common/LoadingState";
@@ -14,7 +14,6 @@ export function SuperAdminLayout() {
     { to: "/admin", icon: LayoutDashboard, label: t("nav.dashboard"), end: true },
     { to: "/admin/tenants", icon: Building2, label: t("nav.tenants") },
     { to: "/admin/admins", icon: Users, label: t("nav.superAdmin") },
-    { to: "/admin/audit", icon: ClipboardList, label: t("nav.audit") },
   ];
 
   return (
