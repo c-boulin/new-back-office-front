@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { type ColumnDef } from "@tanstack/react-table";
 import { formatDistanceToNow } from "date-fns";
-import { Eye, CheckCircle, XCircle } from "lucide-react";
+import { Eye, CircleCheck as CheckCircle, Circle as XCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/common/DataTable";
