@@ -82,8 +82,5 @@ export function TenantsListPage() {
         />
       )}
     </div>
-      )
-      }
-  )
   );
 }
