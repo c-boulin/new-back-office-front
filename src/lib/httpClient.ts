@@ -53,20 +53,43 @@ httpClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 
 let refreshPromise: Promise<string | null> | null = null;
 
+async function refreshSsoSession(): Promise<string | null> {
+  const renewed = await oidcClient.signinSilent();
+  const token = renewed?.access_token ?? null;
+  if (token) {
+    useAuthStore.getState().setSession({
+      accessToken: token,
+      idToken: renewed?.id_token ?? null,
+      expiresAt: renewed?.expires_at ?? null,
+      method: "sso",
+    });
+  }
+  return token;
+}
+
+async function refreshPasswordSession(): Promise<string | null> {
+  const state = useAuthStore.getState();
+  if (!state.refreshToken) return null;
+  const { passwordRefresh } = await import("@/features/auth/password/api");
+  const session = await passwordRefresh(state.refreshToken);
+  useAuthStore.getState().setSession({
+    accessToken: session.accessToken,
+    refreshToken: session.refreshToken,
+    expiresAt: session.expiresAt,
+    method: "password",
+  });
+  useAuthStore.getState().setUser(session.user, session.memberships);
+  return session.accessToken;
+}
+
 async function refreshAccessToken(): Promise<string | null> {
   if (refreshPromise) return refreshPromise;
   refreshPromise = (async () => {
     try {
-      const renewed = await oidcClient.signinSilent();
-      const token = renewed?.access_token ?? null;
-      if (token) {
-        useAuthStore.getState().setSession({
-          accessToken: token,
-          idToken: renewed?.id_token ?? null,
-          expiresAt: renewed?.expires_at ?? null,
-        });
-      }
-      return token;
+      const method = useAuthStore.getState().method;
+      if (method === "password") return await refreshPasswordSession();
+      if (method === "sso") return await refreshSsoSession();
+      return null;
     } catch {
       useAuthStore.getState().markSessionExpired();
       return null;

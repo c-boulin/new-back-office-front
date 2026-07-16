@@ -15,6 +15,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { useTenantStore } from "@/stores/tenantStore";
 import { oidcClient } from "@/lib/oidcClient";
 import { queryClient } from "@/lib/queryClient";
+import { passwordLogout } from "@/features/auth/password/api";
 
 function initials(name: string) {
   return name
@@ -27,6 +28,8 @@ function initials(name: string) {
 
 export function UserMenu() {
   const user = useAuthStore((s) => s.user);
+  const method = useAuthStore((s) => s.method);
+  const refreshToken = useAuthStore((s) => s.refreshToken);
   const clearAuth = useAuthStore((s) => s.clear);
   const clearTenant = useTenantStore((s) => s.clear);
   const navigate = useNavigate();
@@ -37,6 +40,16 @@ export function UserMenu() {
   const onLogout = async () => {
     queryClient.removeQueries();
     clearTenant();
+    if (method === "password") {
+      try {
+        await passwordLogout(refreshToken);
+      } catch {
+        /* ignore mock/real logout errors */
+      }
+      clearAuth();
+      navigate("/login", { replace: true });
+      return;
+    }
     clearAuth();
     try {
       await oidcClient.signoutRedirect();

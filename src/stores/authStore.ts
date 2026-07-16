@@ -3,17 +3,23 @@ import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import type { AuthUser, TenantMembership } from "@/features/auth/types";
 
+export type AuthMethod = "sso" | "password";
+
 type SessionPayload = {
   accessToken: string | null;
-  idToken: string | null;
+  idToken?: string | null;
+  refreshToken?: string | null;
   expiresAt: number | null;
+  method: AuthMethod;
 };
 
 type AuthState = {
   status: "idle" | "authenticating" | "authenticated" | "expired" | "unauthenticated";
+  method: AuthMethod | null;
   user: AuthUser | null;
   accessToken: string | null;
   idToken: string | null;
+  refreshToken: string | null;
   expiresAt: number | null;
   memberships: TenantMembership[];
   setSession: (payload: SessionPayload) => void;
@@ -27,16 +33,20 @@ export const useAuthStore = create<AuthState>()(
   persist(
     immer((set) => ({
       status: "idle",
+      method: null,
       user: null,
       accessToken: null,
       idToken: null,
+      refreshToken: null,
       expiresAt: null,
       memberships: [],
       setSession: (payload) =>
         set((state) => {
           state.accessToken = payload.accessToken;
-          state.idToken = payload.idToken;
+          state.idToken = payload.idToken ?? null;
+          state.refreshToken = payload.refreshToken ?? state.refreshToken;
           state.expiresAt = payload.expiresAt;
+          state.method = payload.method;
           if (payload.accessToken) state.status = "authenticated";
         }),
       setUser: (user, memberships) =>
@@ -57,9 +67,11 @@ export const useAuthStore = create<AuthState>()(
       clear: () =>
         set((state) => {
           state.status = "unauthenticated";
+          state.method = null;
           state.user = null;
           state.accessToken = null;
           state.idToken = null;
+          state.refreshToken = null;
           state.expiresAt = null;
           state.memberships = [];
         }),
@@ -69,6 +81,8 @@ export const useAuthStore = create<AuthState>()(
       partialize: (state) => ({
         user: state.user,
         memberships: state.memberships,
+        method: state.method,
+        refreshToken: state.refreshToken,
       }),
     },
   ),

@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   Dialog,
@@ -13,10 +14,18 @@ import { oidcClient } from "@/lib/oidcClient";
 
 export function SessionExpiredDialog() {
   const status = useAuthStore((s) => s.status);
+  const method = useAuthStore((s) => s.method);
+  const clear = useAuthStore((s) => s.clear);
+  const navigate = useNavigate();
   const { t } = useTranslation("auth");
   const open = status === "expired";
 
   const onReauth = () => {
+    if (method === "password") {
+      clear();
+      navigate("/login", { replace: true });
+      return;
+    }
     void oidcClient.signinRedirect();
   };
 

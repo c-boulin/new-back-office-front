@@ -22,6 +22,7 @@ export function CallbackPage() {
           accessToken: user.access_token,
           idToken: user.id_token ?? null,
           expiresAt: user.expires_at ?? null,
+          method: "sso",
         });
         navigate("/", { replace: true });
       } catch (err) {
