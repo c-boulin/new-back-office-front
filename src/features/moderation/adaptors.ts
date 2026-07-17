@@ -1,3 +1,4 @@
+import { sanitizeHtml, sanitizeText } from "@/lib/sanitize";
 import type { ModerationItem, PaginatedModeration } from "./types";
 import type { RawModerationItem, RawPaginatedModeration } from "./schemas";
 
@@ -6,12 +7,12 @@ export function moderationItemFromRaw(raw: RawModerationItem): ModerationItem {
     id: raw.id,
     type: raw.type,
     status: raw.status,
-    reason: raw.reason,
-    reportedBy: raw.reported_by,
-    subjectName: raw.subject_name,
+    reason: sanitizeText(raw.reason),
+    reportedBy: raw.reported_by ? sanitizeText(raw.reported_by) : raw.reported_by,
+    subjectName: sanitizeText(raw.subject_name),
     subjectId: raw.subject_id,
-    content: raw.content,
-    contentHtml: raw.content_html,
+    content: raw.content ? sanitizeText(raw.content) : raw.content,
+    contentHtml: raw.content_html ? sanitizeHtml(raw.content_html) : raw.content_html,
     imageUrl: raw.image_url,
     severity: raw.severity,
     createdAt: raw.created_at,

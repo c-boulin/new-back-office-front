@@ -3,6 +3,7 @@ import { env } from "./env";
 import { useAuthStore } from "@/stores/authStore";
 import { useTenantStore } from "@/stores/tenantStore";
 import { oidcClient } from "./oidcClient";
+import { passwordRefresh } from "@/features/auth/password/api";
 
 export type ApiErrorCode =
   | "network"
@@ -78,7 +79,6 @@ async function refreshSsoSession(): Promise<string | null> {
 async function refreshPasswordSession(): Promise<string | null> {
   const state = useAuthStore.getState();
   if (!state.refreshToken) return null;
-  const { passwordRefresh } = await import("@/features/auth/password/api");
   const session = await passwordRefresh(state.refreshToken);
   useAuthStore.getState().setSession({
     accessToken: session.accessToken,

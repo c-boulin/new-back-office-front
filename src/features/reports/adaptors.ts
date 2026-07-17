@@ -1,19 +1,20 @@
+import { sanitizeText } from "@/lib/sanitize";
 import type { PaginatedReports, Report } from "./types";
 import type { RawPaginatedReports, RawReport } from "./schemas";
 
 export function reportFromRaw(raw: RawReport): Report {
   return {
     id: raw.id,
-    reporterName: raw.reporter_name,
+    reporterName: sanitizeText(raw.reporter_name),
     reporterId: raw.reporter_id,
-    subjectName: raw.subject_name,
+    subjectName: sanitizeText(raw.subject_name),
     subjectId: raw.subject_id,
     category: raw.category,
     status: raw.status,
-    description: raw.description,
+    description: sanitizeText(raw.description),
     createdAt: raw.created_at,
     resolvedAt: raw.resolved_at,
-    resolverName: raw.resolver_name,
+    resolverName: raw.resolver_name ? sanitizeText(raw.resolver_name) : raw.resolver_name,
   };
 }
 

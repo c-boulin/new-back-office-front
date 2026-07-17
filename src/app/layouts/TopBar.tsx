@@ -1,7 +1,14 @@
 import { Menu } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { LanguageSwitcher } from "@/components/common/LanguageSwitcher";
 import { TenantSwitcher } from "@/components/common/TenantSwitcher";
 import { UserMenu } from "@/components/common/UserMenu";
@@ -18,21 +25,22 @@ export function TopBar({ mobileNav }: { mobileNav: ReactNode }) {
               variant="ghost"
               size="icon"
               className="md:hidden"
-              aria-label="Open navigation"
+              aria-label={t("nav.openMenu")}
             >
               <Menu />
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="p-0">
+            <SheetHeader className="sr-only">
+              <SheetTitle>{t("nav.mobileTitle")}</SheetTitle>
+              <SheetDescription>{t("nav.mobileDescription")}</SheetDescription>
+            </SheetHeader>
             <div className="py-6">{mobileNav}</div>
           </SheetContent>
         </Sheet>
         <TenantSwitcher />
       </div>
       <div className="flex items-center gap-2">
-        <a href="#main" className="skip-link">
-          {t("skipToContent")}
-        </a>
         <LanguageSwitcher />
         <UserMenu />
       </div>

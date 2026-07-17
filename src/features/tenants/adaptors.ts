@@ -1,3 +1,4 @@
+import { sanitizeText } from "@/lib/sanitize";
 import type { Tenant, TenantTheme } from "./types";
 import type { RawTenant, RawTenantTheme } from "./schemas";
 
@@ -16,7 +17,7 @@ export function tenantFromRaw(raw: RawTenant): Tenant {
   return {
     id: raw.id,
     slug: raw.slug,
-    name: raw.name,
+    name: sanitizeText(raw.name),
     logoUrl: raw.logo_url,
     status: raw.status,
     theme: themeFromRaw(raw.theme),

@@ -38,7 +38,10 @@
     "analytics": "Analytique",
     "settings": "Paramètres",
     "superAdmin": "Super admin",
-    "tenants": "Tenants"
+    "tenants": "Tenants",
+    "openMenu": "Ouvrir la navigation",
+    "mobileTitle": "Navigation",
+    "mobileDescription": "Parcourir l'application"
   },
   "pagination": {
     "page": "Page {{page}} sur {{total}}",

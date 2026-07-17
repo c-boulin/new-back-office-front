@@ -1,11 +1,15 @@
 import { Outlet } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "@/components/common/LanguageSwitcher";
+import { SkipLink } from "@/components/common/SkipLink";
 
 export function AuthLayout() {
+  const { t } = useTranslation("common");
   return (
     <div
       className="dark relative flex min-h-screen items-center justify-center overflow-hidden bg-[#05070b] px-4 py-10 text-foreground"
     >
+      <SkipLink label={t("skipToContent")} targetId="auth-main" />
       <div
         aria-hidden
         className="pointer-events-none absolute -left-40 -top-40 h-[520px] w-[520px] rounded-full bg-teal-500/25 blur-3xl"
@@ -23,7 +27,7 @@ export function AuthLayout() {
         <LanguageSwitcher />
       </header>
 
-      <main className="relative z-10 w-full max-w-md">
+      <main id="auth-main" className="relative z-10 w-full max-w-md">
         <Outlet />
       </main>
     </div>
