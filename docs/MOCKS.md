@@ -39,6 +39,16 @@ they will against the real API.
 4. If the endpoint mutates data, extend `src/mocks/db.ts` with the update
    method and call `persist()` inside it.
 
+## Using the mocks from tests
+
+Integration tests under `test/integration/` hit **the same** mock adapter without any extra setup. Vitest reads `.env`, so `VITE_MOCK_API=true` activates the adapter for tests exactly as it does in the dev server. Consequences:
+
+- Do not stub `httpClient` or `axios` in tests. Populate the auth store via `signInAs()` (see `test/utils/fixtures.ts`) and let the mock respond.
+- The seed credentials from `accounts.ts` (`admin`/`admin`, `operator`/`operator`) are what integration tests should use when exercising the password login form.
+- Because handlers throw `AppError` with a real status, integration tests can also exercise the 401 / refresh path without any extra plumbing.
+
+See `docs/TESTING.md` for the full test harness and the four-state contract.
+
 ## Going live against the real API
 
 When the backend is ready:
@@ -50,6 +60,15 @@ When the backend is ready:
    (about six lines).
 4. Remove the `mock` block from `src/lib/env.ts` and the `VITE_MOCK_API` /
    `VITE_MOCK_PERSIST` entries in `.env` and `src/vite-env.d.ts`.
+5. Re-point integration tests that hit named endpoints at a contract-verified
+   stub (msw handlers wired in `test/setup.ts`, or a similar seam). Unit tests
+   stay untouched because they never crossed the network.
 
 Nothing else changes: feature `api.ts` files, Zod schemas, adaptors, React
 Query keys, permissions, and components are all untouched.
+
+> **Supabase note.** When migrating the backend to Supabase (see the project
+> Supabase guidance), the same rules apply: the client still hits `httpClient`
+> for the app's own endpoints, the mock adapter is deleted, and
+> Supabase-facing code lives behind feature `api.ts` files so tests can
+> mock the boundary at one place.

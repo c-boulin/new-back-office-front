@@ -11,6 +11,17 @@ Every component is:
 - **Responsive by default** — mobile-first breakpoints.
 - **Silent by default** — no console noise, no side effects at import time.
 
+## Testing
+
+Every composite in this document has a test under `test/unit/components/common/`. Tests exercise:
+
+- **Rendering shape.** Required props render the expected roles / labels.
+- **The four-state contract.** `DataTable` / `DataList` render `EmptyState` when items are empty; `RouteBoundary` renders its loading fallback while suspending and its error fallback on thrown errors. Feature composites inherit this coverage automatically.
+- **User interactions.** `ConfirmDialog` typed-confirmation, `FilterRow` reset, `TenantSwitcher` selection, `UserMenu` sign-out, `LanguageSwitcher` locale swap.
+- **Store side effects.** `TenantSwitcher` updates `tenantStore`; `UserMenu` clears `authStore`; `SessionExpiredDialog` reacts to `authStore.status === "expired"`.
+
+When adding a new composite, add its test in the same commit — mirror the source path under `test/unit/components/common/`, use `renderWithProviders`, and prefer accessible queries (`getByRole`, `getByLabelText`) over `data-testid`. See `docs/TESTING.md` for the full harness.
+
 ## `PageHeader`
 
 ```tsx

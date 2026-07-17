@@ -269,7 +269,25 @@ Run through this before declaring any feature done:
 - [ ] Loading, empty, and error states all present on data views.
 - [ ] Responsive at `sm`, `md`, `lg` with a **purpose-built layout per device** (mobile, tablet, desktop) — no simple up/down scaling of a single base design; keyboard-navigable; screen-reader labelled.
 - [ ] Complex logic extracted into hooks.
-- [ ] `npm run lint`, `npm run typecheck`, and `npm run build:development` all clean.
+- [ ] `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build:development` all clean.
+
+---
+
+## 18. Automated tests
+
+**Rule.** Every module that carries logic must be covered by an automated test, and every data view must exercise the loading, empty, error, and success states.
+
+**Why.** Tests are the only mechanism that prevents rules 1-17 from silently regressing as the codebase grows. They also freeze the four-state contract in place so future changes cannot ship a page that skips a loading, empty, or error branch.
+
+**How it applies here.**
+
+- All tests live under a top-level `test/` directory — `test/unit/` and `test/integration/` — mirroring the `src/` tree internally. See `docs/TESTING.md`.
+- **Test code obeys these same rules.** No `useEffect` outside listeners, no direct Radix imports, no cross-feature imports, no emoji, shadcn primitives only when rendering fixtures. Tests are code; they age like code.
+- **The mock adapter is the test seam.** Integration tests hit the same in-memory mocks the dev server uses. Do not stub `httpClient` or `axios`. When the real backend replaces the mock, integration tests re-point via a contract-verified stub; unit tests stay untouched because they never crossed the network.
+- **Deterministic only.** No wall-clock waits, no `setTimeout` in tests, no `Math.random()` outside seeded mocks. Use `vi.useFakeTimers()` for time-based logic.
+- **Prefer accessible queries.** `getByRole` / `getByLabelText` / `getByText` beat `data-testid`. Add a testid only when the DOM offers no accessible handle.
+- **Fixtures live in one place.** Use `test/utils/fixtures.ts` and `test/utils/renderWithProviders.tsx` — do not scatter one-off store writes or provider stacks across test files.
+- Run `npm test` (and `npm run coverage` for a full report) before declaring work done, alongside `npm run lint`, `npm run typecheck`, and `npm run build:development`.
 
 ---
 
@@ -277,3 +295,4 @@ Run through this before declaring any feature done:
 
 - 2026-07-16 — Initial version.
 - 2026-07-16 — Responsive rule tightened: each device (mobile, tablet, desktop) must have its own purpose-built design; base design must not be reused as a resized variant.
+- 2026-07-17 — Added §18 "Automated tests" covering the top-level `test/` layout, deterministic-test rule, mock-adapter seam, and the enforcement checklist entry for `npm test`.

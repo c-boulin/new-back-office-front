@@ -219,7 +219,28 @@ Per `BEST_PRACTICES.md` §8:
   all exit clean before a feature is declared done.
 - Imports use the `@/` alias and follow the import plugin's ordering.
 
+## Testing
+
+Automated tests live under a top-level `test/` directory, split into `unit/` and `integration/`. They obey the same rules as production code (no `useEffect` outside listeners, shadcn discipline, no cross-feature imports, no emoji). Integration tests exercise real React Query + Router + the in-memory mock adapter so the Validator-Adaptor pipeline is verified end-to-end. See `docs/TESTING.md` for the harness, fixtures, and four-state contract, and `docs/BEST_PRACTICES.md` §18 for the rule itself.
+
 ## Folder map
+
+```
+test/
+  setup.ts                           # jsdom polyfills, i18n boot, cleanup
+  utils/
+    renderWithProviders.tsx          # QueryClient + Router + Tooltip wrapper
+    fixtures.ts                      # resetStores, signInAs, membership fixtures
+  unit/
+    lib/                             # sanitize, permissions, utils, ...
+    hooks/                           # every hook in src/hooks/
+    stores/                          # every Zustand slice
+    features/<feature>/              # schemas + adaptors
+    components/common/               # every composite in common/
+  integration/
+    auth/                            # login flow + guards
+    pages/                           # route pages exercising RouteBoundary + mocks
+```
 
 ```
 src/
@@ -280,8 +301,9 @@ src/
     or `lib/`.
 12. Verify no direct Radix imports inside the feature — consume through `ui/`.
 13. Verify a purpose-built layout at `sm`, `md`, and `lg` — not a resized copy.
-14. Run `npm run lint`, `npm run typecheck`, and `npm run build:development`
-    clean.
+14. Run `npm run lint`, `npm run typecheck`, `npm test`, and
+    `npm run build:development` clean.
+15. Cover new modules under `test/unit/` (unit) or `test/integration/` (page-level), respecting the layout rules in `docs/TESTING.md`.
 
 ## Anti-patterns (do NOT do)
 
@@ -322,6 +344,9 @@ src/
   **Mobile, tablet, and desktop each get their own purpose-built design.**
 
 ## Change log
+
+- 2026-07-17 — Added a Testing section and extended the folder map with the
+  `test/` tree; feature checklist now requires unit + integration coverage.
 
 - 2026-07-16 — Aligned with `BEST_PRACTICES.md`: declared it the source of
   truth in conflicts, removed the SSO-only clauses, documented password auth
