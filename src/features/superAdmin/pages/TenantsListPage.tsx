@@ -84,6 +84,3 @@ export function TenantsListPage() {
     </div>
       )
       }
-  )
-      )
-      }
