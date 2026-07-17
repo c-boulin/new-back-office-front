@@ -5,7 +5,9 @@
     "search": "Rechercher un tenant",
     "empty": "Aucun tenant ne correspond à votre recherche.",
     "role": "Rôle",
-    "lastAccessed": "Dernier accès"
+    "lastAccessed": "Dernier accès",
+    "brand": "Watchtower",
+    "back": "Retour"
   },
   "switcher": {
     "placeholder": "Changer de tenant",

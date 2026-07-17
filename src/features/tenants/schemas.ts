@@ -7,6 +7,19 @@ export const tenantThemeSchema = z.object({
   foreground: z.string(),
   radius: z.string(),
   font_sans: z.string(),
+  card: z.string().optional(),
+  card_foreground: z.string().optional(),
+  popover: z.string().optional(),
+  popover_foreground: z.string().optional(),
+  secondary: z.string().optional(),
+  secondary_foreground: z.string().optional(),
+  muted: z.string().optional(),
+  muted_foreground: z.string().optional(),
+  border: z.string().optional(),
+  input: z.string().optional(),
+  ring: z.string().optional(),
+  primary_foreground: z.string().optional(),
+  accent_foreground: z.string().optional(),
 });
 
 export const tenantSchema = z.object({

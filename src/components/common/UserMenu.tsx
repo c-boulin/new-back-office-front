@@ -16,6 +16,7 @@ import { useTenantStore } from "@/stores/tenantStore";
 import { oidcClient } from "@/lib/oidcClient";
 import { queryClient } from "@/lib/queryClient";
 import { passwordLogout } from "@/features/auth/password/api";
+import { resetTenantTheme } from "@/lib/tenantTheme";
 
 function initials(name: string) {
   return name
@@ -40,6 +41,7 @@ export function UserMenu() {
   const onLogout = async () => {
     queryClient.removeQueries();
     clearTenant();
+    resetTenantTheme();
     if (method === "password") {
       try {
         await passwordLogout(refreshToken);

@@ -87,8 +87,24 @@ map, feature workflow. If anything here appears to conflict with
 
 - All shadcn tokens are driven by CSS variables (see `src/index.css` and
   `tailwind.config.js`).
-- `applyTenantTheme(theme)` sets those variables on `:root`. Called on tenant
-  activation and by `ThemeProvider`.
+- `applyTenantTheme(theme)` writes the **full token surface** to `:root`
+  (`--primary`, `--accent`, `--background`, `--foreground`, `--card`,
+  `--card-foreground`, `--popover`, `--popover-foreground`, `--secondary`,
+  `--secondary-foreground`, `--muted`, `--muted-foreground`, `--border`,
+  `--input`, `--ring`, `--primary-foreground`, `--accent-foreground`,
+  `--radius`, `--font-sans`). This makes a theme structurally self-consistent:
+  it can no longer look "half-applied" because a surface token was left at the
+  base value.
+- Tenant themes are **scoped to tenant routes**. Pages rendered outside
+  `RequireTenant` (`TenantChooserPage`, `AccessDeniedPage`, the auth surfaces)
+  must call `useDefaultTheme()` from `src/hooks/useDefaultTheme.ts` so a
+  previously-active theme cannot leak onto them.
+- The tenant store persists only `activeTenantId` and `activeTenantSlug`.
+  `activeTheme` is intentionally **not** persisted — it is re-derived from
+  the caller's memberships after `/auth/me` resolves. This prevents a stale
+  tenant theme from surviving a hard reload or a re-login.
+- Every logout path calls `resetTenantTheme()` after clearing the store so
+  no CSS variables linger on the DOM.
 - Super-admin theme editor writes to the tenant record; `TenantMembership.theme`
   is used to re-skin the tenant layout on entry.
 - Do **not** hardcode colors in components — use `bg-primary`, `text-accent`,

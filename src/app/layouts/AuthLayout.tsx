@@ -2,8 +2,10 @@ import { Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "@/components/common/LanguageSwitcher";
 import { SkipLink } from "@/components/common/SkipLink";
+import { useDefaultTheme } from "@/hooks/useDefaultTheme";
 
 export function AuthLayout() {
+  useDefaultTheme();
   const { t } = useTranslation("common");
   return (
     <div

@@ -34,6 +34,12 @@ export const useTenantStore = create<TenantState>()(
           state.activeTheme = null;
         }),
     })),
-    { name: "tenant.active" },
+    {
+      name: "tenant.active",
+      partialize: (state) => ({
+        activeTenantId: state.activeTenantId,
+        activeTenantSlug: state.activeTenantSlug,
+      }),
+    },
   ),
 );

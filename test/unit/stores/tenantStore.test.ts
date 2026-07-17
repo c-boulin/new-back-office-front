@@ -18,6 +18,7 @@ describe("tenantStore", () => {
       activeTenantSlug: null,
       activeTheme: null,
     });
+    window.localStorage.removeItem("tenant.active");
   });
 
   it("has no active tenant by default", () => {
@@ -27,7 +28,7 @@ describe("tenantStore", () => {
     expect(s.activeTheme).toBeNull();
   });
 
-  it("setActiveTenant stores id, slug, and theme", () => {
+  it("setActiveTenant stores id, slug, and theme in memory", () => {
     useTenantStore.getState().setActiveTenant({ id: "t1", slug: "luna", theme });
     const s = useTenantStore.getState();
     expect(s.activeTenantId).toBe("t1");
@@ -42,5 +43,16 @@ describe("tenantStore", () => {
     expect(s.activeTenantId).toBeNull();
     expect(s.activeTenantSlug).toBeNull();
     expect(s.activeTheme).toBeNull();
+  });
+
+  it("does not persist activeTheme to localStorage", () => {
+    useTenantStore.getState().setActiveTenant({ id: "t1", slug: "luna", theme });
+    const persisted = window.localStorage.getItem("tenant.active");
+    expect(persisted).not.toBeNull();
+    const parsed = JSON.parse(persisted!);
+    expect(parsed.state).toEqual(
+      expect.objectContaining({ activeTenantId: "t1", activeTenantSlug: "luna" }),
+    );
+    expect(parsed.state.activeTheme).toBeUndefined();
   });
 });

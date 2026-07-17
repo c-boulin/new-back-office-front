@@ -5,6 +5,19 @@ export type TenantTheme = {
   foreground: string;
   radius: string;
   fontSans: string;
+  card?: string;
+  cardForeground?: string;
+  popover?: string;
+  popoverForeground?: string;
+  secondary?: string;
+  secondaryForeground?: string;
+  muted?: string;
+  mutedForeground?: string;
+  border?: string;
+  input?: string;
+  ring?: string;
+  primaryForeground?: string;
+  accentForeground?: string;
 };
 
 export type Tenant = {

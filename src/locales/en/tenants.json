@@ -5,7 +5,9 @@
     "search": "Search tenants",
     "empty": "No tenants match your search.",
     "role": "Role",
-    "lastAccessed": "Last accessed"
+    "lastAccessed": "Last accessed",
+    "brand": "Watchtower",
+    "back": "Back"
   },
   "switcher": {
     "placeholder": "Switch tenant",

@@ -10,6 +10,19 @@ export function themeFromRaw(raw: RawTenantTheme): TenantTheme {
     foreground: raw.foreground,
     radius: raw.radius,
     fontSans: raw.font_sans,
+    card: raw.card,
+    cardForeground: raw.card_foreground,
+    popover: raw.popover,
+    popoverForeground: raw.popover_foreground,
+    secondary: raw.secondary,
+    secondaryForeground: raw.secondary_foreground,
+    muted: raw.muted,
+    mutedForeground: raw.muted_foreground,
+    border: raw.border,
+    input: raw.input,
+    ring: raw.ring,
+    primaryForeground: raw.primary_foreground,
+    accentForeground: raw.accent_foreground,
   };
 }
 

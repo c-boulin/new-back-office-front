@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/authStore";
 import { oidcClient } from "@/lib/oidcClient";
 import { ShieldOff } from "lucide-react";
+import { useDefaultTheme } from "@/hooks/useDefaultTheme";
 
 export function AccessDeniedPage() {
+  useDefaultTheme();
   const { t } = useTranslation("auth");
   const clear = useAuthStore((s) => s.clear);
   const onSignOut = async () => {
