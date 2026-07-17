@@ -1,7 +1,8 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "node:path";
-import { jsxTailGuard } from "./scripts/jsx-tail-guard";
+// @ts-expect-error - JS plugin, no types needed.
+import { jsxTailGuard } from "./scripts/jsx-tail-guard.mjs";
 
 export default defineConfig({
   plugins: [jsxTailGuard(), react()],

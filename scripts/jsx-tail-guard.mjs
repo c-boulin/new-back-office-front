@@ -1,19 +1,12 @@
-import type { Plugin } from "vite";
+// Auto-heal orphan JSX tail tokens (bare `)`, `}`, `);`, `)}` appended to a
+// file's end) that occasionally slip in via upstream tooling. Babel refuses
+// to parse those files, which becomes "Failed to fetch dynamically imported
+// module" in the browser. This plugin trims trailing close-only lines when —
+// and only when — doing so restores paren/brace balance.
 
-/**
- * Some upstream tooling occasionally re-appends orphan JSX tail tokens
- * (bare `)`, `}`, `);`, `)}` on their own lines) to source files. Babel
- * refuses to parse those files and Vite serves the module as a 500, which
- * surfaces to the browser as "Failed to fetch dynamically imported module".
- *
- * This plugin strips a run of such lines from the END of a file if — and
- * only if — doing so restores paren/brace balance. If the file was already
- * balanced (the normal case), it is returned untouched.
- *
- * Runs before @vitejs/plugin-react so the stripped source is what Babel sees.
- */
-export function jsxTailGuard(): Plugin {
-  function balanced(src: string): boolean {
+/** @returns {import('vite').Plugin} */
+export function jsxTailGuard() {
+  function balanced(src) {
     const stripped = src
       .replace(/\/\/[^\n]*/g, "")
       .replace(/\/\*[\s\S]*?\*\//g, "")
@@ -42,10 +35,8 @@ export function jsxTailGuard(): Plugin {
       if (id.includes("/node_modules/")) return null;
       if (balanced(code)) return null;
 
-      // Try trimming trailing lines made of only close-delimiters until
-      // balance is restored. Cap the number of attempts.
       const lines = code.split("\n");
-      const isJunkTail = (l: string) => /^[\s)}\];,]*$/.test(l);
+      const isJunkTail = (l) => /^[\s)}\];,]*$/.test(l);
       let removed = 0;
       while (lines.length > 0 && removed < 20) {
         const last = lines[lines.length - 1];
@@ -55,12 +46,11 @@ export function jsxTailGuard(): Plugin {
         const candidate = lines.join("\n") + "\n";
         if (balanced(candidate)) {
           this.warn(
-            `[jsx-tail-guard] Stripped ${removed} orphan tail line(s) from ${id.replace(process.cwd(), "")} to restore parse.`,
+            `[jsx-tail-guard] Stripped ${removed} orphan tail line(s) from ${id} to restore parse.`,
           );
           return { code: candidate, map: null };
         }
       }
-      // Could not auto-fix — let the normal parser produce a real error.
       return null;
     },
   };

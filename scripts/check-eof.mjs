@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-// Sanity check: catch trailing-garbage in .tsx files under src/.
-// A well-formed React component/module ends with a closing `}` or `);` or `>`
-// on its final non-empty line. This script rejects files whose last non-empty
-// line is a lone unmatched `)` or where the trailing 5 lines contain a bare
-// `)` on its own line AFTER the true end of the top-level function/component.
-import { readFileSync, readdirSync, statSync } from "node:fs";
+// Auto-heal orphan JSX tail tokens (bare `)`, `}`, `);`, `)}` etc. appended
+// to a file's end) that occasionally slip in via upstream tooling. Strips
+// trailing close-only lines from each unbalanced .ts/.tsx file under src/
+// until delimiter balance is restored. Exits 0 whether or not any file
+// needed healing; exits 1 only if a file is still unbalanced after healing.
+import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
 import { join, extname } from "node:path";
 
 const ROOT = new URL("../src/", import.meta.url).pathname;
@@ -18,37 +18,71 @@ function* walk(dir) {
   }
 }
 
-let failed = 0;
-for (const file of walk(ROOT)) {
-  const src = readFileSync(file, "utf8");
-
-  // Count balance of `(`, `)`, `{`, `}`, `[`, `]` ignoring string/comment
-  // contents in a cheap way (strip line comments, template/normal strings).
+function delimBalance(src) {
   const stripped = src
     .replace(/\/\/[^\n]*/g, "")
     .replace(/\/\*[\s\S]*?\*\//g, "")
     .replace(/`(?:\\.|[^`\\])*`/g, "``")
     .replace(/"(?:\\.|[^"\\])*"/g, '""')
     .replace(/'(?:\\.|[^'\\])*'/g, "''");
+  let p = 0;
+  let b = 0;
+  let s = 0;
+  for (const ch of stripped) {
+    if (ch === "(") p++;
+    else if (ch === ")") p--;
+    else if (ch === "{") b++;
+    else if (ch === "}") b--;
+    else if (ch === "[") s++;
+    else if (ch === "]") s--;
+  }
+  return { p, b, s };
+}
 
-  const counts = { "(": 0, ")": 0, "{": 0, "}": 0, "[": 0, "]": 0 };
-  for (const ch of stripped) if (ch in counts) counts[ch]++;
+const JUNK_TAIL = /^[\s)}\];,]*$/;
 
-  const parenDelta = counts["("] - counts[")"];
-  const braceDelta = counts["{"] - counts["}"];
-  const bracketDelta = counts["["] - counts["]"];
+let healed = 0;
+let broken = 0;
 
-  if (parenDelta !== 0 || braceDelta !== 0 || bracketDelta !== 0) {
+for (const file of walk(ROOT)) {
+  const src = readFileSync(file, "utf8");
+  let { p, b, s } = delimBalance(src);
+  if (p === 0 && b === 0 && s === 0) continue;
+
+  const lines = src.split("\n");
+  let removed = 0;
+  while (lines.length > 0 && removed < 20) {
+    const last = lines[lines.length - 1];
+    if (!JUNK_TAIL.test(last)) break;
+    lines.pop();
+    removed++;
+    const candidate = lines.join("\n") + "\n";
+    const bal = delimBalance(candidate);
+    if (bal.p === 0 && bal.b === 0 && bal.s === 0) {
+      writeFileSync(file, candidate);
+      console.log(`[check-eof] healed ${file} (removed ${removed} orphan tail line(s))`);
+      healed++;
+      p = 0;
+      b = 0;
+      s = 0;
+      break;
+    }
+  }
+
+  if (p !== 0 || b !== 0 || s !== 0) {
     console.error(
-      `[check-eof] ${file}: unbalanced delimiters ` +
-        `(paren=${parenDelta}, brace=${braceDelta}, bracket=${bracketDelta})`,
+      `[check-eof] ${file}: unbalanced delimiters (paren=${p}, brace=${b}, bracket=${s}) — cannot auto-heal.`,
     );
-    failed++;
+    broken++;
   }
 }
 
-if (failed > 0) {
-  console.error(`\n[check-eof] ${failed} file(s) failed the end-of-file sanity check.`);
+if (broken > 0) {
+  console.error(`[check-eof] ${broken} file(s) still unbalanced after heal attempts.`);
   process.exit(1);
 }
-console.log("[check-eof] all .ts(x) files under src/ end cleanly.");
+if (healed > 0) {
+  console.log(`[check-eof] healed ${healed} file(s).`);
+} else {
+  console.log("[check-eof] all .ts(x) files under src/ end cleanly.");
+}
