@@ -1,0 +1,52 @@
+{
+  "title": "File de modération",
+  "description": "Passez en revue les profils, photos et messages signalés pour maintenir la communauté en sécurité.",
+  "empty": {
+    "title": "La file est vide",
+    "description": "Les nouveaux éléments à modérer apparaîtront ici."
+  },
+  "filters": {
+    "status": "Statut",
+    "type": "Type",
+    "all": "Tous"
+  },
+  "columns": {
+    "subject": "Sujet",
+    "type": "Type",
+    "status": "Statut",
+    "severity": "Gravité",
+    "reason": "Motif",
+    "created": "Signalé",
+    "actions": "Actions"
+  },
+  "types": {
+    "profile": "Profil",
+    "photo": "Photo",
+    "message": "Message",
+    "report": "Signalement"
+  },
+  "statuses": {
+    "pending": "En attente",
+    "approved": "Approuvé",
+    "rejected": "Rejeté",
+    "escalated": "Escaladé"
+  },
+  "severity": {
+    "low": "Faible",
+    "medium": "Moyenne",
+    "high": "Élevée"
+  },
+  "actions": {
+    "approve": "Approuver",
+    "reject": "Rejeter",
+    "escalate": "Escalader",
+    "view": "Examiner"
+  },
+  "confirm": {
+    "reject": {
+      "title": "Rejeter cet élément ?",
+      "description": "La soumission sera supprimée et l'auteur du signalement notifié.",
+      "confirm": "Rejeter"
+    }
+  }
+}

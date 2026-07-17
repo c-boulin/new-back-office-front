@@ -1,0 +1,30 @@
+{
+  "dashboard": {
+    "title": "Super admin",
+    "description": "Vue transversale de la plateforme Watchtower."
+  },
+  "tenants": {
+    "title": "Tenants",
+    "description": "Tous les tenants hébergés sur cette plateforme."
+  },
+  "admins": {
+    "title": "Administrateurs plateforme",
+    "description": "Personnes ayant accès à la console super admin.",
+    "columns": {
+      "name": "Nom",
+      "email": "Email",
+      "role": "Rôle",
+      "lastActive": "Dernière activité",
+      "createdAt": "Ajouté"
+    },
+    "roles": {
+      "owner": "Propriétaire",
+      "admin": "Admin",
+      "read_only": "Lecture seule"
+    },
+    "empty": {
+      "title": "Aucun administrateur",
+      "description": "Personne n'a encore d'accès plateforme."
+    }
+  }
+}

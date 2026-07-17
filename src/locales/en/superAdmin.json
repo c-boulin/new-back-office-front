@@ -1,0 +1,30 @@
+{
+  "dashboard": {
+    "title": "Super admin",
+    "description": "Cross-tenant overview of the Watchtower platform."
+  },
+  "tenants": {
+    "title": "Tenants",
+    "description": "All the tenants running on this platform."
+  },
+  "admins": {
+    "title": "Platform admins",
+    "description": "People with access to the super admin console.",
+    "columns": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "lastActive": "Last active",
+      "createdAt": "Added"
+    },
+    "roles": {
+      "owner": "Owner",
+      "admin": "Admin",
+      "read_only": "Read only"
+    },
+    "empty": {
+      "title": "No admins",
+      "description": "No one has been granted platform-level access yet."
+    }
+  }
+}

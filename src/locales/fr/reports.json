@@ -1,0 +1,48 @@
+{
+  "title": "Signalements",
+  "description": "Examinez les signalements des utilisateurs et prenez des mesures de sécurité.",
+  "empty": {
+    "title": "Aucun signalement",
+    "description": "Vous êtes à jour."
+  },
+  "filters": {
+    "status": "Statut",
+    "category": "Catégorie",
+    "all": "Tous"
+  },
+  "columns": {
+    "subject": "Sujet",
+    "reporter": "Auteur",
+    "category": "Catégorie",
+    "status": "Statut",
+    "description": "Description",
+    "created": "Déposé",
+    "actions": "Actions"
+  },
+  "categories": {
+    "harassment": "Harcèlement",
+    "spam": "Spam",
+    "impersonation": "Usurpation",
+    "inappropriate_content": "Contenu inapproprié",
+    "underage": "Mineur",
+    "other": "Autre"
+  },
+  "statuses": {
+    "open": "Ouvert",
+    "in_review": "En cours",
+    "resolved": "Résolu",
+    "dismissed": "Rejeté"
+  },
+  "actions": {
+    "resolve": "Résoudre",
+    "dismiss": "Rejeter",
+    "view": "Détails"
+  },
+  "confirm": {
+    "dismiss": {
+      "title": "Rejeter ce signalement ?",
+      "description": "L'auteur sera notifié qu'aucune action n'a été prise.",
+      "confirm": "Rejeter"
+    }
+  }
+}

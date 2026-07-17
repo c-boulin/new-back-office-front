@@ -1,0 +1,15 @@
+{
+  "title": "Matches",
+  "description": "Insights into how users are connecting on this tenant.",
+  "stats": {
+    "total": "Total matches",
+    "rate": "Match rate",
+    "quality": "Average quality",
+    "median_messages": "Median messages / match"
+  },
+  "sections": {
+    "trend": "Matches over the last 14 days",
+    "quality": "Quality distribution",
+    "geo": "Top countries"
+  }
+}

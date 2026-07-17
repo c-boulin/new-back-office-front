@@ -1,0 +1,48 @@
+{
+  "title": "Reports",
+  "description": "Investigate user reports and take safety actions.",
+  "empty": {
+    "title": "No reports",
+    "description": "You are all caught up."
+  },
+  "filters": {
+    "status": "Status",
+    "category": "Category",
+    "all": "All"
+  },
+  "columns": {
+    "subject": "Subject",
+    "reporter": "Reporter",
+    "category": "Category",
+    "status": "Status",
+    "description": "Description",
+    "created": "Filed",
+    "actions": "Actions"
+  },
+  "categories": {
+    "harassment": "Harassment",
+    "spam": "Spam",
+    "impersonation": "Impersonation",
+    "inappropriate_content": "Inappropriate content",
+    "underage": "Underage",
+    "other": "Other"
+  },
+  "statuses": {
+    "open": "Open",
+    "in_review": "In review",
+    "resolved": "Resolved",
+    "dismissed": "Dismissed"
+  },
+  "actions": {
+    "resolve": "Resolve",
+    "dismiss": "Dismiss",
+    "view": "Details"
+  },
+  "confirm": {
+    "dismiss": {
+      "title": "Dismiss this report?",
+      "description": "The reporter will be notified that no action was taken.",
+      "confirm": "Dismiss"
+    }
+  }
+}

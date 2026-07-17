@@ -2,6 +2,10 @@ import { AppError } from "@/lib/httpClient";
 import * as auth from "./handlers/auth";
 import * as users from "./handlers/users";
 import * as tenants from "./handlers/tenants";
+import * as moderation from "./handlers/moderation";
+import * as reports from "./handlers/reports";
+import * as messages from "./handlers/messages";
+import * as tenantData from "./handlers/tenantData";
 
 export type MockRequest = {
   method: string;
@@ -36,6 +40,14 @@ function ok(data: unknown, status = 200): MockResponse {
   return { status, data };
 }
 
+function readReason(body: unknown): string {
+  if (typeof body === "object" && body && "reason" in body) {
+    const value = (body as { reason?: unknown }).reason;
+    if (typeof value === "string") return value;
+  }
+  return "";
+}
+
 const routes: Array<{ method: string; pattern: string; handler: Route }> = [
   { method: "POST", pattern: "/auth/login", handler: (r) => ok(auth.login((r.body ?? {}) as never)) },
   { method: "POST", pattern: "/auth/refresh", handler: (r) => ok(auth.refresh((r.body ?? {}) as never)) },
@@ -44,11 +56,30 @@ const routes: Array<{ method: string; pattern: string; handler: Route }> = [
 
   { method: "GET", pattern: "/admin/tenants", handler: () => ok(tenants.list()) },
   { method: "GET", pattern: "/admin/tenants/:id", handler: (_, p) => ok(tenants.byId(p.id)) },
+  { method: "GET", pattern: "/admin/admins", handler: () => ok(tenantData.platformAdmins()) },
 
   { method: "GET", pattern: "/users", handler: (r) => ok(users.list(r.headers["x-tenant-id"], r.params)) },
   { method: "POST", pattern: "/users/:id/ban", handler: (r, p) => ok(users.ban(r.headers["x-tenant-id"], p.id)) },
   { method: "POST", pattern: "/users/:id/unban", handler: (r, p) => ok(users.unban(r.headers["x-tenant-id"], p.id)) },
   { method: "POST", pattern: "/users/:id/verify", handler: (r, p) => ok(users.verify(r.headers["x-tenant-id"], p.id)) },
+
+  { method: "GET", pattern: "/dashboard", handler: (r) => ok(tenantData.dashboard(r.headers["x-tenant-id"])) },
+  { method: "GET", pattern: "/matches/overview", handler: (r) => ok(tenantData.matches(r.headers["x-tenant-id"])) },
+  { method: "GET", pattern: "/subscriptions/overview", handler: (r) => ok(tenantData.subscriptions(r.headers["x-tenant-id"])) },
+  { method: "GET", pattern: "/analytics/overview", handler: (r) => ok(tenantData.analytics(r.headers["x-tenant-id"])) },
+  { method: "GET", pattern: "/settings", handler: (r) => ok(tenantData.settings(r.headers["x-tenant-id"])) },
+  { method: "PATCH", pattern: "/settings", handler: (r) => ok(tenantData.updateSettings(r.headers["x-tenant-id"], r.body)) },
+
+  { method: "GET", pattern: "/moderation", handler: (r) => ok(moderation.list(r.headers["x-tenant-id"], r.params)) },
+  { method: "POST", pattern: "/moderation/:id/approve", handler: (r, p) => ok(moderation.approve(r.headers["x-tenant-id"], p.id)) },
+  { method: "POST", pattern: "/moderation/:id/reject", handler: (r, p) => ok(moderation.reject(r.headers["x-tenant-id"], p.id, readReason(r.body))) },
+  { method: "POST", pattern: "/moderation/:id/escalate", handler: (r, p) => ok(moderation.escalate(r.headers["x-tenant-id"], p.id)) },
+
+  { method: "GET", pattern: "/reports", handler: (r) => ok(reports.list(r.headers["x-tenant-id"], r.params)) },
+  { method: "POST", pattern: "/reports/:id/resolve", handler: (r, p) => ok(reports.resolve(r.headers["x-tenant-id"], p.id)) },
+  { method: "POST", pattern: "/reports/:id/dismiss", handler: (r, p) => ok(reports.dismiss(r.headers["x-tenant-id"], p.id, readReason(r.body))) },
+
+  { method: "GET", pattern: "/messages/threads", handler: (r) => ok(messages.listThreads(r.headers["x-tenant-id"], r.params)) },
 ];
 
 export async function mockRouter(req: MockRequest): Promise<MockResponse> {

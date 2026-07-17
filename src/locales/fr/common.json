@@ -7,7 +7,8 @@
     "retry": "Réessayer",
     "search": "Rechercher",
     "close": "Fermer",
-    "back": "Retour"
+    "back": "Retour",
+    "reset": "Réinitialiser"
   },
   "confirm": {
     "typePrompt": "Saisissez {{value}} pour confirmer"

@@ -1,0 +1,25 @@
+{
+  "title": "Messages",
+  "description": "Review flagged conversations and message activity.",
+  "filters": {
+    "flaggedOnly": "Flagged only"
+  },
+  "columns": {
+    "participants": "Participants",
+    "preview": "Last message",
+    "count": "Messages",
+    "flag": "Flag",
+    "lastActivity": "Last activity"
+  },
+  "flags": {
+    "harassment": "Harassment",
+    "spam": "Spam",
+    "explicit": "Explicit",
+    "underage": "Underage",
+    "none": "Clean"
+  },
+  "empty": {
+    "title": "No conversations",
+    "description": "Threads matching your filters will show here."
+  }
+}

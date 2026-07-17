@@ -7,7 +7,8 @@
     "retry": "Retry",
     "search": "Search",
     "close": "Close",
-    "back": "Back"
+    "back": "Back",
+    "reset": "Reset"
   },
   "confirm": {
     "typePrompt": "Type {{value}} to confirm"

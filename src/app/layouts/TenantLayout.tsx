@@ -6,6 +6,7 @@ import { SidebarNav, type SidebarNavItem } from "./SidebarNav";
 import { TopBar } from "./TopBar";
 import { LoadingState } from "@/components/common/LoadingState";
 import { SessionExpiredDialog } from "@/components/common/SessionExpiredDialog";
+import { SkipLink } from "@/components/common/SkipLink";
 import { useActiveTenant } from "@/hooks/useActiveTenant";
 
 export function TenantLayout() {
@@ -29,6 +30,7 @@ export function TenantLayout() {
 
   return (
     <div className="flex min-h-screen bg-muted/30">
+      <SkipLink label={t("skipToContent")} targetId="main" />
       <aside className="hidden w-64 shrink-0 border-r bg-background md:flex md:flex-col">
         <div className="flex h-14 items-center gap-2 border-b px-5">
           <span className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">

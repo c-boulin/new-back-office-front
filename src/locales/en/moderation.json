@@ -1,0 +1,52 @@
+{
+  "title": "Moderation queue",
+  "description": "Review flagged profiles, photos, and messages to keep the community safe.",
+  "empty": {
+    "title": "Queue is clear",
+    "description": "New moderation items will appear here as they come in."
+  },
+  "filters": {
+    "status": "Status",
+    "type": "Type",
+    "all": "All"
+  },
+  "columns": {
+    "subject": "Subject",
+    "type": "Type",
+    "status": "Status",
+    "severity": "Severity",
+    "reason": "Reason",
+    "created": "Reported",
+    "actions": "Actions"
+  },
+  "types": {
+    "profile": "Profile",
+    "photo": "Photo",
+    "message": "Message",
+    "report": "Report"
+  },
+  "statuses": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "escalated": "Escalated"
+  },
+  "severity": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High"
+  },
+  "actions": {
+    "approve": "Approve",
+    "reject": "Reject",
+    "escalate": "Escalate",
+    "view": "Review"
+  },
+  "confirm": {
+    "reject": {
+      "title": "Reject this item?",
+      "description": "The submission will be removed and the reporter notified.",
+      "confirm": "Reject item"
+    }
+  }
+}
