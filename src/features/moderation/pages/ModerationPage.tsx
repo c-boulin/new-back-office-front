@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { useTranslation } from "react-i18next";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import type { PaginationState } from "@tanstack/react-table";
 import { PageHeader } from "@/components/common/PageHeader";
 import { FilterRow } from "@/components/common/FilterRow";
 import { RouteBoundary } from "@/components/common/RouteBoundary";
@@ -16,23 +17,22 @@ import {
 import { ModerationList } from "@/features/moderation/components/ModerationList";
 import { approveItem, escalateItem, rejectItem } from "@/features/moderation/api";
 import { useActiveTenant } from "@/hooks/useActiveTenant";
-import { usePagination } from "@/hooks/usePagination";
 import { usePermissions } from "@/hooks/usePermissions";
+import { useUrlState, urlEnum, urlInt } from "@/hooks/useUrlState";
 import { PERMISSIONS } from "@/lib/permissions";
-import type {
-  ModerationItem,
-  ModerationItemStatus,
-  ModerationItemType,
-} from "@/features/moderation/types";
+import type { ModerationItem } from "@/features/moderation/types";
 
-const STATUSES: (ModerationItemStatus | "all")[] = [
-  "all",
-  "pending",
-  "approved",
-  "rejected",
-  "escalated",
-];
-const TYPES: (ModerationItemType | "all")[] = ["all", "profile", "photo", "message", "report"];
+const STATUSES = ["all", "pending", "approved", "rejected", "escalated"] as const;
+const TYPES = ["all", "profile", "photo", "message", "report"] as const;
+type StatusFilter = (typeof STATUSES)[number];
+type TypeFilter = (typeof TYPES)[number];
+
+const moderationSpec = {
+  status: urlEnum<StatusFilter>(STATUSES, "all"),
+  type: urlEnum<TypeFilter>(TYPES, "all"),
+  page: urlInt(0, 0),
+  size: urlInt(20, 1),
+};
 
 export function ModerationPage() {
   const { t } = useTranslation("moderation");
@@ -41,10 +41,14 @@ export function ModerationPage() {
   const { can } = usePermissions();
   const canAct = can(PERMISSIONS.MODERATION_ACT);
 
-  const { pagination, setPagination } = usePagination({ pageSize: 20 });
-  const [status, setStatus] = useState<ModerationItemStatus | "all">("all");
-  const [type, setType] = useState<ModerationItemType | "all">("all");
+  const [state, setState] = useUrlState(moderationSpec);
   const [pendingReject, setPendingReject] = useState<ModerationItem | null>(null);
+
+  const pagination: PaginationState = { pageIndex: state.page, pageSize: state.size };
+  const setPagination: Dispatch<SetStateAction<PaginationState>> = (updater) => {
+    const next = typeof updater === "function" ? updater(pagination) : updater;
+    setState({ page: next.pageIndex, size: next.pageSize });
+  };
 
   const queryClient = useQueryClient();
   const invalidate = () =>
@@ -83,13 +87,12 @@ export function ModerationPage() {
       <PageHeader title={t("title")} description={t("description")} />
 
       <FilterRow
-        onReset={() => {
-          setStatus("all");
-          setType("all");
-          setPagination({ pageIndex: 0, pageSize: pagination.pageSize });
-        }}
+        onReset={() => setState({ status: "all", type: "all", page: 0 })}
       >
-        <Select value={status} onValueChange={(v) => setStatus(v as typeof status)}>
+        <Select
+          value={state.status}
+          onValueChange={(v) => setState({ status: v as StatusFilter, page: 0 })}
+        >
           <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder={t("filters.status")} />
           </SelectTrigger>
@@ -101,7 +104,10 @@ export function ModerationPage() {
             ))}
           </SelectContent>
         </Select>
-        <Select value={type} onValueChange={(v) => setType(v as typeof type)}>
+        <Select
+          value={state.type}
+          onValueChange={(v) => setState({ type: v as TypeFilter, page: 0 })}
+        >
           <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder={t("filters.type")} />
           </SelectTrigger>
@@ -117,8 +123,8 @@ export function ModerationPage() {
 
       <RouteBoundary>
         <ModerationList
-          status={status}
-          type={type}
+          status={state.status}
+          type={state.type}
           pagination={pagination}
           onPaginationChange={setPagination}
           canAct={canAct}

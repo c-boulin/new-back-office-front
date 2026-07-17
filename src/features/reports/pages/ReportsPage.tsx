@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { useTranslation } from "react-i18next";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import type { PaginationState } from "@tanstack/react-table";
 import { PageHeader } from "@/components/common/PageHeader";
 import { FilterRow } from "@/components/common/FilterRow";
 import { RouteBoundary } from "@/components/common/RouteBoundary";
@@ -16,13 +17,13 @@ import {
 import { ReportsList } from "@/features/reports/components/ReportsList";
 import { dismissReport, resolveReport } from "@/features/reports/api";
 import { useActiveTenant } from "@/hooks/useActiveTenant";
-import { usePagination } from "@/hooks/usePagination";
 import { usePermissions } from "@/hooks/usePermissions";
+import { useUrlState, urlEnum, urlInt } from "@/hooks/useUrlState";
 import { PERMISSIONS } from "@/lib/permissions";
-import type { Report, ReportCategory, ReportStatus } from "@/features/reports/types";
+import type { Report } from "@/features/reports/types";
 
-const STATUSES: (ReportStatus | "all")[] = ["all", "open", "in_review", "resolved", "dismissed"];
-const CATEGORIES: (ReportCategory | "all")[] = [
+const STATUSES = ["all", "open", "in_review", "resolved", "dismissed"] as const;
+const CATEGORIES = [
   "all",
   "harassment",
   "spam",
@@ -30,7 +31,16 @@ const CATEGORIES: (ReportCategory | "all")[] = [
   "inappropriate_content",
   "underage",
   "other",
-];
+] as const;
+type StatusFilter = (typeof STATUSES)[number];
+type CategoryFilter = (typeof CATEGORIES)[number];
+
+const reportsSpec = {
+  status: urlEnum<StatusFilter>(STATUSES, "all"),
+  category: urlEnum<CategoryFilter>(CATEGORIES, "all"),
+  page: urlInt(0, 0),
+  size: urlInt(20, 1),
+};
 
 export function ReportsPage() {
   const { t } = useTranslation("reports");
@@ -39,10 +49,14 @@ export function ReportsPage() {
   const { can } = usePermissions();
   const canAct = can(PERMISSIONS.MODERATION_ACT);
 
-  const { pagination, setPagination } = usePagination({ pageSize: 20 });
-  const [status, setStatus] = useState<ReportStatus | "all">("all");
-  const [category, setCategory] = useState<ReportCategory | "all">("all");
+  const [state, setState] = useUrlState(reportsSpec);
   const [pendingDismiss, setPendingDismiss] = useState<Report | null>(null);
+
+  const pagination: PaginationState = { pageIndex: state.page, pageSize: state.size };
+  const setPagination: Dispatch<SetStateAction<PaginationState>> = (updater) => {
+    const next = typeof updater === "function" ? updater(pagination) : updater;
+    setState({ page: next.pageIndex, size: next.pageSize });
+  };
 
   const queryClient = useQueryClient();
   const invalidate = () =>
@@ -72,13 +86,12 @@ export function ReportsPage() {
       <PageHeader title={t("title")} description={t("description")} />
 
       <FilterRow
-        onReset={() => {
-          setStatus("all");
-          setCategory("all");
-          setPagination({ pageIndex: 0, pageSize: pagination.pageSize });
-        }}
+        onReset={() => setState({ status: "all", category: "all", page: 0 })}
       >
-        <Select value={status} onValueChange={(v) => setStatus(v as typeof status)}>
+        <Select
+          value={state.status}
+          onValueChange={(v) => setState({ status: v as StatusFilter, page: 0 })}
+        >
           <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder={t("filters.status")} />
           </SelectTrigger>
@@ -90,7 +103,10 @@ export function ReportsPage() {
             ))}
           </SelectContent>
         </Select>
-        <Select value={category} onValueChange={(v) => setCategory(v as typeof category)}>
+        <Select
+          value={state.category}
+          onValueChange={(v) => setState({ category: v as CategoryFilter, page: 0 })}
+        >
           <SelectTrigger className="w-full sm:w-[200px]">
             <SelectValue placeholder={t("filters.category")} />
           </SelectTrigger>
@@ -106,8 +122,8 @@ export function ReportsPage() {
 
       <RouteBoundary>
         <ReportsList
-          status={status}
-          category={category}
+          status={state.status}
+          category={state.category}
           pagination={pagination}
           onPaginationChange={setPagination}
           canAct={canAct}

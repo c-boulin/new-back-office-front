@@ -1,17 +1,29 @@
-import { useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { useTranslation } from "react-i18next";
+import type { PaginationState } from "@tanstack/react-table";
 import { PageHeader } from "@/components/common/PageHeader";
 import { FilterRow } from "@/components/common/FilterRow";
 import { RouteBoundary } from "@/components/common/RouteBoundary";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { MessagesThreadList } from "@/features/messages/components/MessagesThreadList";
-import { usePagination } from "@/hooks/usePagination";
+import { useUrlState, urlBool, urlInt } from "@/hooks/useUrlState";
+
+const messagesSpec = {
+  flagged: urlBool(false),
+  page: urlInt(0, 0),
+  size: urlInt(20, 1),
+};
 
 export function MessagesPage() {
   const { t } = useTranslation("messages");
-  const [flagged, setFlagged] = useState(false);
-  const { pagination, setPagination } = usePagination({ pageSize: 20 });
+  const [state, setState] = useUrlState(messagesSpec);
+
+  const pagination: PaginationState = { pageIndex: state.page, pageSize: state.size };
+  const setPagination: Dispatch<SetStateAction<PaginationState>> = (updater) => {
+    const next = typeof updater === "function" ? updater(pagination) : updater;
+    setState({ page: next.pageIndex, size: next.pageSize });
+  };
 
   return (
     <div className="space-y-6">
@@ -21,11 +33,8 @@ export function MessagesPage() {
         <div className="flex items-center gap-2">
           <Switch
             id="flagged-only"
-            checked={flagged}
-            onCheckedChange={(v) => {
-              setFlagged(v);
-              setPagination({ pageIndex: 0, pageSize: pagination.pageSize });
-            }}
+            checked={state.flagged}
+            onCheckedChange={(v) => setState({ flagged: v, page: 0 })}
           />
           <Label htmlFor="flagged-only">{t("filters.flaggedOnly")}</Label>
         </div>
@@ -33,7 +42,7 @@ export function MessagesPage() {
 
       <RouteBoundary>
         <MessagesThreadList
-          flagged={flagged}
+          flagged={state.flagged}
           pagination={pagination}
           onPaginationChange={setPagination}
         />
