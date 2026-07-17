@@ -4,12 +4,14 @@ import { useTranslation } from "react-i18next";
 import { format } from "date-fns";
 import { DataTable } from "@/components/common/DataTable";
 import { DataList } from "@/components/common/DataList";
+import { PermissionGate } from "@/components/common/PermissionGate";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ModerationColumns } from "@/features/moderation/components/ModerationColumns";
 import { listModeration } from "@/features/moderation/api";
 import { useActiveTenant } from "@/hooks/useActiveTenant";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { PERMISSIONS } from "@/lib/permissions";
 import { sanitizeText } from "@/lib/sanitize";
 import type { PaginationState } from "@tanstack/react-table";
 import type {
@@ -25,7 +27,6 @@ export type ModerationListProps = {
   onPaginationChange: (
     updater: PaginationState | ((prev: PaginationState) => PaginationState),
   ) => void;
-  canAct: boolean;
   onApprove: (item: ModerationItem) => void;
   onReject: (item: ModerationItem) => void;
   onEscalate: (item: ModerationItem) => void;
@@ -36,7 +37,6 @@ export function ModerationList({
   type,
   pagination,
   onPaginationChange,
-  canAct,
   onApprove,
   onReject,
   onEscalate,
@@ -71,7 +71,7 @@ export function ModerationList({
   });
 
   const columns = ModerationColumns(
-    { onApprove, onReject, onEscalate, canAct },
+    { onApprove, onReject, onEscalate },
     {
       columns: {
         subject: t("columns.subject"),
@@ -129,18 +129,20 @@ export function ModerationList({
               <Badge>{t(`statuses.${item.status}`)}</Badge>
             </div>
             <p className="text-sm">{sanitizeText(item.reason)}</p>
-            {canAct && item.status === "pending" ? (
-              <div className="flex gap-2 pt-1">
-                <Button size="sm" onClick={() => onApprove(item)}>
-                  {t("actions.approve")}
-                </Button>
-                <Button size="sm" variant="outline" onClick={() => onEscalate(item)}>
-                  {t("actions.escalate")}
-                </Button>
-                <Button size="sm" variant="destructive" onClick={() => onReject(item)}>
-                  {t("actions.reject")}
-                </Button>
-              </div>
+            {item.status === "pending" ? (
+              <PermissionGate require={PERMISSIONS.MODERATION_ACT}>
+                <div className="flex gap-2 pt-1">
+                  <Button size="sm" onClick={() => onApprove(item)}>
+                    {t("actions.approve")}
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={() => onEscalate(item)}>
+                    {t("actions.escalate")}
+                  </Button>
+                  <Button size="sm" variant="destructive" onClick={() => onReject(item)}>
+                    {t("actions.reject")}
+                  </Button>
+                </div>
+              </PermissionGate>
             ) : null}
           </div>
         )}

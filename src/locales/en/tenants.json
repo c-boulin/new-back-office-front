@@ -16,6 +16,15 @@
     "title": "Tenants",
     "description": "Manage every product that runs on this platform.",
     "create": "New tenant",
+    "search": "Search tenants by name or slug",
+    "filters": {
+      "all": "All",
+      "status": "Status"
+    },
+    "empty": {
+      "title": "No tenants found",
+      "description": "Try adjusting your filters."
+    },
     "columns": {
       "name": "Tenant",
       "status": "Status",

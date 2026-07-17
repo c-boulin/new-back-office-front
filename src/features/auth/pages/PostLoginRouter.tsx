@@ -1,18 +1,18 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Navigate } from "react-router-dom";
 import { fetchMe } from "@/features/auth/api";
 import { useAuthStore } from "@/stores/authStore";
+import { RouteBoundary } from "@/components/common/RouteBoundary";
 import { LoadingState } from "@/components/common/LoadingState";
-import { ErrorState } from "@/components/common/ErrorState";
 import { useTenantStore } from "@/stores/tenantStore";
 import { applyTenantTheme } from "@/lib/tenantTheme";
 
-export function PostLoginRouter() {
+function PostLoginResolver() {
   const setUser = useAuthStore((s) => s.setUser);
   const setActiveTenant = useTenantStore((s) => s.setActiveTenant);
   const activeTenantSlug = useTenantStore((s) => s.activeTenantSlug);
 
-  const { data, isPending, isError, refetch } = useQuery({
+  const { data } = useSuspenseQuery({
     queryKey: ["auth", "me"],
     queryFn: async () => {
       const me = await fetchMe();
@@ -21,12 +21,6 @@ export function PostLoginRouter() {
     },
     staleTime: 60_000,
   });
-
-  if (!data) {
-    if (isPending) return <LoadingState className="p-10" />;
-    if (isError) return <ErrorState onRetry={() => void refetch()} />;
-    return <LoadingState className="p-10" />;
-  }
 
   if (data.user.isSuperAdmin) {
     return <Navigate to="/admin" replace />;
@@ -46,4 +40,12 @@ export function PostLoginRouter() {
   }
 
   return <Navigate to="/tenants" replace />;
+}
+
+export function PostLoginRouter() {
+  return (
+    <RouteBoundary loadingFallback={<LoadingState className="p-10" />}>
+      <PostLoginResolver />
+    </RouteBoundary>
+  );
 }

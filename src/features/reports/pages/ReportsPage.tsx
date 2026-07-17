@@ -17,9 +17,7 @@ import {
 import { ReportsList } from "@/features/reports/components/ReportsList";
 import { dismissReport, resolveReport } from "@/features/reports/api";
 import { useActiveTenant } from "@/hooks/useActiveTenant";
-import { usePermissions } from "@/hooks/usePermissions";
 import { useUrlState, urlEnum, urlInt } from "@/hooks/useUrlState";
-import { PERMISSIONS } from "@/lib/permissions";
 import type { Report } from "@/features/reports/types";
 
 const STATUSES = ["all", "open", "in_review", "resolved", "dismissed"] as const;
@@ -46,8 +44,6 @@ export function ReportsPage() {
   const { t } = useTranslation("reports");
   const { t: tCommon } = useTranslation("common");
   const { id: tenantId } = useActiveTenant();
-  const { can } = usePermissions();
-  const canAct = can(PERMISSIONS.MODERATION_ACT);
 
   const [state, setState] = useUrlState(reportsSpec);
   const [pendingDismiss, setPendingDismiss] = useState<Report | null>(null);
@@ -126,7 +122,6 @@ export function ReportsPage() {
           category={state.category}
           pagination={pagination}
           onPaginationChange={setPagination}
-          canAct={canAct}
           onResolve={(report) => resolveMut.mutate(report.id)}
           onDismiss={(report) => setPendingDismiss(report)}
         />

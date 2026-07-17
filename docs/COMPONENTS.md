@@ -53,22 +53,59 @@ Props:
 - `trend?: { direction: "up" | "down" | "flat"; label: string }`.
 - `icon?: LucideIcon`.
 
-## `EmptyState`, `ErrorState`, `LoadingState`
+## Loading / empty / error contract
 
-Use for the four-state contract. All accept `className` for layout.
+Every data view uses the four-state contract. The preferred wiring is
+`useSuspenseQuery` inside a content component + `RouteBoundary` at the page
+level, so pages never write per-component `isPending` / `isError` branches.
 
 ```tsx
-if (query.isPending) return <LoadingState rows={6} />;
-if (query.isError)   return <ErrorState onRetry={query.refetch} />;
-if (query.data.length === 0) {
-  return <EmptyState title="No users" description="Nothing here yet." />;
-}
+// page shell
+<RouteBoundary>
+  <UsersTable ... />
+</RouteBoundary>
+
+// leaf component
+const { data } = useSuspenseQuery({ queryKey, queryFn });
 ```
+
+- **Loading:** `RouteBoundary` shows `<LoadingState />` (or a supplied
+  `loadingFallback`) while the suspending query resolves.
+- **Empty:** `DataTable` and `DataList` render `<EmptyState />` when their
+  items array is empty — no manual check needed.
+- **Error:** `RouteBoundary` catches thrown errors from suspense queries and
+  renders `<ErrorState onRetry={reset} />` wired to
+  `QueryErrorResetBoundary`.
+- **Success:** the real content.
+
+Never conflate loading and empty. A pending query is not an empty state.
+
+## `RouteBoundary`
+
+```tsx
+import { RouteBoundary } from "@/components/common/RouteBoundary";
+import { LoadingCards } from "@/components/common/LoadingState";
+
+<RouteBoundary loadingFallback={<LoadingCards count={4} />}>
+  <MatchesOverview />
+</RouteBoundary>;
+```
+
+Props:
+
+- `children: ReactNode` — usually a component that calls `useSuspenseQuery`.
+- `loadingFallback?: ReactNode` — override the default `LoadingState`.
+- `errorFallback?: (args: { error; reset }) => ReactNode` — override the
+  default `ErrorState`.
+
+`RouteBoundary` wraps `Suspense` inside a `QueryErrorResetBoundary` so the
+retry action re-runs the failed query.
 
 ## `DataTable<T>`
 
 Wraps `@tanstack/react-table` on top of shadcn Table. Supports server
-pagination and controlled sorting.
+pagination and controlled sorting. Renders `<EmptyState />` automatically when
+`data` is empty.
 
 ```tsx
 <DataTable<UserRecord>
@@ -87,7 +124,26 @@ pagination and controlled sorting.
 
 Columns are plain `ColumnDef<T, unknown>[]` from `@tanstack/react-table`.
 
-## `FilterBar`
+## `DataList<T>`
+
+Mobile-first counterpart to `DataTable`. Consumers pair the two behind
+`useMediaQuery("(max-width: 768px)")` so each device gets a purpose-built
+layout instead of a resized table.
+
+```tsx
+if (isMobile) {
+  return (
+    <DataList
+      items={data.items}
+      getKey={(u) => u.id}
+      serverPagination={{ pagination, onPaginationChange, pageCount }}
+      renderCard={(u) => <UserCard user={u} />}
+    />
+  );
+}
+```
+
+## `FilterBar` / `FilterRow`
 
 ```tsx
 <FilterBar
@@ -98,6 +154,24 @@ Columns are plain `ColumnDef<T, unknown>[]` from `@tanstack/react-table`.
 >
   <Select value={status} onValueChange={setStatus}>...</Select>
 </FilterBar>
+```
+
+`FilterRow` is the same shape without the search input, for pages whose only
+filter is a select.
+
+## `useUrlState`
+
+Persists filter and pagination state in the URL so it survives reloads and
+back-navigation. Pair with `RouteBoundary` — the suspense fallback shows
+while the query keyed on URL params refetches.
+
+```tsx
+const [state, setState] = useUrlState({
+  q: urlString(""),
+  status: urlEnum(STATUSES, "all"),
+  page: urlInt(0, 0),
+  size: urlInt(20, 1),
+});
 ```
 
 ## `ConfirmDialog`
@@ -120,7 +194,9 @@ Destructive actions use typed confirmation.
 ## `PermissionGate`
 
 Renders children only if the current user has the required permission on the
-active tenant. Super-admins bypass.
+active tenant. Super-admins bypass. Wrap every destructive action cluster —
+approve/reject/escalate on moderation, resolve/dismiss on reports,
+verify/ban/unban on users — so unauthorized operators do not see them at all.
 
 ```tsx
 <PermissionGate require={PERMISSIONS.USERS_MODERATE} fallback={<Locked />}>
@@ -140,7 +216,8 @@ Toggles between `en` and `fr` via `i18n.changeLanguage`. Preference persists in
 
 ## `UserMenu`
 
-Session dropdown with sign-out through the OIDC provider.
+Session dropdown with sign-out through the OIDC provider or the password
+endpoint, depending on `authStore.method`.
 
 ## `SessionExpiredDialog`
 

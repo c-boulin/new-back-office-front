@@ -1,61 +1,41 @@
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { ColumnDef } from "@tanstack/react-table";
 import { Plus } from "lucide-react";
 import { PageHeader } from "@/components/common/PageHeader";
-import { DataTable } from "@/components/common/DataTable";
-import { LoadingState } from "@/components/common/LoadingState";
-import { ErrorState } from "@/components/common/ErrorState";
-import { Badge } from "@/components/ui/badge";
+import { FilterBar } from "@/components/common/FilterBar";
+import { RouteBoundary } from "@/components/common/RouteBoundary";
 import { Button } from "@/components/ui/button";
-import { listTenants } from "@/features/tenants/api";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { TenantsList } from "@/features/tenants/components/TenantsList";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useUrlState, urlEnum, urlString } from "@/hooks/useUrlState";
 import type { Tenant } from "@/features/tenants/types";
 
-const STATUS_VARIANT: Record<Tenant["status"], "success" | "warning" | "secondary"> = {
-  active: "success",
-  suspended: "warning",
-  provisioning: "secondary",
+const STATUSES = ["all", "active", "suspended", "provisioning"] as const;
+type StatusFilter = (typeof STATUSES)[number];
+
+const spec = {
+  q: urlString(""),
+  status: urlEnum<StatusFilter>(STATUSES, "all"),
 };
 
 export function TenantsListPage() {
   const { t } = useTranslation("tenants");
+  const [state, setState] = useUrlState(spec);
+  const [searchInput, setSearchInput] = useState(state.q);
+  const debouncedSearch = useDebounce(searchInput, 300);
 
-  const query = useQuery({
-    queryKey: ["super-admin", "tenants"],
-    queryFn: listTenants,
-  });
-
-  const columns: ColumnDef<Tenant, unknown>[] = [
-    {
-      id: "name",
-      header: t("list.columns.name"),
-      cell: ({ row }) => (
-        <div>
-          <p className="text-sm font-medium">{row.original.name}</p>
-          <p className="text-xs text-muted-foreground">/{row.original.slug}</p>
-        </div>
-      ),
-    },
-    {
-      id: "status",
-      header: t("list.columns.status"),
-      cell: ({ row }) => (
-        <Badge variant={STATUS_VARIANT[row.original.status]}>
-          {t(`status.${row.original.status}`)}
-        </Badge>
-      ),
-    },
-    {
-      id: "users",
-      header: t("list.columns.users"),
-      accessorFn: (r) => r.usersCount.toLocaleString(),
-    },
-    {
-      id: "created",
-      header: t("list.columns.created"),
-      cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
-    },
-  ];
+  useEffect(() => {
+    if (debouncedSearch !== state.q) {
+      setState({ q: debouncedSearch });
+    }
+  }, [debouncedSearch, state.q, setState]);
 
   return (
     <div className="space-y-6">
@@ -70,17 +50,35 @@ export function TenantsListPage() {
         }
       />
 
-      {query.isPending ? (
-        <LoadingState />
-      ) : query.isError ? (
-        <ErrorState onRetry={() => void query.refetch()} />
-      ) : (
-        <DataTable<Tenant>
-          columns={columns}
-          data={query.data}
-          getRowId={(row) => row.id}
-        />
-      )}
+      <FilterBar
+        search={searchInput}
+        onSearchChange={setSearchInput}
+        searchPlaceholder={t("list.search")}
+        onReset={() => {
+          setSearchInput("");
+          setState({ q: "", status: "all" });
+        }}
+      >
+        <Select
+          value={state.status}
+          onValueChange={(v) => setState({ status: v as StatusFilter })}
+        >
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder={t("list.filters.status")} />
+          </SelectTrigger>
+          <SelectContent>
+            {STATUSES.map((s) => (
+              <SelectItem key={s} value={s}>
+                {s === "all" ? t("list.filters.all") : t(`status.${s}`)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </FilterBar>
+
+      <RouteBoundary>
+        <TenantsList query={state.q} status={state.status as Tenant["status"] | "all"} />
+      </RouteBoundary>
     </div>
-      )
-      }
+  );
+}

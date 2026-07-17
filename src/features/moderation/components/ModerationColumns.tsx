@@ -3,6 +3,8 @@ import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Check, ArrowUpRight, X } from "lucide-react";
+import { PermissionGate } from "@/components/common/PermissionGate";
+import { PERMISSIONS } from "@/lib/permissions";
 import { sanitizeText } from "@/lib/sanitize";
 import type { ModerationItem, ModerationItemStatus } from "@/features/moderation/types";
 
@@ -10,7 +12,6 @@ type Actions = {
   onApprove: (item: ModerationItem) => void;
   onReject: (item: ModerationItem) => void;
   onEscalate: (item: ModerationItem) => void;
-  canAct: boolean;
 };
 
 type Translations = {
@@ -111,35 +112,37 @@ export function ModerationColumns(
         const item = row.original;
         const isPending = item.status === "pending";
         return (
-          <div className="flex justify-end gap-1">
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => actions.onApprove(item)}
-              disabled={!actions.canAct || !isPending}
-              aria-label={t.actions.approve}
-            >
-              <Check />
-            </Button>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => actions.onEscalate(item)}
-              disabled={!actions.canAct || !isPending}
-              aria-label={t.actions.escalate}
-            >
-              <ArrowUpRight />
-            </Button>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => actions.onReject(item)}
-              disabled={!actions.canAct || !isPending}
-              aria-label={t.actions.reject}
-            >
-              <X />
-            </Button>
-          </div>
+          <PermissionGate require={PERMISSIONS.MODERATION_ACT}>
+            <div className="flex justify-end gap-1">
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => actions.onApprove(item)}
+                disabled={!isPending}
+                aria-label={t.actions.approve}
+              >
+                <Check />
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => actions.onEscalate(item)}
+                disabled={!isPending}
+                aria-label={t.actions.escalate}
+              >
+                <ArrowUpRight />
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => actions.onReject(item)}
+                disabled={!isPending}
+                aria-label={t.actions.reject}
+              >
+                <X />
+              </Button>
+            </div>
+          </PermissionGate>
         );
       },
     },

@@ -16,6 +16,15 @@
     "title": "Tenants",
     "description": "Gérez tous les produits opérés sur cette plateforme.",
     "create": "Nouveau tenant",
+    "search": "Rechercher par nom ou identifiant",
+    "filters": {
+      "all": "Tous",
+      "status": "Statut"
+    },
+    "empty": {
+      "title": "Aucun tenant trouvé",
+      "description": "Essayez d'ajuster vos filtres."
+    },
     "columns": {
       "name": "Tenant",
       "status": "Statut",

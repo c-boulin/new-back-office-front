@@ -17,9 +17,7 @@ import {
 import { ModerationList } from "@/features/moderation/components/ModerationList";
 import { approveItem, escalateItem, rejectItem } from "@/features/moderation/api";
 import { useActiveTenant } from "@/hooks/useActiveTenant";
-import { usePermissions } from "@/hooks/usePermissions";
 import { useUrlState, urlEnum, urlInt } from "@/hooks/useUrlState";
-import { PERMISSIONS } from "@/lib/permissions";
 import type { ModerationItem } from "@/features/moderation/types";
 
 const STATUSES = ["all", "pending", "approved", "rejected", "escalated"] as const;
@@ -38,8 +36,6 @@ export function ModerationPage() {
   const { t } = useTranslation("moderation");
   const { t: tCommon } = useTranslation("common");
   const { id: tenantId } = useActiveTenant();
-  const { can } = usePermissions();
-  const canAct = can(PERMISSIONS.MODERATION_ACT);
 
   const [state, setState] = useUrlState(moderationSpec);
   const [pendingReject, setPendingReject] = useState<ModerationItem | null>(null);
@@ -127,7 +123,6 @@ export function ModerationPage() {
           type={state.type}
           pagination={pagination}
           onPaginationChange={setPagination}
-          canAct={canAct}
           onApprove={(item) => approveMut.mutate(item.id)}
           onReject={(item) => setPendingReject(item)}
           onEscalate={(item) => escalateMut.mutate(item.id)}

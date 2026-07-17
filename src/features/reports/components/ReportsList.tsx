@@ -4,12 +4,14 @@ import { useTranslation } from "react-i18next";
 import { format } from "date-fns";
 import { DataTable } from "@/components/common/DataTable";
 import { DataList } from "@/components/common/DataList";
+import { PermissionGate } from "@/components/common/PermissionGate";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Check, X } from "lucide-react";
 import { listReports } from "@/features/reports/api";
 import { useActiveTenant } from "@/hooks/useActiveTenant";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { PERMISSIONS } from "@/lib/permissions";
 import { sanitizeText } from "@/lib/sanitize";
 import type { ColumnDef, PaginationState } from "@tanstack/react-table";
 import type { Report, ReportCategory, ReportStatus } from "@/features/reports/types";
@@ -28,7 +30,6 @@ export type ReportsListProps = {
   onPaginationChange: (
     updater: PaginationState | ((prev: PaginationState) => PaginationState),
   ) => void;
-  canAct: boolean;
   onResolve: (report: Report) => void;
   onDismiss: (report: Report) => void;
 };
@@ -38,7 +39,6 @@ export function ReportsList({
   category,
   pagination,
   onPaginationChange,
-  canAct,
   onResolve,
   onDismiss,
 }: ReportsListProps) {
@@ -121,26 +121,28 @@ export function ReportsList({
         const item = row.original;
         const isOpen = item.status === "open" || item.status === "in_review";
         return (
-          <div className="flex justify-end gap-1">
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => onResolve(item)}
-              disabled={!canAct || !isOpen}
-              aria-label={t("actions.resolve")}
-            >
-              <Check />
-            </Button>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => onDismiss(item)}
-              disabled={!canAct || !isOpen}
-              aria-label={t("actions.dismiss")}
-            >
-              <X />
-            </Button>
-          </div>
+          <PermissionGate require={PERMISSIONS.MODERATION_ACT}>
+            <div className="flex justify-end gap-1">
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => onResolve(item)}
+                disabled={!isOpen}
+                aria-label={t("actions.resolve")}
+              >
+                <Check />
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => onDismiss(item)}
+                disabled={!isOpen}
+                aria-label={t("actions.dismiss")}
+              >
+                <X />
+              </Button>
+            </div>
+          </PermissionGate>
         );
       },
     },
@@ -168,15 +170,17 @@ export function ReportsList({
               <Badge variant={STATUS_VARIANT[item.status]}>{t(`statuses.${item.status}`)}</Badge>
             </div>
             <p className="text-sm">{sanitizeText(item.description)}</p>
-            {canAct && (item.status === "open" || item.status === "in_review") ? (
-              <div className="flex gap-2 pt-1">
-                <Button size="sm" onClick={() => onResolve(item)}>
-                  {t("actions.resolve")}
-                </Button>
-                <Button size="sm" variant="destructive" onClick={() => onDismiss(item)}>
-                  {t("actions.dismiss")}
-                </Button>
-              </div>
+            {item.status === "open" || item.status === "in_review" ? (
+              <PermissionGate require={PERMISSIONS.MODERATION_ACT}>
+                <div className="flex gap-2 pt-1">
+                  <Button size="sm" onClick={() => onResolve(item)}>
+                    {t("actions.resolve")}
+                  </Button>
+                  <Button size="sm" variant="destructive" onClick={() => onDismiss(item)}>
+                    {t("actions.dismiss")}
+                  </Button>
+                </div>
+              </PermissionGate>
             ) : null}
           </div>
         )}

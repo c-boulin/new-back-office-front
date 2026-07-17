@@ -14,11 +14,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 import { PermissionGate } from "@/components/common/PermissionGate";
 import { PERMISSIONS } from "@/lib/permissions";
 import { banUser, unbanUser, verifyUser } from "@/features/users/api";
-import { toast } from "@/components/ui/sonner";
 import type { UserRecord } from "@/features/users/types";
 
 function initials(name: string) {
@@ -46,15 +46,15 @@ export function UserDetailSheet({
   const verifyMutation = useMutation({
     mutationFn: (id: string) => verifyUser(id),
     onSuccess: () => {
-      toast.success("User verified");
+      toast.success(t("toasts.verified"));
       void qc.invalidateQueries({ queryKey: ["tenant"] });
     },
   });
 
   const banMutation = useMutation({
-    mutationFn: (id: string) => banUser(id, "Admin action"),
+    mutationFn: (id: string) => banUser(id, t("toasts.banReason")),
     onSuccess: () => {
-      toast.success("User banned");
+      toast.success(t("toasts.banned"));
       setBanOpen(false);
       onOpenChange(false);
       void qc.invalidateQueries({ queryKey: ["tenant"] });
@@ -64,7 +64,7 @@ export function UserDetailSheet({
   const unbanMutation = useMutation({
     mutationFn: (id: string) => unbanUser(id),
     onSuccess: () => {
-      toast.success("User unbanned");
+      toast.success(t("toasts.unbanned"));
       void qc.invalidateQueries({ queryKey: ["tenant"] });
     },
   });
@@ -87,10 +87,10 @@ export function UserDetailSheet({
               </div>
               <div className="mt-2 flex flex-wrap gap-2">
                 <Badge variant="secondary" className="capitalize">
-                  {user.status.replace("_", " ")}
+                  {t(`status.${user.status}`)}
                 </Badge>
-                {user.isVerified ? <Badge variant="success">Verified</Badge> : null}
-                {user.isPremium ? <Badge>Premium</Badge> : null}
+                {user.isVerified ? <Badge variant="success">{t("badges.verified")}</Badge> : null}
+                {user.isPremium ? <Badge>{t("badges.premium")}</Badge> : null}
               </div>
             </SheetHeader>
 
@@ -98,35 +98,33 @@ export function UserDetailSheet({
 
             <Tabs defaultValue="profile">
               <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="profile">Profile</TabsTrigger>
-                <TabsTrigger value="activity">Activity</TabsTrigger>
-                <TabsTrigger value="moderation">Moderation</TabsTrigger>
+                <TabsTrigger value="profile">{t("detail.tabs.profile")}</TabsTrigger>
+                <TabsTrigger value="activity">{t("detail.tabs.activity")}</TabsTrigger>
+                <TabsTrigger value="moderation">{t("detail.tabs.moderation")}</TabsTrigger>
               </TabsList>
 
               <TabsContent value="profile" className="space-y-3 pt-4 text-sm">
-                <Row label="ID" value={user.id} />
-                <Row label="Country" value={user.country ?? "—"} />
-                <Row label="City" value={user.city ?? "—"} />
+                <Row label={t("detail.fields.id")} value={user.id} />
+                <Row label={t("detail.fields.country")} value={user.country ?? "—"} />
+                <Row label={t("detail.fields.city")} value={user.city ?? "—"} />
                 <Row
-                  label="Joined"
+                  label={t("detail.fields.joined")}
                   value={new Date(user.createdAt).toLocaleString()}
                 />
               </TabsContent>
 
               <TabsContent value="activity" className="space-y-3 pt-4 text-sm">
-                <Row label="Matches" value={String(user.matchesCount)} />
+                <Row label={t("detail.fields.matches")} value={String(user.matchesCount)} />
                 <Row
-                  label="Last active"
+                  label={t("detail.fields.lastActive")}
                   value={
-                    user.lastActiveAt
-                      ? new Date(user.lastActiveAt).toLocaleString()
-                      : "—"
+                    user.lastActiveAt ? new Date(user.lastActiveAt).toLocaleString() : "—"
                   }
                 />
               </TabsContent>
 
               <TabsContent value="moderation" className="space-y-3 pt-4 text-sm">
-                <Row label="Reports" value={String(user.reportCount)} />
+                <Row label={t("detail.fields.reports")} value={String(user.reportCount)} />
               </TabsContent>
             </Tabs>
 

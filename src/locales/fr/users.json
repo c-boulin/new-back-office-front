@@ -34,5 +34,31 @@
     "title": "Bannir cet utilisateur ?",
     "description": "L'utilisateur perdra l'accès immédiatement. L'action est enregistrée dans le journal d'audit.",
     "confirm": "Bannir l'utilisateur"
+  },
+  "badges": {
+    "verified": "Vérifié",
+    "premium": "Premium"
+  },
+  "detail": {
+    "tabs": {
+      "profile": "Profil",
+      "activity": "Activité",
+      "moderation": "Modération"
+    },
+    "fields": {
+      "id": "Identifiant",
+      "country": "Pays",
+      "city": "Ville",
+      "joined": "Inscrit le",
+      "matches": "Matches",
+      "lastActive": "Dernière activité",
+      "reports": "Signalements"
+    }
+  },
+  "toasts": {
+    "verified": "Utilisateur vérifié",
+    "banned": "Utilisateur banni",
+    "unbanned": "Utilisateur débanni",
+    "banReason": "Action administrateur"
   }
 }

@@ -1,7 +1,19 @@
 {
   "dashboard": {
-    "title": "Super admin",
-    "description": "Cross-tenant overview of the Watchtower platform."
+    "title": "Platform overview",
+    "description": "Cross-tenant activity, growth, and platform health.",
+    "stats": {
+      "tenants": "Active tenants",
+      "tenants_hint": "Across regions",
+      "users": "Total users",
+      "users_hint": "Last 30 days",
+      "uptime": "Uptime",
+      "uptime_hint": "Rolling 30 days"
+    },
+    "sections": {
+      "activity": "Recent activity",
+      "activity_empty": "Platform-wide operational feed will appear here."
+    }
   },
   "tenants": {
     "title": "Tenants",
@@ -10,6 +22,10 @@
   "admins": {
     "title": "Platform admins",
     "description": "People with access to the super admin console.",
+    "filters": {
+      "role": "Role",
+      "all": "All roles"
+    },
     "columns": {
       "name": "Name",
       "email": "Email",

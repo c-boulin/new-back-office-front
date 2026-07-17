@@ -34,5 +34,31 @@
     "title": "Ban this user?",
     "description": "The user will lose access immediately. This action is logged in the audit trail.",
     "confirm": "Ban user"
+  },
+  "badges": {
+    "verified": "Verified",
+    "premium": "Premium"
+  },
+  "detail": {
+    "tabs": {
+      "profile": "Profile",
+      "activity": "Activity",
+      "moderation": "Moderation"
+    },
+    "fields": {
+      "id": "ID",
+      "country": "Country",
+      "city": "City",
+      "joined": "Joined",
+      "matches": "Matches",
+      "lastActive": "Last active",
+      "reports": "Reports"
+    }
+  },
+  "toasts": {
+    "verified": "User verified",
+    "banned": "User banned",
+    "unbanned": "User unbanned",
+    "banReason": "Admin action"
   }
 }
