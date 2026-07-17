@@ -12,9 +12,9 @@ map, feature workflow. If anything here appears to conflict with
 ## Golden rules
 
 1. **Async / server state → React Query.** Never fetch in `useEffect` and store
-   in `useState`. `useSuspenseQuery` is preferred at the route level; a Suspense
-   boundary renders `LoadingState` instead of per-component `isPending &&`
-   branches.
+   in `useState`. `useSuspenseQuery` is the default at the route level; a
+   `RouteBoundary` renders `LoadingState` and `ErrorState` instead of
+   per-component `isPending` / `isError` branches.
 2. **Global client state → Zustand.** Only auth session, active tenant, and UI
    preferences. **Do not mirror server data in stores.**
 3. **Local UI state → `useState`.** For UI concerns confined to one component.
@@ -159,12 +159,27 @@ Components must never touch raw payloads.
 
 ## Loading / empty / error contract
 
-Every data view must handle **four** branches explicitly:
+Every data view uses the four-state contract. The canonical wiring is
+`useSuspenseQuery` inside a leaf component wrapped in a `RouteBoundary` at the
+page shell — pages never write per-component `isPending` / `isError` branches.
 
-- **Loading:** `<LoadingState />` inside a Suspense boundary (preferred) or a
-  component-specific `Skeleton`.
-- **Empty:** `<EmptyState title description icon action />`.
-- **Error:** `<ErrorState onRetry={refetch} />`.
+```tsx
+// page shell
+<RouteBoundary>
+  <UsersTable ... />
+</RouteBoundary>
+
+// leaf component
+const { data } = useSuspenseQuery({ queryKey, queryFn });
+```
+
+- **Loading:** `RouteBoundary` renders `<LoadingState />` (or a supplied
+  `loadingFallback`) while the suspending query resolves.
+- **Empty:** `DataTable` and `DataList` render `<EmptyState />` automatically
+  when their items array is empty — no manual check needed.
+- **Error:** `RouteBoundary` catches thrown errors from suspense queries and
+  renders `<ErrorState onRetry={reset} />` wired to
+  `QueryErrorResetBoundary`.
 - **Success:** the real content.
 
 Do not conflate "loading" and "empty". A pending query is not an empty state.
@@ -217,8 +232,10 @@ src/
   components/
     ui/                              shadcn primitives — NEVER duplicate here
     common/                          composed design system (PageHeader,
-                                     DataTable, EmptyState, ErrorState,
-                                     LoadingState, ConfirmDialog, FilterBar,
+                                     DataTable, DataList, EmptyState,
+                                     ErrorState, LoadingState, RouteBoundary,
+                                     RouteErrorFallback, ConfirmDialog,
+                                     FilterBar, FilterRow, SkipLink,
                                      TenantSwitcher, LanguageSwitcher,
                                      UserMenu, PermissionGate,
                                      SessionExpiredDialog, PlaceholderPage,
@@ -234,7 +251,8 @@ src/
       hooks/                         Feature-only hooks (optional)
   hooks/                             Cross-feature hooks (useDebounce,
                                      usePagination, usePermissions,
-                                     useActiveTenant, useMediaQuery)
+                                     useActiveTenant, useMediaQuery,
+                                     useUrlState)
   lib/                               httpClient, queryClient, oidcClient,
                                      i18n, env, permissions, sanitize,
                                      tenantTheme, validatorAdaptor, utils
@@ -277,8 +295,22 @@ src/
   **shadcn/ui only.**
 - Using emoji as icons. **`lucide-react` only.**
 - Cross-feature imports. **Promote shared code to `common/`, `hooks/`, or
-  `lib/`.**
-- Hardcoding colors in components. **Use theme tokens.**
+  `lib/`.** Two exceptions are intentional and codified:
+  - `features/auth/*` reads schemas and types from `features/tenants/*`
+    because the `/auth/me` response carries the caller's tenant memberships,
+    which are structurally owned by the tenants feature. Extracting a third
+    package for the shared shape would be pure ceremony.
+  - `features/superAdmin/pages/TenantsListPage` renders
+    `features/tenants/components/TenantsList` — the same viewer used from
+    the tenant chooser. Reusing it beats forking a second table.
+- Hardcoding colors in tenant-scoped components. **Use theme tokens** so the
+  same component re-skins per tenant. One deliberate exception: the auth
+  shell (`AuthLayout`, `LoginCard`, `AuthDivider`, `SsoLoginButton`,
+  `WatchtowerBrand`, `PasswordLoginForm`) uses a fixed Watchtower brand
+  palette because the user is not signed in yet — there is no tenant to
+  theme from, and the login screen is by design a pre-tenant brand surface.
+  Everything inside `TenantLayout` / `SuperAdminLayout` must still use
+  tokens.
 - Bypassing the shared auth pipeline. **Every method must produce the same
   session shape in `authStore` and go through `httpClient` interceptors.
   Never store credentials in state; never call the backend outside

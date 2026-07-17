@@ -32,8 +32,13 @@ export function TenantSwitcher() {
 
   const onSelect = (membershipId: string) => {
     const next = memberships.find((m) => m.tenantId === membershipId);
-    if (!next) return;
-    queryClient.removeQueries();
+    if (!next || next.tenantId === activeId) {
+      setOpen(false);
+      return;
+    }
+    if (activeId) {
+      queryClient.removeQueries({ queryKey: ["tenant", activeId] });
+    }
     setActiveTenant({ id: next.tenantId, slug: next.tenantSlug, theme: next.theme });
     applyTenantTheme(next.theme);
     setOpen(false);
