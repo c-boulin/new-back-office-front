@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, type CSSProperties } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { formatDistanceToNow } from "date-fns";
@@ -74,8 +74,8 @@ export function DashboardContent() {
                 return (
                   <div
                     key={point.label}
-                    className="group relative flex-1 rounded-t bg-gradient-to-t from-primary/40 to-primary/70 transition-all hover:from-primary/60 hover:to-primary"
-                    style={{ height: `${heightPct}%` }}
+                    className="group relative h-[var(--bar)] flex-1 rounded-t bg-gradient-to-t from-primary/40 to-primary/70 transition-all hover:from-primary/60 hover:to-primary"
+                    style={{ "--bar": `${heightPct}%` } as CSSProperties}
                     title={`${point.label}: ${point.value.toLocaleString()}`}
                   >
                     <span className="sr-only">

@@ -1,4 +1,6 @@
-import type { TenantTheme } from "@/features/tenants/types";
+import type { TenantMembership } from "@/features/tenants/types";
+
+export type { TenantMembership };
 
 export type AuthUser = {
   id: string;
@@ -6,16 +8,6 @@ export type AuthUser = {
   email: string;
   avatarUrl: string | null;
   isSuperAdmin: boolean;
-};
-
-export type TenantMembership = {
-  tenantId: string;
-  tenantSlug: string;
-  tenantName: string;
-  role: "owner" | "admin" | "moderator" | "viewer";
-  permissions: string[];
-  theme: TenantTheme | null;
-  lastAccessedAt: string | null;
 };
 
 export type MeResponse = {

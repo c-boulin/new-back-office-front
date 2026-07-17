@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { Coins, DollarSign, TrendingDown, Users } from "lucide-react";
@@ -80,8 +81,8 @@ export function SubscriptionsOverview() {
               {data.revenueByMonth.map((m) => (
                 <div
                   key={m.month}
-                  className="flex-1 rounded-t bg-primary/70"
-                  style={{ height: `${Math.max(4, (m.cents / revenueMax) * 100)}%` }}
+                  className="h-[var(--bar)] flex-1 rounded-t bg-primary/70"
+                  style={{ "--bar": `${Math.max(4, (m.cents / revenueMax) * 100)}%` } as CSSProperties}
                   title={`${m.month}: ${formatMoney(m.cents, data.currency)}`}
                 >
                   <span className="sr-only">

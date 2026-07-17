@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { Percent, UserCheck, Users } from "lucide-react";
@@ -52,7 +53,10 @@ export function AnalyticsOverview() {
                     <span className="text-muted-foreground">{r.percentage}%</span>
                   </div>
                   <div className="h-2 overflow-hidden rounded-full bg-muted">
-                    <div className="h-full bg-primary" style={{ width: `${r.percentage}%` }} />
+                    <div
+                      className="h-full w-[var(--bar)] bg-primary"
+                      style={{ "--bar": `${r.percentage}%` } as CSSProperties}
+                    />
                   </div>
                 </div>
               ))}
@@ -76,8 +80,8 @@ export function AnalyticsOverview() {
                   </div>
                   <div className="h-2 overflow-hidden rounded-full bg-muted">
                     <div
-                      className="h-full bg-accent"
-                      style={{ width: `${(step.count / funnelMax) * 100}%` }}
+                      className="h-full w-[var(--bar)] bg-accent"
+                      style={{ "--bar": `${(step.count / funnelMax) * 100}%` } as CSSProperties}
                     />
                   </div>
                 </div>
@@ -96,8 +100,8 @@ export function AnalyticsOverview() {
             {data.activityByHour.map((h) => (
               <div
                 key={h.hour}
-                className="flex-1 rounded-t bg-primary/70"
-                style={{ height: `${Math.max(4, (h.value / activityMax) * 100)}%` }}
+                className="h-[var(--bar)] flex-1 rounded-t bg-primary/70"
+                style={{ "--bar": `${Math.max(4, (h.value / activityMax) * 100)}%` } as CSSProperties}
                 title={`${h.hour}h: ${h.value}`}
               >
                 <span className="sr-only">

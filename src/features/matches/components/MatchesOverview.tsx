@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { Heart, MessagesSquare, Percent, Star } from "lucide-react";
@@ -42,8 +43,8 @@ export function MatchesOverview() {
               {data.matchesByDay.map((point) => (
                 <div
                   key={point.date}
-                  className="flex-1 rounded-t bg-primary/70"
-                  style={{ height: `${Math.max(4, (point.value / trendMax) * 100)}%` }}
+                  className="h-[var(--bar)] flex-1 rounded-t bg-primary/70"
+                  style={{ "--bar": `${Math.max(4, (point.value / trendMax) * 100)}%` } as CSSProperties}
                   title={`${point.date}: ${point.value.toLocaleString()}`}
                 >
                   <span className="sr-only">
@@ -69,8 +70,8 @@ export function MatchesOverview() {
                   </div>
                   <div className="h-2 overflow-hidden rounded-full bg-muted">
                     <div
-                      className="h-full bg-primary"
-                      style={{ width: `${(bucket.count / qualityMax) * 100}%` }}
+                      className="h-full w-[var(--bar)] bg-primary"
+                      style={{ "--bar": `${(bucket.count / qualityMax) * 100}%` } as CSSProperties}
                     />
                   </div>
                 </div>
@@ -94,8 +95,8 @@ export function MatchesOverview() {
                 </div>
                 <div className="h-2 overflow-hidden rounded-full bg-muted">
                   <div
-                    className="h-full bg-accent"
-                    style={{ width: `${(row.count / geoMax) * 100}%` }}
+                    className="h-full w-[var(--bar)] bg-accent"
+                    style={{ "--bar": `${(row.count / geoMax) * 100}%` } as CSSProperties}
                   />
                 </div>
               </div>

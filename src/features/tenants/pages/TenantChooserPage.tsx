@@ -13,7 +13,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { useTenantStore } from "@/stores/tenantStore";
 import { applyTenantTheme } from "@/lib/tenantTheme";
 import { useDebounce } from "@/hooks/useDebounce";
-import type { TenantMembership } from "@/features/auth/types";
+import type { TenantMembership } from "@/features/tenants/types";
 
 export function TenantChooserPage() {
   const { t } = useTranslation("tenants");

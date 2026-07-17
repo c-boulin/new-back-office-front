@@ -81,7 +81,13 @@ export function DataTable<TData>({
             {table.getHeaderGroups().map((group) => (
               <TableRow key={group.id}>
                 {group.headers.map((header) => (
-                  <TableHead key={header.id} style={{ width: header.getSize() }}>
+                  <TableHead
+                    key={header.id}
+                    // TanStack Table exposes column widths as runtime pixel values via
+                    // getSize(); inline style is the library's canonical wire-up and is
+                    // not a design token, so BEST_PRACTICES §5 does not apply here.
+                    style={{ width: header.getSize() }}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}

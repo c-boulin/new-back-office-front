@@ -18,3 +18,13 @@ export type Tenant = {
   createdAt: string;
   usersCount: number;
 };
+
+export type TenantMembership = {
+  tenantId: string;
+  tenantSlug: string;
+  tenantName: string;
+  role: "owner" | "admin" | "moderator" | "viewer";
+  permissions: string[];
+  theme: TenantTheme | null;
+  lastAccessedAt: string | null;
+};
