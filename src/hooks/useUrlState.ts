@@ -51,6 +51,12 @@ type StateOf<S extends Record<string, ParamDef<unknown>>> = {
   [K in keyof S]: S[K] extends ParamDef<infer T> ? T : never;
 };
 
+// Callers pass a spec object whose values are ParamDefs with heterogeneous
+// inner types (string, number, enum, boolean). Constraining to
+// `ParamDef<unknown>` here would force every call site to widen its literal
+// spec with `as ParamDef<unknown>`, defeating inference downstream in
+// `StateOf<S>`. `any` at the constraint level is the standard escape hatch
+// for this "record of generics" pattern.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useUrlState<S extends Record<string, ParamDef<any>>>(spec: S) {
   const [params, setParams] = useSearchParams();
@@ -92,3 +98,6 @@ export function useUrlState<S extends Record<string, ParamDef<any>>>(spec: S) {
 
   return [state, update] as const;
 }
+
+
+export { useUrlState, urlEnum, urlString }
