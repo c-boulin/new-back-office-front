@@ -73,6 +73,17 @@ Every data-driven view has four states the tests must exercise:
 
 ---
 
+## Cross-cutting invariants
+
+Some invariants live above any single view. Every relevant test file must enforce them locally so a regression cannot slip past a green suite.
+
+- **Theme leakage.** Any page rendered **outside** `RequireTenant` (the tenant chooser, access-denied, auth surfaces) must leave the DOM's tenant CSS variables cleared. Assert `document.documentElement.style.getPropertyValue("--background") === ""` after mount, plus one extended token (e.g. `--card`), so a future page that forgets `useDefaultTheme()` fails here. Pattern lives in `test/integration/pages/TenantChooserPage.test.tsx`.
+- **Store isolation.** Every test calls `resetStores()` in `beforeEach`. Tenant themes that need to be pre-set for a test call `applyTenantTheme(...)` from `@/lib/tenantTheme` directly rather than routing through the store — `tenantStore.activeTheme` is intentionally not persisted, so writing to it does not model what happens at runtime.
+- **Permissions.** Destructive actions are gated by `PermissionGate` and must be tested with fixtures that hold the specific permission (e.g. `users.suspend`), not with a super-admin bypass. A super-admin fixture hides regressions on the underlying permission check.
+- **i18n.** Assertions target translation **keys** through the real i18n table, not hardcoded English copy, so a language regression (missing key, wrong namespace, French-only breakage) surfaces here rather than in QA.
+
+---
+
 ## Rendering with providers
 
 Use the `renderWithProviders` wrapper from `test/utils/renderWithProviders.tsx`. It gives you:
@@ -98,7 +109,7 @@ Never mutate a Zustand store by importing its internals in an ad-hoc way. Use `t
 
 - `resetStores()` — call in `beforeEach` to guarantee isolation.
 - `signInAs(user, memberships?)` — populates the auth store as if a password login just finished.
-- `activateTenant(id, slug)` — populates the tenant store.
+- `activateTenant(id, slug)` — populates the tenant store. Writes `activeTheme: null`; tests that need a leaked theme in place before mount call `applyTenantTheme(...)` from `@/lib/tenantTheme` directly.
 - `superAdminFixture` / `operatorFixture` / `membershipFixture()` — canonical seed data.
 
 If you need a new fixture, add it to `fixtures.ts` — do not scatter one-off store writes across test files.
@@ -153,4 +164,5 @@ All four must exit clean.
 
 ## Change log
 
+- 2026-07-17 — Added the cross-cutting invariants subsection (theme leakage, store isolation, permissions, i18n) and clarified `activateTenant` fixture semantics.
 - 2026-07-17 — Initial version.

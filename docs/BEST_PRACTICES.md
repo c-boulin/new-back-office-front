@@ -107,7 +107,8 @@ Each section states the rule verbatim, a short "Why", and "How it applies here" 
 **How it applies here.**
 
 - Repeated `useQuery` bundles, form flows, permission checks, and multi-step interactions move into `src/hooks/` or a feature-local `hooks/` folder.
-- Existing examples: `useActiveTenant`, `useDebounce`, `useMediaQuery`, `usePagination`, `usePermissions`.
+- Existing examples: `useActiveTenant`, `useDebounce`, `useDefaultTheme`, `useMediaQuery`, `usePagination`, `usePermissions`.
+- Theming rule. Any page rendered **outside** `RequireTenant` (auth surfaces, tenant chooser, access-denied) must call `useDefaultTheme()` on mount so a previously-active tenant theme cannot leak through. See `docs/ARCHITECTURE.md` §"Theming per tenant".
 
 ---
 
@@ -293,6 +294,7 @@ Run through this before declaring any feature done:
 
 ## Change log
 
+- 2026-07-17 — Documented `useDefaultTheme` and the "cross-tenant pages must reset theme" rule.
 - 2026-07-16 — Initial version.
 - 2026-07-16 — Responsive rule tightened: each device (mobile, tablet, desktop) must have its own purpose-built design; base design must not be reused as a resized variant.
 - 2026-07-17 — Added §18 "Automated tests" covering the top-level `test/` layout, deterministic-test rule, mock-adapter seam, and the enforcement checklist entry for `npm test`.

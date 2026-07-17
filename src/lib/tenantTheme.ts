@@ -58,12 +58,32 @@ function mergeWithDefaults(theme: Partial<TenantTheme> | null): ResolvedTheme {
   return merged;
 }
 
+const WARNED_PRIMARIES = new Set<string>();
+
+export function __resetContrastWarnCacheForTests(): void {
+  WARNED_PRIMARIES.clear();
+}
+
+function warnLowContrast(theme: ResolvedTheme): void {
+  const primaryPair = contrastRatio(theme.primary, theme.primaryForeground);
+  const surfacePair = contrastRatio(theme.background, theme.foreground);
+  if (primaryPair >= 4.5 && surfacePair >= 4.5) return;
+  if (WARNED_PRIMARIES.has(theme.primary)) return;
+  WARNED_PRIMARIES.add(theme.primary);
+  console.warn(
+    `[tenantTheme] low WCAG contrast — primary/primary-foreground=${primaryPair.toFixed(2)}, background/foreground=${surfacePair.toFixed(2)} (target >= 4.5)`,
+  );
+}
+
 export function applyTenantTheme(theme: Partial<TenantTheme> | null): void {
   const root = document.documentElement;
   const merged = mergeWithDefaults(theme);
   (Object.keys(CSS_VAR_MAP) as (keyof ResolvedTheme)[]).forEach((key) => {
     root.style.setProperty(CSS_VAR_MAP[key], merged[key]);
   });
+  if (import.meta.env.DEV) {
+    warnLowContrast(merged);
+  }
 }
 
 export function resetTenantTheme(): void {

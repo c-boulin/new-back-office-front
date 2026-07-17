@@ -1,5 +1,10 @@
-import { describe, it, expect, afterEach } from "vitest";
-import { applyTenantTheme, resetTenantTheme, contrastRatio } from "@/lib/tenantTheme";
+import { describe, it, expect, afterEach, beforeEach, vi } from "vitest";
+import {
+  applyTenantTheme,
+  resetTenantTheme,
+  contrastRatio,
+  __resetContrastWarnCacheForTests,
+} from "@/lib/tenantTheme";
 
 const ALL_VARS = [
   "--primary",
@@ -95,5 +100,52 @@ describe("contrastRatio", () => {
     const a = contrastRatio("0 0% 100%", "0 0% 0%");
     const b = contrastRatio("0 0% 0%", "0 0% 100%");
     expect(a).toBeCloseTo(b);
+  });
+});
+
+describe("applyTenantTheme dev-only contrast warning", () => {
+  let warnSpy: ReturnType<typeof vi.spyOn>;
+
+  beforeEach(() => {
+    __resetContrastWarnCacheForTests();
+    warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    warnSpy.mockRestore();
+    resetTenantTheme();
+  });
+
+  it("warns exactly once for a low-contrast palette (deduped by primary)", () => {
+    const badPalette = {
+      primary: "0 0% 55%",
+      primaryForeground: "0 0% 60%",
+      background: "0 0% 55%",
+      foreground: "0 0% 60%",
+      accent: "0 0% 55%",
+      accentForeground: "0 0% 60%",
+      radius: "0.5rem",
+      fontSans: "Inter",
+    };
+    applyTenantTheme(badPalette);
+    applyTenantTheme(badPalette);
+    applyTenantTheme(badPalette);
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0]?.[0]).toMatch(/low WCAG contrast/i);
+  });
+
+  it("does not warn for a compliant palette", () => {
+    const goodPalette = {
+      primary: "0 0% 10%",
+      primaryForeground: "0 0% 100%",
+      background: "0 0% 100%",
+      foreground: "0 0% 0%",
+      accent: "0 0% 10%",
+      accentForeground: "0 0% 100%",
+      radius: "0.5rem",
+      fontSans: "Inter",
+    };
+    applyTenantTheme(goodPalette);
+    expect(warnSpy).not.toHaveBeenCalled();
   });
 });

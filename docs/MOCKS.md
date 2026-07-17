@@ -49,6 +49,20 @@ Integration tests under `test/integration/` hit **the same** mock adapter withou
 
 See `docs/TESTING.md` for the full test harness and the four-state contract.
 
+## Theme seeds
+
+Tenant themes in `src/mocks/seeds/tenants.ts` must declare the **complete
+token surface** — background, foreground, card, popover, secondary, muted,
+border, input, ring, and the paired `*-foreground` tokens — not just primary
+and accent. Light-mode defaults live in `src/lib/tenantTheme.ts` and fill any
+gap the seed omits, but relying on that defaulting is what caused the
+"half-applied" theme bug: a dark accent slotted onto a light background token.
+Use the `darkTheme(primary, accent)` helper in `tenants.ts` as the canonical
+constructor for a new tenant palette so the whole surface stays internally
+consistent. Same rule applies when the real API is wired: response payloads
+should carry the full surface, and `themeFromRaw` maps every optional token
+1:1.
+
 ## Going live against the real API
 
 When the backend is ready:
@@ -67,8 +81,6 @@ When the backend is ready:
 Nothing else changes: feature `api.ts` files, Zod schemas, adaptors, React
 Query keys, permissions, and components are all untouched.
 
-> **Supabase note.** When migrating the backend to Supabase (see the project
-> Supabase guidance), the same rules apply: the client still hits `httpClient`
-> for the app's own endpoints, the mock adapter is deleted, and
-> Supabase-facing code lives behind feature `api.ts` files so tests can
-> mock the boundary at one place.
+The mock adapter exists only to unblock dev + tests until the real API is
+wired. It is not a persistence layer, it is not a design target, and no
+production data ever passes through it. The real backend is our own service.

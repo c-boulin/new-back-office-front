@@ -105,8 +105,18 @@ map, feature workflow. If anything here appears to conflict with
   tenant theme from surviving a hard reload or a re-login.
 - Every logout path calls `resetTenantTheme()` after clearing the store so
   no CSS variables linger on the DOM.
-- Super-admin theme editor writes to the tenant record; `TenantMembership.theme`
-  is used to re-skin the tenant layout on entry.
+- **Planned:** Super-admin theme editor writes to the tenant record; `TenantMembership.theme`
+  is used to re-skin the tenant layout on entry. No editor UI exists yet — when
+  implemented it will PATCH the tenant record through our own API
+  (`PATCH /tenants/:id`) with a body matching the `TenantTheme` surface; a Zod
+  schema on the request will mirror the one on the response so both
+  directions stay type-safe.
+- **Dev-only contrast guard.** `applyTenantTheme` computes the contrast of
+  `primary` / `primary-foreground` and `background` / `foreground` after the
+  merge; if either falls below WCAG AA (4.5) and `import.meta.env.DEV` is
+  true, a single `console.warn` fires per apply (deduped by the tenant's
+  primary token). This branch is dead-code-eliminated by Vite in production
+  bundles — zero runtime cost, zero bytes shipped.
 - Do **not** hardcode colors in components — use `bg-primary`, `text-accent`,
   etc. The same components must re-skin for any tenant.
 
@@ -360,6 +370,8 @@ src/
   **Mobile, tablet, and desktop each get their own purpose-built design.**
 
 ## Change log
+
+- 2026-07-17 — Marked the super-admin theme editor as planned; documented the dev-only WCAG contrast warning in `applyTenantTheme`; noted the full-token-surface rule for tenant themes.
 
 - 2026-07-17 — Added a Testing section and extended the folder map with the
   `test/` tree; feature checklist now requires unit + integration coverage.

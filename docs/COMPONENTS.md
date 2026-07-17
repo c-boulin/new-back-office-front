@@ -18,7 +18,7 @@ Every composite in this document has a test under `test/unit/components/common/`
 - **Rendering shape.** Required props render the expected roles / labels.
 - **The four-state contract.** `DataTable` / `DataList` render `EmptyState` when items are empty; `RouteBoundary` renders its loading fallback while suspending and its error fallback on thrown errors. Feature composites inherit this coverage automatically.
 - **User interactions.** `ConfirmDialog` typed-confirmation, `FilterRow` reset, `TenantSwitcher` selection, `UserMenu` sign-out, `LanguageSwitcher` locale swap.
-- **Store side effects.** `TenantSwitcher` updates `tenantStore`; `UserMenu` clears `authStore`; `SessionExpiredDialog` reacts to `authStore.status === "expired"`.
+- **Store side effects.** `TenantSwitcher` updates `tenantStore` and re-applies the destination tenant theme via `applyTenantTheme`; `UserMenu` clears `authStore` **and** calls `resetTenantTheme()` so no CSS variables linger past sign-out; `SessionExpiredDialog` reacts to `authStore.status === "expired"`.
 
 When adding a new composite, add its test in the same commit — mirror the source path under `test/unit/components/common/`, use `renderWithProviders`, and prefer accessible queries (`getByRole`, `getByLabelText`) over `data-testid`. See `docs/TESTING.md` for the full harness.
 
@@ -218,7 +218,18 @@ verify/ban/unban on users — so unauthorized operators do not see them at all.
 ## `TenantSwitcher`
 
 Renders only when the user has more than one membership. Clears React Query
-cache on switch and navigates to `/t/:slug`.
+cache on switch and navigates to `/t/:slug`. Applies the destination tenant's
+theme via `applyTenantTheme`; leaving a tenant is what resets it — either
+implicitly via `useDefaultTheme()` on cross-tenant pages, or explicitly via
+`resetTenantTheme()` in `UserMenu` on sign-out.
+
+## `TenantChooserPage`
+
+Rendered outside `RequireTenant`, so it calls `useDefaultTheme()` on mount to
+guarantee the neutral base tokens are in place. The shell (background, header,
+search) stays neutral for every visitor; each membership tile can carry its
+own branded strip / logo, but the strip is scoped to the tile — the CSS
+variables at `:root` do not change.
 
 ## `LanguageSwitcher`
 
@@ -228,7 +239,9 @@ Toggles between `en` and `fr` via `i18n.changeLanguage`. Preference persists in
 ## `UserMenu`
 
 Session dropdown with sign-out through the OIDC provider or the password
-endpoint, depending on `authStore.method`.
+endpoint, depending on `authStore.method`. Sign-out clears `authStore` **and**
+calls `resetTenantTheme()` so no tenant CSS variables leak onto the auth
+surfaces that render next.
 
 ## `SessionExpiredDialog`
 
