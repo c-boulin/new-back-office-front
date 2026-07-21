@@ -4,8 +4,31 @@ import { KeyRound, Loader as Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/authStore";
+import { AppError } from "@/lib/httpClient";
 import { ssoInit } from "../api";
 import { getSsoCallbackUrl } from "../ssoCallback";
+
+function describeApiError(err: unknown): string | null {
+  if (!(err instanceof AppError)) return null;
+  const body = err.details as
+    | { message?: unknown; errors?: Record<string, unknown> }
+    | undefined;
+  if (body && typeof body === "object") {
+    if (body.errors && typeof body.errors === "object") {
+      const flat = Object.entries(body.errors)
+        .map(([field, msgs]) => {
+          const list = Array.isArray(msgs) ? msgs : [msgs];
+          return `${field}: ${list.join(", ")}`;
+        })
+        .join(" — ");
+      if (flat) return flat;
+    }
+    if (typeof body.message === "string" && body.message.length > 0) {
+      return body.message;
+    }
+  }
+  return err.message || null;
+}
 
 export function SsoLoginButton() {
   const { t } = useTranslation("auth");
@@ -18,8 +41,19 @@ export function SsoLoginButton() {
     try {
       const url = await ssoInit(getSsoCallbackUrl());
       window.location.assign(url);
-    } catch {
-      toast.error(t("errors.ssoInitFailed"));
+    } catch (err) {
+      if (err instanceof AppError) {
+        console.error("[sso-init] backend rejected the request", {
+          status: err.status,
+          code: err.code,
+          requestId: err.requestId,
+          body: err.details,
+        });
+      } else {
+        console.error("[sso-init] unexpected failure", err);
+      }
+      const detail = describeApiError(err);
+      toast.error(detail ? `${t("errors.ssoInitFailed")} — ${detail}` : t("errors.ssoInitFailed"));
       setPending(false);
     }
   };
