@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { Suspense } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { queryClient } from "@/lib/queryClient";
 import { Toaster } from "@/components/ui/sonner";
@@ -18,7 +17,6 @@ export function AppProviders({ children }: { children: ReactNode }) {
             <TooltipProvider delayDuration={200}>
               <Suspense fallback={null}>{children}</Suspense>
               <Toaster />
-              <ReactQueryDevtools initialIsOpen={false} />
             </TooltipProvider>
           </AuthProvider>
         </ThemeProvider>

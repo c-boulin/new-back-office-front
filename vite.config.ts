@@ -27,7 +27,6 @@ export default defineConfig({
           "react-vendor": ["react", "react-dom", "react-router-dom"],
           "query-vendor": [
             "@tanstack/react-query",
-            "@tanstack/react-query-devtools",
             "@tanstack/react-table",
           ],
           "radix-vendor": [
