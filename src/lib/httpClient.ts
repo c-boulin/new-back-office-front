@@ -2,8 +2,6 @@ import axios, { AxiosError, type AxiosInstance, type InternalAxiosRequestConfig 
 import { env } from "./env";
 import { useAuthStore } from "@/stores/authStore";
 import { useTenantStore } from "@/stores/tenantStore";
-import { oidcClient } from "./oidcClient";
-import { passwordRefresh } from "@/features/auth/password/api";
 
 export type ApiErrorCode =
   | "network"
@@ -22,6 +20,7 @@ export class AppError extends Error {
     message: string,
     public readonly status?: number,
     public readonly details?: unknown,
+    public readonly requestId?: string,
   ) {
     super(message);
   }
@@ -52,52 +51,52 @@ if (env.mock.api) {
   });
 }
 
+function isAuthEndpoint(url: string | undefined): boolean {
+  if (!url) return false;
+  const stripped = url.split("?")[0];
+  return stripped.startsWith("/v1/auth/") || stripped === "/v1/auth";
+}
+
 httpClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = useAuthStore.getState().accessToken;
-  const tenantId = useTenantStore.getState().activeTenantId;
   if (token) config.headers.set("Authorization", `Bearer ${token}`);
-  if (tenantId) config.headers.set("X-Tenant-Id", tenantId);
+
+  if (!isAuthEndpoint(config.url)) {
+    const activeTenantId = useTenantStore.getState().activeTenantId;
+    if (activeTenantId !== null) {
+      const params = (config.params ?? {}) as Record<string, unknown>;
+      if (params.product_id === undefined) {
+        config.params = { ...params, product_id: activeTenantId };
+      }
+    }
+  }
+
   return config;
 });
 
 let refreshPromise: Promise<string | null> | null = null;
 
-async function refreshSsoSession(): Promise<string | null> {
-  const renewed = await oidcClient.signinSilent();
-  const token = renewed?.access_token ?? null;
-  if (token) {
-    useAuthStore.getState().setSession({
-      accessToken: token,
-      idToken: renewed?.id_token ?? null,
-      expiresAt: renewed?.expires_at ?? null,
-      method: "sso",
-    });
-  }
-  return token;
-}
-
-async function refreshPasswordSession(): Promise<string | null> {
-  const state = useAuthStore.getState();
-  if (!state.refreshToken) return null;
-  const session = await passwordRefresh(state.refreshToken);
-  useAuthStore.getState().setSession({
-    accessToken: session.accessToken,
-    refreshToken: session.refreshToken,
-    expiresAt: session.expiresAt,
-    method: "password",
-  });
-  useAuthStore.getState().setUser(session.user, session.memberships);
-  return session.accessToken;
-}
-
 async function refreshAccessToken(): Promise<string | null> {
   if (refreshPromise) return refreshPromise;
   refreshPromise = (async () => {
     try {
-      const method = useAuthStore.getState().method;
-      if (method === "password") return await refreshPasswordSession();
-      if (method === "sso") return await refreshSsoSession();
-      return null;
+      const state = useAuthStore.getState();
+      if (!state.refreshToken) {
+        state.markSessionExpired();
+        return null;
+      }
+      const response = await axios.post<{ access_token: string }>(
+        "/v1/auth/refresh",
+        { refresh_token: state.refreshToken },
+        { baseURL: env.apiBaseUrl, timeout: 20_000 },
+      );
+      const token = response.data.access_token;
+      if (!token) {
+        useAuthStore.getState().markSessionExpired();
+        return null;
+      }
+      useAuthStore.getState().updateAccessToken(token);
+      return token;
     } catch {
       useAuthStore.getState().markSessionExpired();
       return null;
@@ -108,13 +107,21 @@ async function refreshAccessToken(): Promise<string | null> {
   return refreshPromise;
 }
 
+function extractRequestId(error: AxiosError): string | undefined {
+  const headerId = error.response?.headers?.["x-request-id"];
+  if (typeof headerId === "string") return headerId;
+  const body = error.response?.data as { request_id?: unknown } | undefined;
+  if (body && typeof body.request_id === "string") return body.request_id;
+  return undefined;
+}
+
 httpClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const original = error.config as InternalAxiosRequestConfig & { _retried?: boolean };
     const status = error.response?.status;
 
-    if (status === 401 && original && !original._retried) {
+    if (status === 401 && original && !original._retried && !isAuthEndpoint(original.url)) {
       original._retried = true;
       const token = await refreshAccessToken();
       if (token) {
@@ -128,6 +135,8 @@ httpClient.interceptors.response.use(
       (error.response?.data as { message?: string } | undefined)?.message ??
       error.message ??
       "Request failed";
-    return Promise.reject(new AppError(code, message, status, error.response?.data));
+    return Promise.reject(
+      new AppError(code, message, status, error.response?.data, extractRequestId(error)),
+    );
   },
 );

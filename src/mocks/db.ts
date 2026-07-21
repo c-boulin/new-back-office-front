@@ -40,7 +40,7 @@ type MockDatabase = {
   platformAdmins: RawPlatformAdmin[];
 };
 
-const STORAGE_KEY = "mock.db.v2";
+const STORAGE_KEY = "mock.db.v3";
 const PER_TENANT_USERS = 120;
 
 function seedTenantScoped<T>(
@@ -186,12 +186,12 @@ export const db = {
     persist();
     return next;
   },
-  findAccount(identifier: string, password?: string): MockAccount | null {
-    const normalized = identifier.trim().toLowerCase();
+  findAccount(email: string, password?: string): MockAccount | null {
+    const normalized = email.trim().toLowerCase();
     return (
       dbRef.accounts.find(
         (a) =>
-          a.identifier === normalized &&
+          a.email.toLowerCase() === normalized &&
           (password === undefined || a.password === password),
       ) ?? null
     );

@@ -9,9 +9,7 @@ export function resetStores() {
     method: null,
     user: null,
     accessToken: null,
-    idToken: null,
     refreshToken: null,
-    expiresAt: null,
     memberships: [],
   });
   useTenantStore.setState({
@@ -34,7 +32,6 @@ export function signInAs(
     memberships,
     accessToken: token,
     refreshToken: "refresh-token",
-    expiresAt: Date.now() + 60_000,
   });
 }
 
@@ -47,7 +44,7 @@ export function activateTenant(id: string, slug: string) {
 }
 
 export const superAdminFixture: AuthUser = {
-  id: "u_super",
+  id: "admin@example.com",
   email: "admin@example.com",
   name: "Super Admin",
   isSuperAdmin: true,
@@ -55,7 +52,7 @@ export const superAdminFixture: AuthUser = {
 };
 
 export const operatorFixture: AuthUser = {
-  id: "u_operator",
+  id: "operator@example.com",
   email: "operator@example.com",
   name: "Operator",
   isSuperAdmin: false,
@@ -69,7 +66,7 @@ export const membershipFixture = (
   tenantSlug: "luna",
   tenantName: "Luna",
   role: "admin",
-  permissions: ["users.read", "users.write", "users.moderate"],
+  permissions: [],
   theme: null,
   lastAccessedAt: null,
   ...overrides,

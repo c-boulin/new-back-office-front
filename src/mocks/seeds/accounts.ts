@@ -1,55 +1,35 @@
-import type { RawAuthUser, RawMembership } from "@/features/tenants/schemas";
-import { tenantSeeds } from "./tenants";
+import type { RawApiUser } from "@/features/tenants/schemas";
 
 export type MockAccount = {
-  identifier: string;
+  email: string;
   password: string;
-  user: RawAuthUser;
-  memberships: RawMembership[];
+  user: RawApiUser;
 };
 
 export const accountSeeds: MockAccount[] = [
   {
-    identifier: "admin",
+    email: "admin@watchtower.local",
     password: "admin",
     user: {
-      id: "usr_super_admin",
       name: "Alex Morgan",
       email: "admin@watchtower.local",
-      avatar_url: null,
-      is_super_admin: true,
+      role: { id: "administrator", name: "administrator" },
+      products: [
+        { id: 69, name: "Luna", slug: "luna", role: { id: "admin", name: "admin" } },
+      ],
     },
-    memberships: [],
   },
   {
-    identifier: "operator",
+    email: "operator@watchtower.local",
     password: "operator",
     user: {
-      id: "usr_operator",
       name: "Jamie Rivera",
-      email: "jamie@watchtower.local",
-      avatar_url: null,
-      is_super_admin: false,
+      email: "operator@watchtower.local",
+      role: { id: "moderator", name: "moderator" },
+      products: [
+        { id: 69, name: "Luna", slug: "luna", role: { id: "admin", name: "admin" } },
+        { id: 42, name: "Orbit", slug: "orbit", role: { id: "moderator", name: "moderator" } },
+      ],
     },
-    memberships: [
-      {
-        tenant_id: "tnt_luna",
-        tenant_slug: "luna",
-        tenant_name: "Luna",
-        role: "admin",
-        permissions: ["users.read", "users.write", "moderation.read", "reports.read"],
-        theme: tenantSeeds[0].theme,
-        last_accessed_at: null,
-      },
-      {
-        tenant_id: "tnt_orbit",
-        tenant_slug: "orbit",
-        tenant_name: "Orbit",
-        role: "moderator",
-        permissions: ["users.read", "moderation.read"],
-        theme: tenantSeeds[1].theme,
-        last_accessed_at: null,
-      },
-    ],
   },
 ];

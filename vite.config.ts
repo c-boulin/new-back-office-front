@@ -52,7 +52,6 @@ export default defineConfig({
           ],
           "date-vendor": ["date-fns"],
           "sanitize-vendor": ["dompurify"],
-          "auth-vendor": ["oidc-client-ts"],
         },
       },
     },

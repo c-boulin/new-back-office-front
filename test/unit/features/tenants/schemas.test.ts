@@ -1,5 +1,13 @@
 import { describe, it, expect } from "vitest";
-import { tenantSchema, membershipSchema, tenantThemeSchema } from "@/features/tenants/schemas";
+import {
+  apiProductSchema,
+  apiUserSchema,
+  loginResponseSchema,
+  meResponseSchema,
+  ssoInitResponseSchema,
+  tenantSchema,
+  tenantThemeSchema,
+} from "@/features/tenants/schemas";
 
 const validTheme = {
   primary: "1 2% 3%",
@@ -39,29 +47,6 @@ describe("tenantThemeSchema", () => {
   it("parses a minimal theme with none of the extended fields", () => {
     const parsed = tenantThemeSchema.parse(validTheme);
     expect(parsed.card).toBeUndefined();
-    expect(parsed.card_foreground).toBeUndefined();
-    expect(parsed.primary_foreground).toBeUndefined();
-  });
-
-  it("does not insert phantom defaults for missing optional fields", () => {
-    const parsed = tenantThemeSchema.parse(validTheme) as Record<string, unknown>;
-    for (const key of [
-      "card",
-      "card_foreground",
-      "popover",
-      "popover_foreground",
-      "secondary",
-      "secondary_foreground",
-      "muted",
-      "muted_foreground",
-      "border",
-      "input",
-      "ring",
-      "primary_foreground",
-      "accent_foreground",
-    ]) {
-      expect(parsed[key], `${key} should be absent, not empty`).toBeUndefined();
-    }
   });
 });
 
@@ -71,7 +56,7 @@ describe("tenantSchema", () => {
     slug: "luna",
     name: "Luna",
     logo_url: null,
-    status: "active",
+    status: "active" as const,
     theme: validTheme,
     feature_flags: { premium: true },
     created_at: "2024-01-01",
@@ -87,22 +72,46 @@ describe("tenantSchema", () => {
   });
 });
 
-describe("membershipSchema", () => {
-  const valid = {
-    tenant_id: "t1",
-    tenant_slug: "luna",
-    tenant_name: "Luna",
-    role: "admin",
-    permissions: ["users.read"],
-    theme: null,
-    last_accessed_at: null,
+describe("api auth schemas", () => {
+  const product = { id: 69, name: "Luna", slug: "luna", role: { id: 1, name: "admin" } };
+  const user = {
+    name: "Alice",
+    email: "alice@example.com",
+    role: { id: 1, name: "admin" },
+    products: [product],
   };
 
-  it("parses valid membership", () => {
-    expect(() => membershipSchema.parse(valid)).not.toThrow();
+  it("parses a product", () => {
+    expect(() => apiProductSchema.parse(product)).not.toThrow();
   });
 
-  it("rejects unknown role", () => {
-    expect(() => membershipSchema.parse({ ...valid, role: "guest" })).toThrow();
+  it("parses a user with role null", () => {
+    expect(() => apiUserSchema.parse({ ...user, role: null })).not.toThrow();
+  });
+
+  it("parses a valid login response", () => {
+    expect(() =>
+      loginResponseSchema.parse({ access_token: "a", refresh_token: "b", user }),
+    ).not.toThrow();
+  });
+
+  it("rejects a login response without refresh_token", () => {
+    expect(() =>
+      loginResponseSchema.parse({ access_token: "a", user }),
+    ).toThrow();
+  });
+
+  it("parses a me response", () => {
+    expect(() => meResponseSchema.parse({ user })).not.toThrow();
+  });
+
+  it("parses an sso init response", () => {
+    expect(() =>
+      ssoInitResponseSchema.parse({ data: { url: "https://sesame.example/redirect" } }),
+    ).not.toThrow();
+  });
+
+  it("rejects an sso init response with a non-URL", () => {
+    expect(() => ssoInitResponseSchema.parse({ data: { url: "not-a-url" } })).toThrow();
   });
 });

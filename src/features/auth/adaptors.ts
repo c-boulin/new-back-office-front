@@ -1,32 +1,62 @@
-import type { AuthUser, MeResponse, TenantMembership } from "./types";
-import type { RawAuthUser, RawMembership, RawMeResponse } from "@/features/tenants/schemas";
-import { themeFromRaw } from "@/features/tenants/adaptors";
+import type { AuthUser, AuthSession, MeResponse, TenantMembership } from "./types";
+import type {
+  RawApiProduct,
+  RawApiUser,
+  RawLoginResponse,
+  RawMeResponse,
+} from "@/features/tenants/schemas";
 
-export function authUserFromRaw(raw: RawAuthUser): AuthUser {
+type InternalRole = TenantMembership["role"];
+
+const ROLE_MAP: Record<string, InternalRole> = {
+  owner: "owner",
+  admin: "admin",
+  administrator: "admin",
+  moderator: "moderator",
+  viewer: "viewer",
+  reader: "viewer",
+};
+
+export function mapApiRoleName(name: string): InternalRole {
+  return ROLE_MAP[name.trim().toLowerCase()] ?? "admin";
+}
+
+export function productToMembership(product: RawApiProduct): TenantMembership {
+  const idString = String(product.id);
+  const slug = product.slug && product.slug.length > 0 ? product.slug : idString;
   return {
-    id: raw.id,
-    name: raw.name,
-    email: raw.email,
-    avatarUrl: raw.avatar_url,
-    isSuperAdmin: raw.is_super_admin,
+    tenantId: idString,
+    tenantSlug: slug,
+    tenantName: product.name,
+    role: mapApiRoleName(product.role.name),
+    permissions: [],
+    theme: null,
+    lastAccessedAt: null,
   };
 }
 
-export function membershipFromRaw(raw: RawMembership): TenantMembership {
+export function apiUserToAuthUser(user: RawApiUser): AuthUser {
   return {
-    tenantId: raw.tenant_id,
-    tenantSlug: raw.tenant_slug,
-    tenantName: raw.tenant_name,
-    role: raw.role,
-    permissions: raw.permissions,
-    theme: raw.theme ? themeFromRaw(raw.theme) : null,
-    lastAccessedAt: raw.last_accessed_at,
+    id: user.email,
+    name: user.name,
+    email: user.email,
+    avatarUrl: null,
+    isSuperAdmin: false,
   };
 }
 
-export function meResponseFromRaw(raw: RawMeResponse): MeResponse {
+export function loginResponseToSession(raw: RawLoginResponse): AuthSession {
   return {
-    user: authUserFromRaw(raw.user),
-    memberships: raw.memberships.map(membershipFromRaw),
+    accessToken: raw.access_token,
+    refreshToken: raw.refresh_token,
+    user: apiUserToAuthUser(raw.user),
+    memberships: raw.user.products.map(productToMembership),
+  };
+}
+
+export function meResponseToMe(raw: RawMeResponse): MeResponse {
+  return {
+    user: apiUserToAuthUser(raw.user),
+    memberships: raw.user.products.map(productToMembership),
   };
 }

@@ -2,6 +2,15 @@ import "@testing-library/jest-dom/vitest";
 import { afterEach, beforeEach, vi } from "vitest";
 import { cleanup } from "@testing-library/react";
 
+vi.stubEnv("VITE_API_BASE_URL", "https://api.test.local/api");
+vi.stubEnv("VITE_DEFAULT_PRODUCT_ID", "69");
+vi.stubEnv("VITE_AUTH_PASSWORD_ENABLED", "true");
+vi.stubEnv("VITE_AUTH_SSO_ENABLED", "true");
+vi.stubEnv("VITE_AUTH_MOCK", "false");
+vi.stubEnv("VITE_MOCK_API", "true");
+vi.stubEnv("VITE_MOCK_PERSIST", "false");
+vi.stubEnv("VITE_ENABLE_MSW", "false");
+
 if (typeof window !== "undefined" && !window.matchMedia) {
   Object.defineProperty(window, "matchMedia", {
     writable: true,

@@ -6,11 +6,8 @@ import { useAuthStore } from "@/stores/authStore";
 import { renderWithProviders } from "@test/utils/renderWithProviders";
 import { resetStores, signInAs, operatorFixture, superAdminFixture } from "@test/utils/fixtures";
 
-vi.mock("@/lib/oidcClient", () => ({
-  oidcClient: { signoutRedirect: vi.fn().mockResolvedValue(undefined) },
-}));
-vi.mock("@/features/auth/password/api", () => ({
-  passwordLogout: vi.fn().mockResolvedValue(undefined),
+vi.mock("@/features/auth/api", () => ({
+  logoutRequest: vi.fn().mockResolvedValue(undefined),
 }));
 
 describe("UserMenu", () => {

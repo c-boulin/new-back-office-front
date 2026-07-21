@@ -8,9 +8,7 @@ function reset() {
     method: null,
     user: null,
     accessToken: null,
-    idToken: null,
     refreshToken: null,
-    expiresAt: null,
     memberships: [],
   });
 }
@@ -34,7 +32,6 @@ describe("authStore", () => {
     useAuthStore.getState().setSession({
       accessToken: "t",
       refreshToken: "r",
-      expiresAt: 12345,
       method: "password",
     });
     const s = useAuthStore.getState();
@@ -47,11 +44,25 @@ describe("authStore", () => {
   it("setSession without accessToken keeps prior status", () => {
     useAuthStore.getState().setSession({
       accessToken: null,
-      expiresAt: null,
       method: "sso",
     });
     expect(useAuthStore.getState().status).toBe("idle");
     expect(useAuthStore.getState().method).toBe("sso");
+  });
+
+  it("setSession preserves refreshToken when omitted", () => {
+    useAuthStore.setState({ refreshToken: "keep-me" });
+    useAuthStore.getState().setSession({ accessToken: "t", method: "password" });
+    expect(useAuthStore.getState().refreshToken).toBe("keep-me");
+  });
+
+  it("updateAccessToken swaps only the access token and confirms authenticated status", () => {
+    useAuthStore.setState({ refreshToken: "r", accessToken: null, status: "expired" });
+    useAuthStore.getState().updateAccessToken("new");
+    const s = useAuthStore.getState();
+    expect(s.accessToken).toBe("new");
+    expect(s.refreshToken).toBe("r");
+    expect(s.status).toBe("authenticated");
   });
 
   it("setUser records user and memberships and marks authenticated", () => {
@@ -64,11 +75,7 @@ describe("authStore", () => {
   });
 
   it("markSessionExpired clears the token and flags expired", () => {
-    useAuthStore.getState().setSession({
-      accessToken: "t",
-      expiresAt: 1,
-      method: "password",
-    });
+    useAuthStore.getState().setSession({ accessToken: "t", method: "password" });
     useAuthStore.getState().markSessionExpired();
     const s = useAuthStore.getState();
     expect(s.status).toBe("expired");
@@ -83,6 +90,7 @@ describe("authStore", () => {
     expect(s.user).toBeNull();
     expect(s.memberships).toEqual([]);
     expect(s.accessToken).toBeNull();
+    expect(s.refreshToken).toBeNull();
     expect(s.method).toBeNull();
   });
 });

@@ -11,7 +11,7 @@ function AppShell() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/post-login" element={<div>post-login-placeholder</div>} />
+      <Route path="/" element={<div>post-login-placeholder</div>} />
     </Routes>
   );
 }
@@ -21,10 +21,10 @@ describe("password login flow", () => {
     resetStores();
   });
 
-  it("submits operator credentials, populates auth store, and navigates to /post-login", async () => {
+  it("submits operator credentials, populates auth store, and navigates to /", async () => {
     renderWithProviders(<AppShell />, { route: "/login" });
 
-    await userEvent.type(screen.getByLabelText(/username/i), "operator");
+    await userEvent.type(screen.getByLabelText(/email/i), "operator@watchtower.local");
     await userEvent.type(screen.getByLabelText(/^password$/i), "operator");
 
     await userEvent.click(screen.getByRole("button", { name: /^sign in$/i }));
@@ -34,7 +34,7 @@ describe("password login flow", () => {
     const auth = useAuthStore.getState();
     expect(auth.status).toBe("authenticated");
     expect(auth.method).toBe("password");
-    expect(auth.user?.email).toContain("@");
+    expect(auth.user?.email).toBe("operator@watchtower.local");
     expect(auth.accessToken).toBeTruthy();
     expect(auth.memberships.length).toBeGreaterThan(0);
   });
@@ -42,7 +42,7 @@ describe("password login flow", () => {
   it("leaves the auth store in idle state after a rejected login", async () => {
     renderWithProviders(<AppShell />, { route: "/login" });
 
-    await userEvent.type(screen.getByLabelText(/username/i), "nobody");
+    await userEvent.type(screen.getByLabelText(/email/i), "nobody@example.com");
     await userEvent.type(screen.getByLabelText(/^password$/i), "wrong");
     await userEvent.click(screen.getByRole("button", { name: /^sign in$/i }));
 

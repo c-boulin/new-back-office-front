@@ -7,9 +7,7 @@ export type AuthMethod = "sso" | "password";
 
 type SessionPayload = {
   accessToken: string | null;
-  idToken?: string | null;
   refreshToken?: string | null;
-  expiresAt: number | null;
   method: AuthMethod;
 };
 
@@ -18,11 +16,10 @@ type AuthState = {
   method: AuthMethod | null;
   user: AuthUser | null;
   accessToken: string | null;
-  idToken: string | null;
   refreshToken: string | null;
-  expiresAt: number | null;
   memberships: TenantMembership[];
   setSession: (payload: SessionPayload) => void;
+  updateAccessToken: (token: string) => void;
   setUser: (user: AuthUser, memberships: TenantMembership[]) => void;
   markAuthenticating: () => void;
   markSessionExpired: () => void;
@@ -36,18 +33,21 @@ export const useAuthStore = create<AuthState>()(
       method: null,
       user: null,
       accessToken: null,
-      idToken: null,
       refreshToken: null,
-      expiresAt: null,
       memberships: [],
       setSession: (payload) =>
         set((state) => {
           state.accessToken = payload.accessToken;
-          state.idToken = payload.idToken ?? null;
-          state.refreshToken = payload.refreshToken ?? state.refreshToken;
-          state.expiresAt = payload.expiresAt;
+          if (payload.refreshToken !== undefined) {
+            state.refreshToken = payload.refreshToken;
+          }
           state.method = payload.method;
           if (payload.accessToken) state.status = "authenticated";
+        }),
+      updateAccessToken: (token) =>
+        set((state) => {
+          state.accessToken = token;
+          state.status = "authenticated";
         }),
       setUser: (user, memberships) =>
         set((state) => {
@@ -70,9 +70,7 @@ export const useAuthStore = create<AuthState>()(
           state.method = null;
           state.user = null;
           state.accessToken = null;
-          state.idToken = null;
           state.refreshToken = null;
-          state.expiresAt = null;
           state.memberships = [];
         }),
     })),

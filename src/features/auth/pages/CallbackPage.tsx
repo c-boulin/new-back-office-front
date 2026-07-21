@@ -1,42 +1,73 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Loader as Loader2 } from "lucide-react";
-import { oidcClient } from "@/lib/oidcClient";
+import { toast } from "sonner";
+import { ssoLogin } from "../api";
 import { useAuthStore } from "@/stores/authStore";
+import { queryClient } from "@/lib/queryClient";
 import { ErrorState } from "@/components/common/ErrorState";
+
+const SESAME_TOKEN_PATTERN = /^[A-Za-z0-9]{30,64}$/;
 
 export function CallbackPage() {
   const { t } = useTranslation("auth");
   const navigate = useNavigate();
+  const [params] = useSearchParams();
   const setSession = useAuthStore((s) => s.setSession);
+  const setUser = useAuthStore((s) => s.setUser);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
+
+    const status = params.get("status");
+    const token = params.get("sesame_token");
+
+    if (status === "ko") {
+      setError(t("errors.ssoRejected"));
+      return;
+    }
+    if (!token || !SESAME_TOKEN_PATTERN.test(token)) {
+      setError(t("errors.ssoTokenInvalid"));
+      return;
+    }
+
     void (async () => {
       try {
-        const user = await oidcClient.signinRedirectCallback();
+        const session = await ssoLogin(token);
         if (cancelled) return;
         setSession({
-          accessToken: user.access_token,
-          idToken: user.id_token ?? null,
-          expiresAt: user.expires_at ?? null,
+          accessToken: session.accessToken,
+          refreshToken: session.refreshToken,
           method: "sso",
+        });
+        setUser(session.user, session.memberships);
+        queryClient.setQueryData(["auth", "me"], {
+          user: session.user,
+          memberships: session.memberships,
         });
         navigate("/", { replace: true });
       } catch (err) {
-        console.error("[CallbackPage] signin failed", err);
-        if (!cancelled) setError(t("callback.error"));
+        console.error("[CallbackPage] SSO login failed", err);
+        if (!cancelled) {
+          setError(t("errors.generic"));
+          toast.error(t("errors.generic"));
+        }
       }
     })();
+
     return () => {
       cancelled = true;
     };
-  }, [navigate, setSession, t]);
+  }, [navigate, params, setSession, setUser, t]);
 
   if (error) {
-    return <ErrorState title={error} onRetry={() => navigate("/login", { replace: true })} />;
+    return (
+      <div className="flex min-h-screen items-center justify-center p-6">
+        <ErrorState title={error} onRetry={() => navigate("/login", { replace: true })} />
+      </div>
+    );
   }
 
   return (

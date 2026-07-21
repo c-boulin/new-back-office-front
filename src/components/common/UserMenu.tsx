@@ -13,9 +13,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuthStore } from "@/stores/authStore";
 import { useTenantStore } from "@/stores/tenantStore";
-import { oidcClient } from "@/lib/oidcClient";
 import { queryClient } from "@/lib/queryClient";
-import { passwordLogout } from "@/features/auth/password/api";
+import { logoutRequest } from "@/features/auth/api";
 import { resetTenantTheme } from "@/lib/tenantTheme";
 
 function initials(name: string) {
@@ -29,8 +28,6 @@ function initials(name: string) {
 
 export function UserMenu() {
   const user = useAuthStore((s) => s.user);
-  const method = useAuthStore((s) => s.method);
-  const refreshToken = useAuthStore((s) => s.refreshToken);
   const clearAuth = useAuthStore((s) => s.clear);
   const clearTenant = useTenantStore((s) => s.clear);
   const navigate = useNavigate();
@@ -39,25 +36,12 @@ export function UserMenu() {
   if (!user) return null;
 
   const onLogout = async () => {
+    await logoutRequest();
     queryClient.removeQueries();
     clearTenant();
     resetTenantTheme();
-    if (method === "password") {
-      try {
-        await passwordLogout(refreshToken);
-      } catch {
-        /* ignore mock/real logout errors */
-      }
-      clearAuth();
-      navigate("/login", { replace: true });
-      return;
-    }
     clearAuth();
-    try {
-      await oidcClient.signoutRedirect();
-    } catch {
-      navigate("/login");
-    }
+    navigate("/login", { replace: true });
   };
 
   return (

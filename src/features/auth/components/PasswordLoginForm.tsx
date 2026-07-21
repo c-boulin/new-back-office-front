@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Eye, EyeOff, KeyRound, Loader as Loader2, Lock, User } from "lucide-react";
+import { Eye, EyeOff, KeyRound, Loader as Loader2, Lock, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,8 +17,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { AppError } from "@/lib/httpClient";
+import { queryClient } from "@/lib/queryClient";
 import { passwordCredentialsSchema, type PasswordCredentialsInput } from "../password/schemas";
-import { passwordLogin } from "../password/api";
+import { passwordLogin } from "../api";
 import { useAuthStore } from "@/stores/authStore";
 
 export function PasswordLoginForm() {
@@ -30,7 +31,7 @@ export function PasswordLoginForm() {
 
   const form = useForm<PasswordCredentialsInput>({
     resolver: zodResolver(passwordCredentialsSchema),
-    defaultValues: { identifier: "", password: "" },
+    defaultValues: { email: "", password: "" },
     mode: "onSubmit",
   });
 
@@ -40,11 +41,14 @@ export function PasswordLoginForm() {
       setSession({
         accessToken: session.accessToken,
         refreshToken: session.refreshToken,
-        expiresAt: session.expiresAt,
         method: "password",
       });
       setUser(session.user, session.memberships);
-      navigate("/post-login", { replace: true });
+      queryClient.setQueryData(["auth", "me"], {
+        user: session.user,
+        memberships: session.memberships,
+      });
+      navigate("/", { replace: true });
     } catch (error) {
       const messageKey =
         error instanceof AppError && error.code === "unauthorized"
@@ -62,24 +66,25 @@ export function PasswordLoginForm() {
       <form onSubmit={onSubmit} className="space-y-5" noValidate>
         <FormField
           control={form.control}
-          name="identifier"
+          name="email"
           render={({ field }) => (
             <FormItem className="space-y-2">
               <FormLabel className="text-xs font-medium uppercase tracking-[0.2em] text-slate-400">
-                {t("login.identifierLabel")}
+                {t("login.emailLabel")}
               </FormLabel>
               <FormControl>
                 <FieldInput
-                  placeholder={t("login.identifierPlaceholder")}
-                  autoComplete="username"
+                  type="email"
+                  placeholder={t("login.emailPlaceholder")}
+                  autoComplete="email"
                   disabled={isPending}
-                  icon={<User className="h-4 w-4" />}
+                  icon={<Mail className="h-4 w-4" />}
                   {...field}
                 />
               </FormControl>
               <FormMessage className="text-xs text-rose-400">
-                {form.formState.errors.identifier?.message
-                  ? t(form.formState.errors.identifier.message)
+                {form.formState.errors.email?.message
+                  ? t(form.formState.errors.email.message)
                   : null}
               </FormMessage>
             </FormItem>

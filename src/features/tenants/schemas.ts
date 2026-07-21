@@ -34,31 +34,46 @@ export const tenantSchema = z.object({
   users_count: z.number().int().nonnegative(),
 });
 
-export const membershipSchema = z.object({
-  tenant_id: z.string(),
-  tenant_slug: z.string(),
-  tenant_name: z.string(),
-  role: z.enum(["owner", "admin", "moderator", "viewer"]),
-  permissions: z.array(z.string()),
-  theme: tenantThemeSchema.nullable(),
-  last_accessed_at: z.string().nullable(),
+export const apiRoleSchema = z.object({
+  id: z.union([z.string(), z.number()]),
+  name: z.string(),
 });
 
-export const authUserSchema = z.object({
-  id: z.string(),
+export const apiProductSchema = z.object({
+  id: z.number().int(),
+  name: z.string(),
+  slug: z.string().nullable().optional(),
+  role: apiRoleSchema,
+});
+
+export const apiUserSchema = z.object({
   name: z.string(),
   email: z.string().email(),
-  avatar_url: z.string().nullable(),
-  is_super_admin: z.boolean(),
+  role: apiRoleSchema.nullable().optional(),
+  products: z.array(apiProductSchema),
+});
+
+export const loginResponseSchema = z.object({
+  access_token: z.string(),
+  refresh_token: z.string(),
+  user: apiUserSchema,
 });
 
 export const meResponseSchema = z.object({
-  user: authUserSchema,
-  memberships: z.array(membershipSchema),
+  user: apiUserSchema,
+});
+
+export const ssoInitResponseSchema = z.object({
+  data: z.object({
+    url: z.string().url(),
+  }),
 });
 
 export type RawTenant = z.infer<typeof tenantSchema>;
 export type RawTenantTheme = z.infer<typeof tenantThemeSchema>;
-export type RawMembership = z.infer<typeof membershipSchema>;
-export type RawAuthUser = z.infer<typeof authUserSchema>;
+export type RawApiRole = z.infer<typeof apiRoleSchema>;
+export type RawApiProduct = z.infer<typeof apiProductSchema>;
+export type RawApiUser = z.infer<typeof apiUserSchema>;
+export type RawLoginResponse = z.infer<typeof loginResponseSchema>;
 export type RawMeResponse = z.infer<typeof meResponseSchema>;
+export type RawSsoInitResponse = z.infer<typeof ssoInitResponseSchema>;

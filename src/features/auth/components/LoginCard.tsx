@@ -7,7 +7,7 @@ import { SsoLoginButton } from "./SsoLoginButton";
 
 export function LoginCard() {
   const { t } = useTranslation("auth");
-  const { passwordEnabled, ssoEnabled, mocked } = env.auth;
+  const { passwordEnabled, ssoEnabled } = env.auth;
   const showBoth = passwordEnabled && ssoEnabled;
 
   return (
@@ -25,12 +25,6 @@ export function LoginCard() {
           {showBoth ? <AuthDivider /> : null}
 
           {ssoEnabled ? <SsoLoginButton /> : null}
-
-          {mocked && passwordEnabled ? (
-            <p className="rounded-md border border-teal-400/20 bg-teal-400/5 px-3 py-2 text-[11px] leading-relaxed text-teal-200/80">
-              {t("login.mockHint")}
-            </p>
-          ) : null}
 
           <p className="text-center text-[11px] text-slate-500">{t("login.help")}</p>
         </div>

@@ -1,7 +1,11 @@
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/authStore";
-import { oidcClient } from "@/lib/oidcClient";
+import { useTenantStore } from "@/stores/tenantStore";
+import { queryClient } from "@/lib/queryClient";
+import { resetTenantTheme } from "@/lib/tenantTheme";
+import { logoutRequest } from "@/features/auth/api";
 import { ShieldOff } from "lucide-react";
 import { useDefaultTheme } from "@/hooks/useDefaultTheme";
 
@@ -9,14 +13,18 @@ export function AccessDeniedPage() {
   useDefaultTheme();
   const { t } = useTranslation("auth");
   const clear = useAuthStore((s) => s.clear);
+  const clearTenant = useTenantStore((s) => s.clear);
+  const navigate = useNavigate();
+
   const onSignOut = async () => {
+    await logoutRequest();
+    queryClient.removeQueries();
+    clearTenant();
+    resetTenantTheme();
     clear();
-    try {
-      await oidcClient.signoutRedirect();
-    } catch {
-      window.location.href = "/login";
-    }
+    navigate("/login", { replace: true });
   };
+
   return (
     <div className="flex min-h-screen items-center justify-center p-6">
       <div className="max-w-md space-y-4 rounded-lg border bg-card p-8 text-center shadow-sm">

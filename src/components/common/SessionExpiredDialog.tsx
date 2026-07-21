@@ -10,23 +10,24 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/authStore";
-import { oidcClient } from "@/lib/oidcClient";
+import { useTenantStore } from "@/stores/tenantStore";
+import { queryClient } from "@/lib/queryClient";
+import { resetTenantTheme } from "@/lib/tenantTheme";
 
 export function SessionExpiredDialog() {
   const status = useAuthStore((s) => s.status);
-  const method = useAuthStore((s) => s.method);
   const clear = useAuthStore((s) => s.clear);
+  const clearTenant = useTenantStore((s) => s.clear);
   const navigate = useNavigate();
   const { t } = useTranslation("auth");
   const open = status === "expired";
 
   const onReauth = () => {
-    if (method === "password") {
-      clear();
-      navigate("/login", { replace: true });
-      return;
-    }
-    void oidcClient.signinRedirect();
+    queryClient.removeQueries();
+    clearTenant();
+    resetTenantTheme();
+    clear();
+    navigate("/login", { replace: true });
   };
 
   return (

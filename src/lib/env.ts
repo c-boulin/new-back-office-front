@@ -1,31 +1,63 @@
-const passwordEnabled = import.meta.env.VITE_AUTH_PASSWORD_ENABLED === "true";
-const ssoEnabled = import.meta.env.VITE_AUTH_SSO_ENABLED === "true";
+const FALLBACK_API_BASE_URL = [
+  "https:",
+  "",
+  "876avtwsc1.execute-api.eu-west-1.amazonaws.com/dev/api",
+].join("/");
+const FALLBACK_PRODUCT_ID = 69;
+
+function readString(key: keyof ImportMetaEnv, fallback: string): string {
+  const raw = import.meta.env[key];
+  if (typeof raw === "string" && raw.length > 0) return raw;
+  if (import.meta.env.DEV) {
+    console.warn("[env] " + key + " missing, using fallback: " + fallback);
+  }
+  return fallback;
+}
+
+function readBool(key: keyof ImportMetaEnv, fallback: boolean): boolean {
+  const raw = import.meta.env[key];
+  if (raw === "true") return true;
+  if (raw === "false") return false;
+  return fallback;
+}
+
+function readProductId(): number {
+  const raw = import.meta.env.VITE_DEFAULT_PRODUCT_ID;
+  const parsed = raw ? Number(raw) : NaN;
+  if (Number.isFinite(parsed) && Number.isInteger(parsed) && parsed > 0) {
+    return parsed;
+  }
+  if (import.meta.env.DEV) {
+    console.warn(
+      "[env] VITE_DEFAULT_PRODUCT_ID missing or invalid, using fallback: " +
+        FALLBACK_PRODUCT_ID,
+    );
+  }
+  return FALLBACK_PRODUCT_ID;
+}
+
+const passwordEnabled = readBool("VITE_AUTH_PASSWORD_ENABLED", true);
+const ssoEnabled = readBool("VITE_AUTH_SSO_ENABLED", true);
 
 if (!passwordEnabled && !ssoEnabled) {
   throw new Error(
-    "[env] At least one auth method must be enabled: set VITE_AUTH_PASSWORD_ENABLED or VITE_AUTH_SSO_ENABLED to \"true\".",
+    "[env] At least one auth method must be enabled: set VITE_AUTH_PASSWORD_ENABLED or VITE_AUTH_SSO_ENABLED to true.",
   );
 }
 
 export const env = {
-  apiBaseUrl: import.meta.env.VITE_API_BASE_URL as string,
-  sso: {
-    authority: import.meta.env.VITE_SSO_AUTHORITY as string,
-    clientId: import.meta.env.VITE_SSO_CLIENT_ID as string,
-    redirectUri: import.meta.env.VITE_SSO_REDIRECT_URI as string,
-    postLogoutRedirectUri: import.meta.env.VITE_SSO_POST_LOGOUT_REDIRECT_URI as string,
-    scope: import.meta.env.VITE_SSO_SCOPE as string,
-  },
+  apiBaseUrl: readString("VITE_API_BASE_URL", FALLBACK_API_BASE_URL),
+  defaultProductId: readProductId(),
   auth: {
     passwordEnabled,
     ssoEnabled,
-    mocked: import.meta.env.VITE_AUTH_MOCK === "true",
+    mocked: readBool("VITE_AUTH_MOCK", false),
   },
   mock: {
-    api: import.meta.env.VITE_MOCK_API === "true",
-    persist: import.meta.env.VITE_MOCK_PERSIST === "true",
+    api: readBool("VITE_MOCK_API", false),
+    persist: readBool("VITE_MOCK_PERSIST", false),
   },
   flags: {
-    enableMsw: import.meta.env.VITE_ENABLE_MSW === "true",
+    enableMsw: readBool("VITE_ENABLE_MSW", false),
   },
 } as const;

@@ -1,89 +1,115 @@
 import { describe, it, expect } from "vitest";
-import { authUserFromRaw, membershipFromRaw, meResponseFromRaw } from "@/features/auth/adaptors";
+import {
+  apiUserToAuthUser,
+  loginResponseToSession,
+  mapApiRoleName,
+  meResponseToMe,
+  productToMembership,
+} from "@/features/auth/adaptors";
 
-describe("authUserFromRaw", () => {
-  it("converts snake_case fields", () => {
-    const out = authUserFromRaw({
-      id: "u1",
+describe("mapApiRoleName", () => {
+  it.each([
+    ["owner", "owner"],
+    ["admin", "admin"],
+    ["Administrator", "admin"],
+    ["moderator", "moderator"],
+    ["viewer", "viewer"],
+    ["reader", "viewer"],
+    ["totally-unknown-role", "admin"],
+  ] as const)("maps %s -> %s", (input, expected) => {
+    expect(mapApiRoleName(input)).toBe(expected);
+  });
+});
+
+describe("productToMembership", () => {
+  it("uses slug when present, falls back to id string otherwise", () => {
+    expect(
+      productToMembership({
+        id: 69,
+        name: "Luna",
+        slug: "luna",
+        role: { id: 1, name: "admin" },
+      }).tenantSlug,
+    ).toBe("luna");
+    expect(
+      productToMembership({
+        id: 42,
+        name: "Orbit",
+        slug: null,
+        role: { id: 2, name: "moderator" },
+      }).tenantSlug,
+    ).toBe("42");
+  });
+
+  it("projects role name through the mapping and defaults theme + permissions", () => {
+    const m = productToMembership({
+      id: 69,
+      name: "Luna",
+      slug: "luna",
+      role: { id: 1, name: "administrator" },
+    });
+    expect(m.role).toBe("admin");
+    expect(m.permissions).toEqual([]);
+    expect(m.theme).toBeNull();
+    expect(m.lastAccessedAt).toBeNull();
+  });
+});
+
+describe("apiUserToAuthUser", () => {
+  it("derives id from email and forces isSuperAdmin=false", () => {
+    const u = apiUserToAuthUser({
       name: "Alice",
       email: "alice@example.com",
-      avatar_url: null,
-      is_super_admin: true,
+      role: { id: 1, name: "admin" },
+      products: [],
     });
-    expect(out).toEqual({
-      id: "u1",
+    expect(u).toEqual({
+      id: "alice@example.com",
       name: "Alice",
       email: "alice@example.com",
       avatarUrl: null,
-      isSuperAdmin: true,
+      isSuperAdmin: false,
     });
   });
 });
 
-describe("membershipFromRaw", () => {
-  it("converts membership fields and null theme", () => {
-    const out = membershipFromRaw({
-      tenant_id: "t1",
-      tenant_slug: "luna",
-      tenant_name: "Luna",
-      role: "admin",
-      permissions: ["users.read"],
-      theme: null,
-      last_accessed_at: null,
-    });
-    expect(out.tenantId).toBe("t1");
-    expect(out.tenantSlug).toBe("luna");
-    expect(out.tenantName).toBe("Luna");
-    expect(out.theme).toBeNull();
-    expect(out.lastAccessedAt).toBeNull();
-  });
-
-  it("converts theme when present", () => {
-    const out = membershipFromRaw({
-      tenant_id: "t1",
-      tenant_slug: "luna",
-      tenant_name: "Luna",
-      role: "viewer",
-      permissions: [],
-      theme: {
-        primary: "0 0% 0%",
-        accent: "0 0% 100%",
-        background: "0 0% 100%",
-        foreground: "222 47% 11%",
-        radius: "0.5rem",
-        font_sans: "Inter",
-      },
-      last_accessed_at: "2024-06-01",
-    });
-    expect(out.theme?.fontSans).toBe("Inter");
-    expect(out.lastAccessedAt).toBe("2024-06-01");
-  });
-});
-
-describe("meResponseFromRaw", () => {
-  it("maps user and every membership", () => {
-    const out = meResponseFromRaw({
+describe("loginResponseToSession", () => {
+  it("maps tokens and memberships from products", () => {
+    const session = loginResponseToSession({
+      access_token: "at",
+      refresh_token: "rt",
       user: {
-        id: "u1",
         name: "Alice",
         email: "alice@example.com",
-        avatar_url: null,
-        is_super_admin: false,
+        role: { id: 1, name: "admin" },
+        products: [
+          { id: 69, name: "Luna", slug: "luna", role: { id: 1, name: "admin" } },
+          { id: 42, name: "Orbit", slug: "orbit", role: { id: 2, name: "moderator" } },
+        ],
       },
-      memberships: [
-        {
-          tenant_id: "t1",
-          tenant_slug: "luna",
-          tenant_name: "Luna",
-          role: "admin",
-          permissions: [],
-          theme: null,
-          last_accessed_at: null,
-        },
-      ],
     });
-    expect(out.user.name).toBe("Alice");
-    expect(out.memberships).toHaveLength(1);
-    expect(out.memberships[0].tenantId).toBe("t1");
+    expect(session.accessToken).toBe("at");
+    expect(session.refreshToken).toBe("rt");
+    expect(session.memberships).toHaveLength(2);
+    expect(session.memberships[0].tenantId).toBe("69");
+    expect(session.memberships[1].role).toBe("moderator");
+  });
+});
+
+describe("meResponseToMe", () => {
+  it("maps user and derives memberships from products", () => {
+    const me = meResponseToMe({
+      user: {
+        name: "Alice",
+        email: "alice@example.com",
+        role: null,
+        products: [
+          { id: 69, name: "Luna", slug: "luna", role: { id: 1, name: "admin" } },
+        ],
+      },
+    });
+    expect(me.user.email).toBe("alice@example.com");
+    expect(me.memberships).toHaveLength(1);
+    expect(me.memberships[0].tenantSlug).toBe("luna");
   });
 });
