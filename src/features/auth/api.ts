@@ -22,7 +22,10 @@ export async function passwordLogin(
 
 export async function ssoInit(callbackUrl: string): Promise<string> {
   const { data } = await httpClient.get("/v1/auth/sso/init", {
-    params: { callback_url: callbackUrl },
+    params: {
+      callback_url: callbackUrl,
+      product_id: env.defaultProductId,
+    },
   });
   const parsed = validateAndAdapt(data, ssoInitResponseSchema, (r) => r);
   return parsed.data.url;
