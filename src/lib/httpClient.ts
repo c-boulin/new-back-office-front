@@ -43,9 +43,18 @@ export const httpClient: AxiosInstance = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
+const SSO_BYPASS_PREFIX = "/v1/auth/sso/";
+
+function shouldBypassMockAdapter(url: string | undefined): boolean {
+  if (!env.auth.ssoBypassMock) return false;
+  if (!url) return false;
+  return url.split("?")[0].startsWith(SSO_BYPASS_PREFIX);
+}
+
 if (env.mock.api) {
   const adapterPromise = import("@/mocks").then((m) => m.mockAdapter);
   httpClient.interceptors.request.use(async (config) => {
+    if (shouldBypassMockAdapter(config.url)) return config;
     config.adapter = await adapterPromise;
     return config;
   });

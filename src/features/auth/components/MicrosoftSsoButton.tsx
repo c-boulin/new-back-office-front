@@ -1,18 +1,12 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Loader as Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/authStore";
-import { queryClient } from "@/lib/queryClient";
 import { AppError } from "@/lib/httpClient";
-import { env } from "@/lib/env";
-import { passwordLogin, ssoInit } from "../api";
+import { ssoInit } from "../api";
 import { getSsoCallbackUrl } from "../ssoCallback";
-
-const DEMO_EMAIL = "admin@weezchat.fr";
-const DEMO_PASSWORD = "admin123";
 
 function MicrosoftLogo() {
   return (
@@ -27,43 +21,15 @@ function MicrosoftLogo() {
 
 export function MicrosoftSsoButton() {
   const { t } = useTranslation("auth");
-  const navigate = useNavigate();
   const markAuthenticating = useAuthStore((s) => s.markAuthenticating);
-  const setSession = useAuthStore((s) => s.setSession);
-  const setUser = useAuthStore((s) => s.setUser);
   const [pending, setPending] = useState(false);
-
-  const useMockPath = env.auth.mocked || env.mock.api;
-
-  const runMock = async () => {
-    const session = await passwordLogin({ email: DEMO_EMAIL, password: DEMO_PASSWORD });
-    setSession({
-      accessToken: session.accessToken,
-      refreshToken: session.refreshToken,
-      method: "sso",
-    });
-    setUser(session.user, session.memberships);
-    queryClient.setQueryData(["auth", "me"], {
-      user: session.user,
-      memberships: session.memberships,
-    });
-    navigate("/", { replace: true });
-  };
-
-  const runReal = async () => {
-    const url = await ssoInit(getSsoCallbackUrl());
-    window.location.assign(url);
-  };
 
   const onClick = async () => {
     setPending(true);
     markAuthenticating();
     try {
-      if (useMockPath) {
-        await runMock();
-      } else {
-        await runReal();
-      }
+      const url = await ssoInit(getSsoCallbackUrl());
+      window.location.assign(url);
     } catch (err) {
       const detail =
         err instanceof AppError && typeof err.message === "string" ? err.message : null;
