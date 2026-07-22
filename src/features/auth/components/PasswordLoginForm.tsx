@@ -146,10 +146,6 @@ export function PasswordLoginForm({ productName: _productName }: PasswordLoginFo
             t("login.submit")
           )}
         </Button>
-
-        <p className="pt-1 text-center text-xs text-muted-foreground">
-          {t("login.demoHint")}
-        </p>
       </form>
     </Form>
   );
