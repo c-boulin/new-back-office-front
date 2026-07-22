@@ -24,17 +24,17 @@ describe("getSsoCallbackUrl", () => {
     "http://localhost:5173",
     "https://staging.example.com",
     "https://app.example.com:8443",
-  ])("builds ${origin}/auth/callback from window.location.origin=%s at root", (origin) => {
+  ])("builds ${origin}/index.html from window.location.origin=%s at root", (origin) => {
     vi.stubEnv("BASE_URL", "/");
     setOrigin(origin);
-    expect(getSsoCallbackUrl()).toBe(`${origin}/auth/callback`);
+    expect(getSsoCallbackUrl()).toBe(`${origin}/index.html`);
   });
 
   it("prepends the base path when the app is deployed under a subpath", () => {
     vi.stubEnv("BASE_URL", "/pocs/bolt-dating-front-back-office/");
     setOrigin("https://tools.dating.dve-dev.com");
     expect(getSsoCallbackUrl()).toBe(
-      "https://tools.dating.dve-dev.com/pocs/bolt-dating-front-back-office/auth/callback",
+      "https://tools.dating.dve-dev.com/pocs/bolt-dating-front-back-office/index.html",
     );
   });
 
@@ -42,13 +42,13 @@ describe("getSsoCallbackUrl", () => {
     vi.stubEnv("BASE_URL", "/nested/app/");
     setOrigin("https://example.com");
     const url = getSsoCallbackUrl();
-    expect(url).toBe("https://example.com/nested/app/auth/callback");
+    expect(url).toBe("https://example.com/nested/app/index.html");
     expect(url.split("//").length).toBe(2);
   });
 
-  it("does not introduce double slashes when origin is a bare host and base is root", () => {
-    vi.stubEnv("BASE_URL", "/");
-    setOrigin("https://example.com");
-    expect(getSsoCallbackUrl().split("/auth/callback").length).toBe(2);
+  it("targets a real file so static hosts do not 403 on SPA-only routes", () => {
+    vi.stubEnv("BASE_URL", "/pocs/bolt-dating-front-back-office/");
+    setOrigin("https://tools.dating.dve-dev.com");
+    expect(getSsoCallbackUrl().endsWith("/index.html")).toBe(true);
   });
 });
