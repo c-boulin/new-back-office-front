@@ -79,6 +79,7 @@ const routes: Array<{ method: string; pattern: string; handler: Route }> = [
   { method: "PATCH", pattern: "/settings", handler: (r) => ok(tenantData.updateSettings(tenantHeader(r), r.body)) },
 
   { method: "GET", pattern: "/moderation", handler: (r) => ok(moderation.list(tenantHeader(r), r.params)) },
+  { method: "GET", pattern: "/moderation/stats", handler: (r) => ok(moderation.stats(tenantHeader(r))) },
   { method: "POST", pattern: "/moderation/:id/approve", handler: (r, p) => ok(moderation.approve(tenantHeader(r), p.id)) },
   { method: "POST", pattern: "/moderation/:id/reject", handler: (r, p) => ok(moderation.reject(tenantHeader(r), p.id, readReason(r.body))) },
   { method: "POST", pattern: "/moderation/:id/escalate", handler: (r, p) => ok(moderation.escalate(tenantHeader(r), p.id)) },

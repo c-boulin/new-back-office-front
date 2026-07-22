@@ -1,5 +1,6 @@
 import { Menu } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -10,11 +11,10 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { LanguageSwitcher } from "@/components/common/LanguageSwitcher";
-import { TenantSwitcher } from "@/components/common/TenantSwitcher";
+import { ThemeToggle } from "@/components/common/ThemeToggle";
 import { UserMenu } from "@/components/common/UserMenu";
-import type { ReactNode } from "react";
 
-export function TopBar({ mobileNav }: { mobileNav: ReactNode }) {
+export function TopBar({ mobileNav, actions }: { mobileNav: ReactNode; actions?: ReactNode }) {
   const { t } = useTranslation("common");
   return (
     <header className="sticky top-0 z-40 flex h-14 items-center justify-between gap-3 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -30,17 +30,18 @@ export function TopBar({ mobileNav }: { mobileNav: ReactNode }) {
               <Menu />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="p-0">
+          <SheetContent side="left" className="w-72 p-0">
             <SheetHeader className="sr-only">
               <SheetTitle>{t("nav.mobileTitle")}</SheetTitle>
               <SheetDescription>{t("nav.mobileDescription")}</SheetDescription>
             </SheetHeader>
-            <div className="py-6">{mobileNav}</div>
+            {mobileNav}
           </SheetContent>
         </Sheet>
-        <TenantSwitcher />
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1">
+        {actions}
+        <ThemeToggle />
         <LanguageSwitcher />
         <UserMenu />
       </div>

@@ -13,6 +13,9 @@ export const moderationItemSchema = z.object({
   image_url: z.string().nullable(),
   severity: z.enum(["low", "medium", "high"]),
   created_at: z.string(),
+  ai_decision: z.enum(["accepted", "refused", "unknown"]).optional(),
+  content_kind: z.enum(["nickname", "profile_photo", "story", "message"]).optional(),
+  content_preview: z.string().nullable().optional(),
 });
 
 export const paginatedModerationSchema = z.object({
@@ -22,5 +25,15 @@ export const paginatedModerationSchema = z.object({
   page_size: z.number().int().positive(),
 });
 
+export const moderationStatsSchema = z.object({
+  total_processed: z.number().int().nonnegative(),
+  pending: z.number().int().nonnegative(),
+  confirmed: z.number().int().nonnegative(),
+  reverted: z.number().int().nonnegative(),
+  ai_refused: z.number().int().nonnegative(),
+  ai_accepted: z.number().int().nonnegative(),
+});
+
 export type RawModerationItem = z.infer<typeof moderationItemSchema>;
 export type RawPaginatedModeration = z.infer<typeof paginatedModerationSchema>;
+export type RawModerationStats = z.infer<typeof moderationStatsSchema>;
