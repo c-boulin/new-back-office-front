@@ -71,6 +71,25 @@ const PlatformAdminsPage = lazy(() =>
     default: m.PlatformAdminsPage,
   })),
 );
+const AnimatorsPage = lazy(() =>
+  import("@/features/animators/pages/AnimatorsPage").then((m) => ({ default: m.AnimatorsPage })),
+);
+const CoachesPage = lazy(() =>
+  import("@/features/coaches/pages/CoachesPage").then((m) => ({ default: m.CoachesPage })),
+);
+const CoachAiPage = lazy(() =>
+  import("@/features/coachAi/pages/CoachAiPage").then((m) => ({ default: m.CoachAiPage })),
+);
+const ProductConfigPage = lazy(() =>
+  import("@/features/productConfig/pages/ProductConfigPage").then((m) => ({
+    default: m.ProductConfigPage,
+  })),
+);
+const PermissionsPage = lazy(() =>
+  import("@/features/permissions/pages/PermissionsPage").then((m) => ({
+    default: m.PermissionsPage,
+  })),
+);
 
 export const router = createBrowserRouter([
   {
@@ -119,6 +138,11 @@ export const router = createBrowserRouter([
               { path: "subscriptions", element: <SubscriptionsPage /> },
               { path: "analytics", element: <AnalyticsPage /> },
               { path: "settings", element: <SettingsPage /> },
+              { path: "animators", element: <AnimatorsPage /> },
+              { path: "coaches", element: <CoachesPage /> },
+              { path: "coach-ai", element: <CoachAiPage /> },
+              { path: "product-config", element: <ProductConfigPage /> },
+              { path: "permissions", element: <PermissionsPage /> },
             ],
           },
         ],
