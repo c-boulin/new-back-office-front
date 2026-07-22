@@ -1,3 +1,4 @@
 export function getSsoCallbackUrl(): string {
-  return `${window.location.origin}/auth/callback`;
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+  return `${window.location.origin}${base}/auth/callback`;
 }

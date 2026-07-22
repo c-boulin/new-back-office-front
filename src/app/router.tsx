@@ -91,63 +91,68 @@ const PermissionsPage = lazy(() =>
   })),
 );
 
-export const router = createBrowserRouter([
-  {
-    element: <AuthLayout />,
-    errorElement: <RouteErrorFallback />,
-    children: [
-      { path: "/login", element: <LoginPage /> },
-      { path: "/auth/callback", element: <CallbackPage /> },
-    ],
-  },
-  { path: "/access-denied", element: <AccessDeniedPage /> },
-  {
-    element: <RequireAuth />,
-    children: [
-      { path: "/", element: <PostLoginRouter /> },
-      { path: "/tenants", element: <TenantChooserPage /> },
-      {
-        path: "/admin",
-        element: <RequireSuperAdmin />,
-        children: [
-          {
-            element: <SuperAdminLayout />,
-            errorElement: <RouteErrorFallback />,
-            children: [
-              { index: true, element: <SuperAdminDashboardPage /> },
-              { path: "tenants", element: <TenantsListPage /> },
-              { path: "admins", element: <PlatformAdminsPage /> },
-            ],
-          },
-        ],
-      },
-      {
-        path: "/t/:tenantSlug",
-        element: <RequireTenant />,
-        children: [
-          {
-            element: <TenantLayout />,
-            errorElement: <RouteErrorFallback />,
-            children: [
-              { index: true, element: <TenantDashboardPage /> },
-              { path: "users", element: <UsersListPage /> },
-              { path: "moderation", element: <ModerationPage /> },
-              { path: "reports", element: <ReportsPage /> },
-              { path: "matches", element: <MatchesPage /> },
-              { path: "messages", element: <MessagesPage /> },
-              { path: "subscriptions", element: <SubscriptionsPage /> },
-              { path: "analytics", element: <AnalyticsPage /> },
-              { path: "settings", element: <SettingsPage /> },
-              { path: "animators", element: <AnimatorsPage /> },
-              { path: "coaches", element: <CoachesPage /> },
-              { path: "coach-ai", element: <CoachAiPage /> },
-              { path: "product-config", element: <ProductConfigPage /> },
-              { path: "permissions", element: <PermissionsPage /> },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  { path: "*", element: <Navigate to="/" replace /> },
-]);
+const routerBasename = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+export const router = createBrowserRouter(
+  [
+    {
+      element: <AuthLayout />,
+      errorElement: <RouteErrorFallback />,
+      children: [
+        { path: "/login", element: <LoginPage /> },
+        { path: "/auth/callback", element: <CallbackPage /> },
+      ],
+    },
+    { path: "/access-denied", element: <AccessDeniedPage /> },
+    {
+      element: <RequireAuth />,
+      children: [
+        { path: "/", element: <PostLoginRouter /> },
+        { path: "/tenants", element: <TenantChooserPage /> },
+        {
+          path: "/admin",
+          element: <RequireSuperAdmin />,
+          children: [
+            {
+              element: <SuperAdminLayout />,
+              errorElement: <RouteErrorFallback />,
+              children: [
+                { index: true, element: <SuperAdminDashboardPage /> },
+                { path: "tenants", element: <TenantsListPage /> },
+                { path: "admins", element: <PlatformAdminsPage /> },
+              ],
+            },
+          ],
+        },
+        {
+          path: "/t/:tenantSlug",
+          element: <RequireTenant />,
+          children: [
+            {
+              element: <TenantLayout />,
+              errorElement: <RouteErrorFallback />,
+              children: [
+                { index: true, element: <TenantDashboardPage /> },
+                { path: "users", element: <UsersListPage /> },
+                { path: "moderation", element: <ModerationPage /> },
+                { path: "reports", element: <ReportsPage /> },
+                { path: "matches", element: <MatchesPage /> },
+                { path: "messages", element: <MessagesPage /> },
+                { path: "subscriptions", element: <SubscriptionsPage /> },
+                { path: "analytics", element: <AnalyticsPage /> },
+                { path: "settings", element: <SettingsPage /> },
+                { path: "animators", element: <AnimatorsPage /> },
+                { path: "coaches", element: <CoachesPage /> },
+                { path: "coach-ai", element: <CoachAiPage /> },
+                { path: "product-config", element: <ProductConfigPage /> },
+                { path: "permissions", element: <PermissionsPage /> },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    { path: "*", element: <Navigate to="/" replace /> },
+  ],
+  { basename: routerBasename },
+);

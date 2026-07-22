@@ -4,7 +4,20 @@ import path from "node:path";
 // @ts-expect-error - JS plugin, no types needed.
 import { jsxTailGuard } from "./scripts/jsx-tail-guard.mjs";
 
-export default defineConfig({
+// Static hosting on S3/CloudFront serves this bundle under a subpath prefix.
+// Local `vite` dev still runs at the root, so base is command-dependent.
+const DEPLOY_BASE = "/pocs/bolt-dating-front-back-office/";
+
+function resolveBase(command: "serve" | "build"): string {
+  const override = process.env.VITE_BASE_PATH;
+  if (override && override.startsWith("/") && override.endsWith("/")) {
+    return override;
+  }
+  return command === "build" ? DEPLOY_BASE : "/";
+}
+
+export default defineConfig(({ command }) => ({
+  base: resolveBase(command),
   plugins: [jsxTailGuard(), react()],
   resolve: {
     alias: {
@@ -56,4 +69,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));
