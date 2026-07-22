@@ -1,34 +1,38 @@
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { env } from "@/lib/env";
-import { WatchtowerBrand } from "./WatchtowerBrand";
+import { AuthBrandHeader } from "./AuthBrandHeader";
+import { ProductPicker } from "./ProductPicker";
 import { PasswordLoginForm } from "./PasswordLoginForm";
 import { AuthDivider } from "./AuthDivider";
-import { SsoLoginButton } from "./SsoLoginButton";
+import { MicrosoftSsoButton } from "./MicrosoftSsoButton";
+import { PRODUCT_CATALOG, type CatalogProduct } from "./product-catalog";
 
 export function LoginCard() {
   const { t } = useTranslation("auth");
   const { passwordEnabled, ssoEnabled } = env.auth;
+  const [selected, setSelected] = useState<CatalogProduct>(PRODUCT_CATALOG[0]);
+
   const showBoth = passwordEnabled && ssoEnabled;
+  const year = useMemo(() => new Date().getFullYear(), []);
 
   return (
-    <div className="relative">
-      <div
-        aria-hidden
-        className="absolute -inset-px rounded-2xl bg-gradient-to-b from-teal-400/25 via-slate-800/0 to-slate-800/0 blur-sm"
-      />
-      <section className="relative overflow-hidden rounded-2xl border border-slate-800/80 bg-slate-950/70 p-8 shadow-[0_40px_80px_-40px_rgba(0,0,0,0.9)] backdrop-blur-xl">
-        <WatchtowerBrand />
+    <div className="w-full max-w-md">
+      <AuthBrandHeader />
 
-        <div className="mt-8 space-y-6">
-          {passwordEnabled ? <PasswordLoginForm /> : null}
+      <section className="space-y-6 rounded-2xl border border-border bg-card p-6 shadow-xl shadow-black/5 sm:p-8">
+        <ProductPicker value={selected} onChange={setSelected} />
 
-          {showBoth ? <AuthDivider /> : null}
+        {ssoEnabled ? <MicrosoftSsoButton /> : null}
 
-          {ssoEnabled ? <SsoLoginButton /> : null}
+        {showBoth ? <AuthDivider /> : null}
 
-          <p className="text-center text-[11px] text-slate-500">{t("login.help")}</p>
-        </div>
+        {passwordEnabled ? <PasswordLoginForm productName={selected.name} /> : null}
       </section>
+
+      <p className="mt-6 text-center text-xs text-muted-foreground">
+        {t("layout.footer", { year })}
+      </p>
     </div>
   );
 }

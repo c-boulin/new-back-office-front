@@ -27,40 +27,111 @@ function isoAt(daysAgo: number, hoursAgo = 0): string {
   return new Date(base - daysAgo * 86_400_000 - hoursAgo * 3_600_000).toISOString();
 }
 
+type ModerationTemplate = {
+  type: RawModerationItem["type"];
+  contentKind: NonNullable<RawModerationItem["content_kind"]>;
+  reason: string;
+  content: string;
+  previews: string[];
+  weight: number;
+};
+
+const MODERATION_TEMPLATES: ModerationTemplate[] = [
+  {
+    type: "profile",
+    contentKind: "nickname",
+    reason: "Nickname flagged by classifier",
+    content: "The pseudonym breaches the community guidelines.",
+    previews: [
+      "DirtyTalker",
+      "HotMama2024",
+      "XxDarkAngelxX",
+      "NaughtyEmma",
+      "SexyBeast92",
+      "BadBoy4Life",
+    ],
+    weight: 3,
+  },
+  {
+    type: "photo",
+    contentKind: "profile_photo",
+    reason: "Profile photo flagged by classifier",
+    content: "Automated review requested — suspected NSFW content.",
+    previews: [],
+    weight: 3,
+  },
+  {
+    type: "message",
+    contentKind: "story",
+    reason: "Story flagged by classifier",
+    content: "Story preview flagged for review.",
+    previews: [
+      "Regardez mon nouveau spot secret...",
+      "Rencontre ce soir chez moi...",
+      "Vous ne devinerez jamais ce que j'ai fait...",
+      "Une belle journée à la plage aujourd'hui.",
+    ],
+    weight: 2,
+  },
+  {
+    type: "report",
+    contentKind: "message",
+    reason: "Message reported by another user",
+    content: "Direct message contains policy-violating language.",
+    previews: [
+      "Envoie moi ton num tout de suite.",
+      "Tu viens chez moi ce soir ?",
+      "Je te paye si tu réponds.",
+    ],
+    weight: 2,
+  },
+];
+
+function pickTemplate(rng: ReturnType<typeof createRng>): ModerationTemplate {
+  const bag: ModerationTemplate[] = [];
+  for (const t of MODERATION_TEMPLATES) {
+    for (let i = 0; i < t.weight; i += 1) bag.push(t);
+  }
+  return rng.pick(bag);
+}
+
 export function buildModerationSeeds(tenantId: string, seed: number): RawModerationItem[] {
   const rng = createRng(seed);
-  const types: RawModerationItem["type"][] = ["profile", "photo", "message", "report"];
   const statuses: RawModerationItem["status"][] = [
     "pending", "pending", "pending", "pending", "approved", "rejected", "escalated",
   ];
   const severities: RawModerationItem["severity"][] = ["low", "medium", "high"];
-  const reasons = [
-    "Suspicious profile photo",
-    "Reported for harassment",
-    "Automated content flag",
-    "User age verification pending",
-    "Duplicate profile detected",
-    "Reported for spam",
+  const decisions: NonNullable<RawModerationItem["ai_decision"]>[] = [
+    "refused", "refused", "refused", "accepted", "unknown",
   ];
-  return Array.from({ length: 48 }, (_, i) => ({
-    id: `mod_${tenantId}_${String(i + 1).padStart(3, "0")}`,
-    type: rng.pick(types),
-    status: rng.pick(statuses),
-    reason: rng.pick(reasons),
-    reported_by: rng.bool(0.7) ? fullName(rng) : null,
-    subject_name: fullName(rng),
-    subject_id: `usr_${tenantId}_${String(rng.int(1, 120)).padStart(4, "0")}`,
-    content: rng.pick([
-      "Profile bio flagged by classifier.",
-      "Photo review requested by user report.",
-      "Message contains policy-violating language.",
-      "Reported by three separate users in the last week.",
-    ]),
-    content_html: null,
-    image_url: null,
-    severity: rng.pick(severities),
-    created_at: isoAt(rng.int(0, 30), rng.int(0, 23)),
-  }));
+  return Array.from({ length: 48 }, (_, i) => {
+    const template = pickTemplate(rng);
+    const preview =
+      template.previews.length > 0 ? rng.pick(template.previews) : null;
+    return {
+      id: `mod_${tenantId}_${String(i + 1).padStart(3, "0")}`,
+      type: template.type,
+      status: rng.pick(statuses),
+      reason: template.reason,
+      reported_by: rng.bool(0.7) ? fullName(rng) : null,
+      subject_name: fullName(rng),
+      subject_id: `usr_${tenantId}_${String(rng.int(1, 120)).padStart(4, "0")}`,
+      content: template.content,
+      content_html: null,
+      image_url:
+        template.contentKind === "profile_photo"
+          ? "https:/" +
+            "/images.pexels.com/photos/" +
+            String(1000000 + rng.int(0, 500)) +
+            "/pexels-photo.jpeg?auto=compress&w=320"
+          : null,
+      severity: rng.pick(severities),
+      created_at: isoAt(rng.int(0, 30), rng.int(0, 23)),
+      ai_decision: rng.pick(decisions),
+      content_kind: template.contentKind,
+      content_preview: preview,
+    };
+  });
 }
 
 export function buildReportSeeds(tenantId: string, seed: number): RawReport[] {

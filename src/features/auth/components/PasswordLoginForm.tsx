@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Eye, EyeOff, KeyRound, Loader as Loader2, Lock, Mail } from "lucide-react";
+import { Lock, Loader as Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,19 +15,23 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 import { AppError } from "@/lib/httpClient";
 import { queryClient } from "@/lib/queryClient";
+import { cn } from "@/lib/utils";
 import { passwordCredentialsSchema, type PasswordCredentialsInput } from "../password/schemas";
 import { passwordLogin } from "../api";
 import { useAuthStore } from "@/stores/authStore";
 
-export function PasswordLoginForm() {
+export type PasswordLoginFormProps = {
+  productName: string;
+};
+
+export function PasswordLoginForm({ productName: _productName }: PasswordLoginFormProps) {
   const { t } = useTranslation("auth");
   const navigate = useNavigate();
   const setSession = useAuthStore((s) => s.setSession);
   const setUser = useAuthStore((s) => s.setUser);
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword] = useState(false);
 
   const form = useForm<PasswordCredentialsInput>({
     resolver: zodResolver(passwordCredentialsSchema),
@@ -63,26 +67,33 @@ export function PasswordLoginForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit} className="space-y-5" noValidate>
+      <form onSubmit={onSubmit} className="space-y-4" noValidate>
+        <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+          <Lock className="h-4 w-4 text-muted-foreground" aria-hidden />
+          {t("login.emailSectionTitle")}
+        </div>
+
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem className="space-y-2">
-              <FormLabel className="text-xs font-medium uppercase tracking-[0.2em] text-slate-400">
-                {t("login.emailLabel")}
-              </FormLabel>
+            <FormItem className="space-y-1.5">
+              <FormLabel className="sr-only">{t("login.emailLabel")}</FormLabel>
               <FormControl>
-                <FieldInput
+                <Input
                   type="email"
                   placeholder={t("login.emailPlaceholder")}
                   autoComplete="email"
+                  aria-label={t("login.emailLabel")}
                   disabled={isPending}
-                  icon={<Mail className="h-4 w-4" />}
+                  className={cn(
+                    "h-11 rounded-full border-border bg-card px-5 text-sm",
+                    "focus-visible:ring-primary/50",
+                  )}
                   {...field}
                 />
               </FormControl>
-              <FormMessage className="text-xs text-rose-400">
+              <FormMessage>
                 {form.formState.errors.email?.message
                   ? t(form.formState.errors.email.message)
                   : null}
@@ -95,32 +106,23 @@ export function PasswordLoginForm() {
           control={form.control}
           name="password"
           render={({ field }) => (
-            <FormItem className="space-y-2">
-              <FormLabel className="text-xs font-medium uppercase tracking-[0.2em] text-slate-400">
-                {t("login.passwordLabel")}
-              </FormLabel>
+            <FormItem className="space-y-1.5">
+              <FormLabel className="sr-only">{t("login.passwordLabel")}</FormLabel>
               <FormControl>
-                <FieldInput
+                <Input
                   type={showPassword ? "text" : "password"}
                   placeholder={t("login.passwordPlaceholder")}
                   autoComplete="current-password"
+                  aria-label={t("login.passwordLabel")}
                   disabled={isPending}
-                  icon={<Lock className="h-4 w-4" />}
-                  trailing={
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword((v) => !v)}
-                      className="text-slate-500 transition hover:text-teal-300"
-                      aria-label={t(showPassword ? "login.hidePassword" : "login.showPassword")}
-                      tabIndex={-1}
-                    >
-                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
-                  }
+                  className={cn(
+                    "h-11 rounded-full border-border bg-card px-5 text-sm",
+                    "focus-visible:ring-primary/50",
+                  )}
                   {...field}
                 />
               </FormControl>
-              <FormMessage className="text-xs text-rose-400">
+              <FormMessage>
                 {form.formState.errors.password?.message
                   ? t(form.formState.errors.password.message)
                   : null}
@@ -133,44 +135,22 @@ export function PasswordLoginForm() {
           type="submit"
           size="lg"
           disabled={isPending}
-          className="h-11 w-full bg-gradient-to-r from-teal-400 to-cyan-400 text-slate-950 shadow-[0_10px_30px_-10px_rgba(45,212,191,0.6)] transition hover:from-teal-300 hover:to-cyan-300 focus-visible:ring-teal-400 disabled:opacity-70"
+          className="h-12 w-full rounded-full bg-primary text-base font-semibold text-primary-foreground shadow-md hover:bg-primary/90"
         >
           {isPending ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />
               {t("login.submitting")}
             </>
           ) : (
-            <>
-              <KeyRound className="mr-2 h-4 w-4" />
-              {t("login.submit")}
-            </>
+            t("login.submit")
           )}
         </Button>
+
+        <p className="pt-1 text-center text-xs text-muted-foreground">
+          {t("login.demoHint")}
+        </p>
       </form>
     </Form>
   );
 }
-
-type FieldInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
-  icon?: React.ReactNode;
-  trailing?: React.ReactNode;
-};
-
-const FieldInput = ({ icon, trailing, className, ...props }: FieldInputProps) => (
-  <div
-    className={cn(
-      "group relative flex items-center rounded-lg border border-slate-800 bg-slate-950/70 transition focus-within:border-teal-400/60 focus-within:ring-1 focus-within:ring-teal-400/40",
-      className,
-    )}
-  >
-    {icon ? (
-      <span className="pl-3 text-slate-500 group-focus-within:text-teal-300">{icon}</span>
-    ) : null}
-    <Input
-      {...props}
-      className="h-11 border-0 bg-transparent px-3 text-sm text-slate-100 placeholder:text-slate-500 focus-visible:ring-0 focus-visible:ring-offset-0"
-    />
-    {trailing ? <span className="pr-3">{trailing}</span> : null}
-  </div>
-);

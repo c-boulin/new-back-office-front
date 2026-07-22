@@ -39,9 +39,21 @@
     "settings": "Settings",
     "superAdmin": "Super admin",
     "tenants": "Tenants",
+    "animators": "Animators",
+    "coaches": "Coaches",
+    "coachAi": "AI coach",
+    "productConfig": "Product config",
+    "permissions": "Permissions",
     "openMenu": "Open navigation",
     "mobileTitle": "Navigation",
-    "mobileDescription": "Browse the application"
+    "mobileDescription": "Browse the application",
+    "groups": {
+      "main": "Main",
+      "animation": "Animation",
+      "analysis": "Analysis",
+      "moderation": "Moderation",
+      "configuration": "Configuration"
+    }
   },
   "pagination": {
     "page": "Page {{page}} of {{total}}",
@@ -51,5 +63,47 @@
   "skipToContent": "Skip to main content",
   "connectivity": {
     "offline": "You are offline. Some features may be unavailable."
+  },
+  "themeToggle": {
+    "switchToDark": "Switch to dark mode",
+    "switchToLight": "Switch to light mode"
+  },
+  "roles": {
+    "superAdmin": "Super admin",
+    "admin": "Administrator",
+    "operator": "Operator"
+  },
+  "productCard": {
+    "label": "Active product",
+    "switch": "Switch product",
+    "search": "Search product",
+    "empty": "No product found"
+  },
+  "placeholders": {
+    "animators": {
+      "description": "Manage animators, their schedules and performance.",
+      "emptyTitle": "Animators coming soon",
+      "emptyDescription": "This module will be available soon."
+    },
+    "coaches": {
+      "description": "Manage coaches supporting your users.",
+      "emptyTitle": "Coaches coming soon",
+      "emptyDescription": "This module will be available soon."
+    },
+    "coachAi": {
+      "description": "Configure the AI assistant offered to your users.",
+      "emptyTitle": "AI coach coming soon",
+      "emptyDescription": "This module will be available soon."
+    },
+    "productConfig": {
+      "description": "Configure your product's behaviour and appearance.",
+      "emptyTitle": "Configuration coming soon",
+      "emptyDescription": "This module will be available soon."
+    },
+    "permissions": {
+      "description": "Control team roles and access.",
+      "emptyTitle": "Permissions coming soon",
+      "emptyDescription": "This module will be available soon."
+    }
   }
 }

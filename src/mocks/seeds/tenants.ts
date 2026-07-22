@@ -1,76 +1,91 @@
 import type { RawTenant, RawTenantTheme } from "@/features/tenants/schemas";
 
-const darkSurface: Omit<RawTenantTheme, "primary" | "accent" | "radius" | "font_sans" | "background" | "foreground"> = {
-  card: "222 47% 8%",
-  card_foreground: "210 40% 98%",
-  popover: "222 47% 8%",
-  popover_foreground: "210 40% 98%",
-  secondary: "217 33% 17%",
-  secondary_foreground: "210 40% 98%",
-  muted: "217 33% 17%",
-  muted_foreground: "215 20% 65%",
-  border: "217 33% 22%",
-  input: "217 33% 22%",
-  primary_foreground: "222 47% 11%",
-  accent_foreground: "222 47% 11%",
-};
+const BASE_RADIUS = "1rem";
+const BASE_FONT = "Inter, system-ui, sans-serif";
 
-function darkTheme(primary: string, accent: string): RawTenantTheme {
+/**
+ * Tenant themes only override brand tokens (primary/accent/ring + radius/font).
+ * Surface tokens (background/foreground/card/…) come from the base :root and
+ * .dark stylesheets in index.css so the global light/dark toggle keeps working
+ * for every tenant.
+ */
+function productTheme(primary: string, accent: string): RawTenantTheme {
   return {
     primary,
     accent,
-    background: "222 47% 6%",
-    foreground: "210 40% 98%",
-    radius: "0.75rem",
-    font_sans: "Inter, system-ui, sans-serif",
+    background: "",
+    foreground: "",
+    radius: BASE_RADIUS,
+    font_sans: BASE_FONT,
     ring: primary,
-    ...darkSurface,
   };
 }
 
 export const tenantSeeds: RawTenant[] = [
   {
-    id: "tnt_luna",
-    slug: "luna",
-    name: "Luna",
+    id: "101",
+    slug: "woozgo",
+    name: "Woozgo",
     logo_url: null,
     status: "active",
-    theme: darkTheme("199 89% 55%", "174 72% 48%"),
-    feature_flags: { premium: true, moderation: true, video: false },
+    theme: productTheme("158 34% 52%", "158 34% 62%"),
+    feature_flags: { premium: true, moderation: true, video: false, coach_ai: true },
     created_at: "2024-08-12T09:00:00.000Z",
-    users_count: 82,
+    users_count: 1287,
   },
   {
-    id: "tnt_orbit",
-    slug: "orbit",
-    name: "Orbit",
+    id: "102",
+    slug: "weezchat-fr",
+    name: "Weezchat FR",
     logo_url: null,
     status: "active",
-    theme: darkTheme("162 63% 41%", "35 92% 55%"),
-    feature_flags: { premium: true, moderation: true, video: true },
-    created_at: "2024-11-01T09:00:00.000Z",
-    users_count: 46,
+    theme: productTheme("343 74% 56%", "343 74% 68%"),
+    feature_flags: { premium: true, moderation: true, video: true, coach_ai: true },
+    created_at: "2024-05-01T09:00:00.000Z",
+    users_count: 3210,
   },
   {
-    id: "tnt_nova",
-    slug: "nova",
-    name: "Nova",
+    id: "103",
+    slug: "weezchat-ci",
+    name: "Weezchat CI",
     logo_url: null,
-    status: "provisioning",
-    theme: darkTheme("12 88% 58%", "45 92% 55%"),
-    feature_flags: { premium: false, moderation: true, video: false },
-    created_at: "2025-02-19T09:00:00.000Z",
-    users_count: 0,
+    status: "active",
+    theme: productTheme("22 88% 55%", "22 88% 68%"),
+    feature_flags: { premium: false, moderation: true, video: false, coach_ai: false },
+    created_at: "2024-09-10T09:00:00.000Z",
+    users_count: 812,
   },
   {
-    id: "tnt_atlas",
-    slug: "atlas",
-    name: "Atlas",
+    id: "104",
+    slug: "toolov-sk",
+    name: "Toolov SK",
     logo_url: null,
-    status: "suspended",
-    theme: darkTheme("220 76% 55%", "195 76% 55%"),
-    feature_flags: { premium: true, moderation: false, video: false },
-    created_at: "2023-05-10T09:00:00.000Z",
-    users_count: 12,
+    status: "active",
+    theme: productTheme("199 84% 47%", "199 84% 62%"),
+    feature_flags: { premium: true, moderation: true, video: true, coach_ai: false },
+    created_at: "2024-11-20T09:00:00.000Z",
+    users_count: 574,
+  },
+  {
+    id: "105",
+    slug: "weezchat-tg",
+    name: "Weezchat TG",
+    logo_url: null,
+    status: "active",
+    theme: productTheme("48 89% 52%", "48 89% 65%"),
+    feature_flags: { premium: false, moderation: true, video: false, coach_ai: false },
+    created_at: "2025-01-14T09:00:00.000Z",
+    users_count: 341,
+  },
+  {
+    id: "106",
+    slug: "swipi",
+    name: "Swipi",
+    logo_url: null,
+    status: "active",
+    theme: productTheme("174 65% 40%", "174 65% 55%"),
+    feature_flags: { premium: true, moderation: true, video: true, coach_ai: true },
+    created_at: "2025-03-01T09:00:00.000Z",
+    users_count: 908,
   },
 ];

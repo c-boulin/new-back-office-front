@@ -23,7 +23,11 @@
     "profile": "Profile",
     "photo": "Photo",
     "message": "Message",
-    "report": "Report"
+    "report": "Report",
+    "all": "All",
+    "nickname": "Nicknames",
+    "profilePhoto": "Profile photos",
+    "story": "Stories"
   },
   "statuses": {
     "pending": "Pending",
@@ -48,5 +52,29 @@
       "description": "The submission will be removed and the reporter notified.",
       "confirm": "Reject item"
     }
+  },
+  "stats": {
+    "totalProcessed": "Total processed",
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "reverted": "Reverted",
+    "aiRefused": "Refused by AI",
+    "aiAccepted": "Accepted by AI"
+  },
+  "aiDecision": {
+    "accepted": "Accepted by AI",
+    "refused": "Refused by AI",
+    "unknown": "Not processed by AI",
+    "label": "AI decision"
+  },
+  "pendingReviewPill": "Awaiting review",
+  "detail": {
+    "emptyTitle": "Select an item",
+    "emptyDescription": "Click an item on the left to see its details.",
+    "sectionContent": "Content to moderate",
+    "sectionMeta": "Metadata",
+    "author": "Author",
+    "reportedAt": "Reported at",
+    "type": "Type"
   }
 }

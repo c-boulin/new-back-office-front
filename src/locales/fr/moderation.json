@@ -23,7 +23,11 @@
     "profile": "Profil",
     "photo": "Photo",
     "message": "Message",
-    "report": "Signalement"
+    "report": "Signalement",
+    "all": "Tous",
+    "nickname": "Pseudos",
+    "profilePhoto": "Photos de profil",
+    "story": "Stories"
   },
   "statuses": {
     "pending": "En attente",
@@ -48,5 +52,29 @@
       "description": "La soumission sera supprimée et l'auteur du signalement notifié.",
       "confirm": "Rejeter"
     }
+  },
+  "stats": {
+    "totalProcessed": "Total traités",
+    "pending": "En attente",
+    "confirmed": "Confirmés",
+    "reverted": "Revertés",
+    "aiRefused": "Refusés IA",
+    "aiAccepted": "Acceptés IA"
+  },
+  "aiDecision": {
+    "accepted": "Accepté par l'IA",
+    "refused": "Refusé par l'IA",
+    "unknown": "Non traité par l'IA",
+    "label": "Décision IA"
+  },
+  "pendingReviewPill": "En attente de revue",
+  "detail": {
+    "emptyTitle": "Sélectionnez un élément",
+    "emptyDescription": "Cliquez sur un élément à gauche pour voir ses détails.",
+    "sectionContent": "Contenu à modérer",
+    "sectionMeta": "Informations",
+    "author": "Auteur",
+    "reportedAt": "Signalé le",
+    "type": "Type"
   }
 }

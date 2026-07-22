@@ -33,34 +33,34 @@ describe("applyTenantTheme", () => {
     resetTenantTheme();
   });
 
-  it("writes each CSS variable to :root", () => {
+  it("writes only the provided CSS variables and leaves others untouched", () => {
     applyTenantTheme({
       primary: "10 20% 30%",
       accent: "40 50% 60%",
-      background: "0 0% 100%",
-      foreground: "222 47% 11%",
+      ring: "10 20% 30%",
       radius: "0.5rem",
       fontSans: "Arial",
     });
     const root = document.documentElement;
     expect(root.style.getPropertyValue("--primary")).toBe("10 20% 30%");
     expect(root.style.getPropertyValue("--accent")).toBe("40 50% 60%");
+    expect(root.style.getPropertyValue("--ring")).toBe("10 20% 30%");
     expect(root.style.getPropertyValue("--radius")).toBe("0.5rem");
     expect(root.style.getPropertyValue("--font-sans")).toBe("Arial");
+    expect(root.style.getPropertyValue("--background")).toBe("");
+    expect(root.style.getPropertyValue("--foreground")).toBe("");
+    expect(root.style.getPropertyValue("--card")).toBe("");
   });
 
-  it("writes the full token surface even when only partial values are provided", () => {
+  it("does not force any variable when only partial values are provided", () => {
     applyTenantTheme({ primary: "10 20% 30%" });
     const root = document.documentElement;
-    for (const cssVar of ALL_VARS) {
-      expect(
-        root.style.getPropertyValue(cssVar),
-        `${cssVar} should have a value`,
-      ).not.toBe("");
-    }
+    expect(root.style.getPropertyValue("--primary")).toBe("10 20% 30%");
+    expect(root.style.getPropertyValue("--background")).toBe("");
+    expect(root.style.getPropertyValue("--radius")).toBe("");
   });
 
-  it("applies partial extended tokens", () => {
+  it("applies extended tokens when provided", () => {
     applyTenantTheme({
       primary: "1 2% 3%",
       card: "222 47% 8%",
@@ -73,16 +73,17 @@ describe("applyTenantTheme", () => {
     expect(root.style.getPropertyValue("--border")).toBe("217 33% 22%");
   });
 
-  it("falls back to defaults on null", () => {
+  it("resets tenant overrides when called with null", () => {
+    applyTenantTheme({ primary: "1 2% 3%" });
     applyTenantTheme(null);
     for (const cssVar of ALL_VARS) {
-      expect(document.documentElement.style.getPropertyValue(cssVar)).not.toBe("");
+      expect(document.documentElement.style.getPropertyValue(cssVar)).toBe("");
     }
   });
 });
 
 describe("resetTenantTheme", () => {
-  it("removes every tenant CSS variable including the extended surface", () => {
+  it("removes every tenant CSS variable that was pushed", () => {
     applyTenantTheme({ primary: "1 2% 3%", card: "222 47% 8%" });
     resetTenantTheme();
     for (const cssVar of ALL_VARS) {
@@ -146,6 +147,11 @@ describe("applyTenantTheme dev-only contrast warning", () => {
       fontSans: "Inter",
     };
     applyTenantTheme(goodPalette);
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  it("skips the warning when required tokens are missing", () => {
+    applyTenantTheme({ primary: "0 0% 55%" });
     expect(warnSpy).not.toHaveBeenCalled();
   });
 });

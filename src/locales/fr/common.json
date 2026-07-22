@@ -39,9 +39,21 @@
     "settings": "Paramètres",
     "superAdmin": "Super admin",
     "tenants": "Tenants",
+    "animators": "Animateurs",
+    "coaches": "Coachs",
+    "coachAi": "Coach IA",
+    "productConfig": "Configuration produit",
+    "permissions": "Permissions",
     "openMenu": "Ouvrir la navigation",
     "mobileTitle": "Navigation",
-    "mobileDescription": "Parcourir l'application"
+    "mobileDescription": "Parcourir l'application",
+    "groups": {
+      "main": "Principal",
+      "animation": "Animation",
+      "analysis": "Analyse",
+      "moderation": "Modération",
+      "configuration": "Configuration"
+    }
   },
   "pagination": {
     "page": "Page {{page}} sur {{total}}",
@@ -51,5 +63,47 @@
   "skipToContent": "Aller au contenu principal",
   "connectivity": {
     "offline": "Vous êtes hors ligne. Certaines fonctionnalités peuvent être indisponibles."
+  },
+  "themeToggle": {
+    "switchToDark": "Passer en mode sombre",
+    "switchToLight": "Passer en mode clair"
+  },
+  "roles": {
+    "superAdmin": "Super admin",
+    "admin": "Administrateur",
+    "operator": "Opérateur"
+  },
+  "productCard": {
+    "label": "Produit actif",
+    "switch": "Changer de produit",
+    "search": "Rechercher un produit",
+    "empty": "Aucun produit trouvé"
+  },
+  "placeholders": {
+    "animators": {
+      "description": "Gérez les animateurs, leurs plannings et leurs performances.",
+      "emptyTitle": "Animateurs en préparation",
+      "emptyDescription": "Ce module sera bientôt disponible."
+    },
+    "coaches": {
+      "description": "Gérez les coachs qui accompagnent vos utilisateurs.",
+      "emptyTitle": "Coachs en préparation",
+      "emptyDescription": "Ce module sera bientôt disponible."
+    },
+    "coachAi": {
+      "description": "Pilotez l'assistant IA proposé à vos utilisateurs.",
+      "emptyTitle": "Coach IA en préparation",
+      "emptyDescription": "Ce module sera bientôt disponible."
+    },
+    "productConfig": {
+      "description": "Paramétrez le comportement et l'apparence de votre produit.",
+      "emptyTitle": "Configuration en préparation",
+      "emptyDescription": "Ce module sera bientôt disponible."
+    },
+    "permissions": {
+      "description": "Contrôlez les rôles et les accès de l'équipe.",
+      "emptyTitle": "Permissions en préparation",
+      "emptyDescription": "Ce module sera bientôt disponible."
+    }
   }
 }
