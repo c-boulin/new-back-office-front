@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { format } from "date-fns";
-import { AlertCircle, Camera, Image as ImageIcon, MessageSquare, User } from "lucide-react";
+import { CircleAlert as AlertCircle, Camera, Image as ImageIcon, MessageSquare, User } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { sanitizeText } from "@/lib/sanitize";
