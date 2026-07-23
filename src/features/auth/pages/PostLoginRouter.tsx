@@ -1,8 +1,9 @@
 import { useEffect } from "react";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { Navigate } from "react-router-dom";
-import { fetchMe } from "@/features/auth/api";
+import { fetchMe, fetchProducts } from "@/features/auth/api";
 import { useAuthStore } from "@/stores/authStore";
+import { useProductsStore } from "@/stores/productsStore";
 import { RouteBoundary } from "@/components/common/RouteBoundary";
 import { LoadingState } from "@/components/common/LoadingState";
 import { useTenantStore } from "@/stores/tenantStore";
@@ -32,6 +33,7 @@ function ActivateTenant({ target }: { target: TenantMembership }) {
 function PostLoginResolver() {
   useDefaultTheme();
   const setUser = useAuthStore((s) => s.setUser);
+  const setProducts = useProductsStore((s) => s.setProducts);
 
   const { data } = useSuspenseQuery({
     queryKey: ["auth", "me"],
@@ -42,6 +44,16 @@ function PostLoginResolver() {
     },
     staleTime: 60_000,
   });
+
+  const { data: catalog } = useQuery({
+    queryKey: ["auth", "products"],
+    queryFn: fetchProducts,
+    staleTime: 5 * 60_000,
+  });
+
+  useEffect(() => {
+    if (catalog && catalog.length > 0) setProducts(catalog);
+  }, [catalog, setProducts]);
 
   if (data.memberships.length === 0) {
     if (data.user.isSuperAdmin) {
