@@ -6,9 +6,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { RouteBoundary } from "@/components/common/RouteBoundary";
 import { LoadingState } from "@/components/common/LoadingState";
 import { useTenantStore } from "@/stores/tenantStore";
-import { useProductsStore } from "@/stores/productsStore";
 import { applyBrandThemeForTenant } from "@/lib/tenantTheme";
-import { membershipToProduct } from "@/features/auth/products";
 import { PostLoginProductPicker } from "@/features/auth/components/PostLoginProductPicker";
 import { useDefaultTheme } from "@/hooks/useDefaultTheme";
 import type { TenantMembership } from "@/features/auth/types";
@@ -34,14 +32,12 @@ function ActivateTenant({ target }: { target: TenantMembership }) {
 function PostLoginResolver() {
   useDefaultTheme();
   const setUser = useAuthStore((s) => s.setUser);
-  const setProducts = useProductsStore((s) => s.setProducts);
 
   const { data } = useSuspenseQuery({
     queryKey: ["auth", "me"],
     queryFn: async () => {
       const me = await fetchMe();
       setUser(me.user, me.memberships);
-      setProducts(me.memberships.map(membershipToProduct));
       return me;
     },
     staleTime: 60_000,
@@ -63,8 +59,16 @@ function PostLoginResolver() {
 
 export function PostLoginRouter() {
   return (
-    <RouteBoundary loadingFallback={<LoadingState className="p-10" />}>
+    <RouteBoundary loadingFallback={<CenteredLoading />}>
       <PostLoginResolver />
     </RouteBoundary>
+  );
+}
+
+function CenteredLoading() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-muted/30">
+      <LoadingState />
+    </div>
   );
 }

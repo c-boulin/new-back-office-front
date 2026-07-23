@@ -67,11 +67,17 @@ function isAuthEndpoint(url: string | undefined): boolean {
   return stripped.startsWith("/v1/auth/") || stripped === "/v1/auth";
 }
 
+function isPublicCatalog(url: string | undefined): boolean {
+  if (!url) return false;
+  const stripped = url.split("?")[0];
+  return stripped === "/v1/products";
+}
+
 httpClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = useAuthStore.getState().accessToken;
   if (token) config.headers.set("Authorization", `Bearer ${token}`);
 
-  if (!isAuthEndpoint(config.url)) {
+  if (!isAuthEndpoint(config.url) && !isPublicCatalog(config.url)) {
     const activeTenantId = useTenantStore.getState().activeTenantId;
     if (activeTenantId !== null) {
       const params = (config.params ?? {}) as Record<string, unknown>;

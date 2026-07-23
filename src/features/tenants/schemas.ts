@@ -71,6 +71,18 @@ export const ssoInitResponseSchema = z.object({
   }),
 });
 
+export const apiPublicProductSchema = z.object({
+  id: z.number().int(),
+  name: z.string(),
+  slug: z.string().nullable().optional(),
+  color: z.string().nullable().optional(),
+});
+
+export const publicProductsResponseSchema = z.union([
+  z.array(apiPublicProductSchema),
+  z.object({ data: z.array(apiPublicProductSchema) }),
+]);
+
 export type RawTenant = z.infer<typeof tenantSchema>;
 export type RawTenantTheme = z.infer<typeof tenantThemeSchema>;
 export type RawApiRole = z.infer<typeof apiRoleSchema>;
@@ -79,3 +91,5 @@ export type RawApiUser = z.infer<typeof apiUserSchema>;
 export type RawLoginResponse = z.infer<typeof loginResponseSchema>;
 export type RawMeResponse = z.infer<typeof meResponseSchema>;
 export type RawSsoInitResponse = z.infer<typeof ssoInitResponseSchema>;
+export type RawPublicProduct = z.infer<typeof apiPublicProductSchema>;
+export type RawPublicProductsResponse = z.infer<typeof publicProductsResponseSchema>;

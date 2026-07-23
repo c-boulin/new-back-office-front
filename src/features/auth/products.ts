@@ -1,5 +1,5 @@
 import type { TenantMembership } from "@/features/tenants/types";
-import type { RawApiProduct } from "@/features/tenants/schemas";
+import type { RawApiProduct, RawPublicProduct } from "@/features/tenants/schemas";
 
 export type Product = {
   id: number;
@@ -142,6 +142,24 @@ export function apiProductToProduct(raw: RawApiProduct): Product {
     name: raw.name,
     slug,
     color: null,
+    hue,
+    accent,
+  };
+}
+
+/**
+ * Build a UI `Product` from a public /v1/products entry, using its authoritative
+ * `color` (hex or HSL triplet) when the backend supplies one.
+ */
+export function publicProductToProduct(raw: RawPublicProduct): Product {
+  const slug = raw.slug && raw.slug.length > 0 ? raw.slug : null;
+  const color = typeof raw.color === "string" && raw.color.length > 0 ? raw.color : null;
+  const { hue, accent } = productColors(raw.id, slug, color);
+  return {
+    id: raw.id,
+    name: raw.name,
+    slug,
+    color,
     hue,
     accent,
   };

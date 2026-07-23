@@ -3,9 +3,11 @@ import { validateAndAdapt } from "@/lib/validatorAdaptor";
 import {
   loginResponseSchema,
   meResponseSchema,
+  publicProductsResponseSchema,
   ssoInitResponseSchema,
 } from "@/features/tenants/schemas";
 import { loginResponseToSession, meResponseToMe } from "./adaptors";
+import { publicProductToProduct, type Product } from "./products";
 import type { AuthSession, MeResponse, PasswordCredentials } from "./types";
 
 export async function passwordLogin(
@@ -46,4 +48,17 @@ export async function logoutRequest(): Promise<void> {
 export async function fetchMe(): Promise<MeResponse> {
   const { data } = await httpClient.get("/v1/auth/me");
   return validateAndAdapt(data, meResponseSchema, meResponseToMe);
+}
+
+/**
+ * Fetch the public product catalog (`GET /v1/products`). Used to enrich the
+ * post-login product picker with authoritative brand colors from the backend.
+ * Not tenant-scoped — the axios interceptor won't attach `product_id`.
+ */
+export async function fetchProducts(): Promise<Product[]> {
+  const { data } = await httpClient.get("/v1/products");
+  return validateAndAdapt(data, publicProductsResponseSchema, (raw) => {
+    const list = Array.isArray(raw) ? raw : raw.data;
+    return list.map(publicProductToProduct);
+  });
 }

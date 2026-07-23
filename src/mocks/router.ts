@@ -2,6 +2,7 @@ import { AppError } from "@/lib/httpClient";
 import * as auth from "./handlers/auth";
 import * as users from "./handlers/users";
 import * as tenants from "./handlers/tenants";
+import * as products from "./handlers/products";
 import * as moderation from "./handlers/moderation";
 import * as reports from "./handlers/reports";
 import * as messages from "./handlers/messages";
@@ -61,6 +62,8 @@ const routes: Array<{ method: string; pattern: string; handler: Route }> = [
   { method: "GET", pattern: "/v1/auth/me", handler: (r) => ok(auth.me(r.headers.authorization ?? null)) },
   { method: "GET", pattern: "/v1/auth/sso/init", handler: () => ok(auth.ssoInit()) },
   { method: "POST", pattern: "/v1/auth/sso/login", handler: () => ok(auth.ssoLogin()) },
+
+  { method: "GET", pattern: "/v1/products", handler: () => ok(products.list()) },
 
   { method: "GET", pattern: "/admin/tenants", handler: () => ok(tenants.list()) },
   { method: "GET", pattern: "/admin/tenants/:id", handler: (_, p) => ok(tenants.byId(p.id)) },
