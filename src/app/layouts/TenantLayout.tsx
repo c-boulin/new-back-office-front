@@ -9,6 +9,7 @@ import {
   MessageSquareHeart,
   Mic,
   Settings2,
+  Shield,
   ShieldAlert,
   ShieldCheck,
   Sparkles,
@@ -23,10 +24,15 @@ import { TopBar } from "./TopBar";
 import { LoadingState } from "@/components/common/LoadingState";
 import { SessionExpiredDialog } from "@/components/common/SessionExpiredDialog";
 import { SkipLink } from "@/components/common/SkipLink";
+import { useAuthStore } from "@/stores/authStore";
 
 type NavGroup = { key: string; items: SidebarNavItem[] };
 
-function buildGroups(base: string, t: (key: string) => string): NavGroup[] {
+function buildGroups(
+  base: string,
+  t: (key: string) => string,
+  isSuperAdmin: boolean,
+): NavGroup[] {
   const item = (
     slug: string,
     icon: LucideIcon,
@@ -38,7 +44,7 @@ function buildGroups(base: string, t: (key: string) => string): NavGroup[] {
     label: t(labelKey),
     end,
   });
-  return [
+  const groups: NavGroup[] = [
     {
       key: "main",
       items: [
@@ -74,6 +80,15 @@ function buildGroups(base: string, t: (key: string) => string): NavGroup[] {
       ],
     },
   ];
+  if (isSuperAdmin) {
+    groups.push({
+      key: "platform",
+      items: [
+        { to: "/admin", icon: Shield, label: t("nav.superAdminConsole"), end: true },
+      ],
+    });
+  }
+  return groups;
 }
 
 function GroupedSidebarNav({ groups, t }: { groups: NavGroup[]; t: (key: string) => string }) {
@@ -92,8 +107,12 @@ export function TenantLayout() {
   const { t } = useTranslation("common");
   const { tenantSlug } = useParams();
   const base = `/t/${tenantSlug}`;
+  const isSuperAdmin = useAuthStore((state) => state.user?.isSuperAdmin ?? false);
 
-  const groups = useMemo(() => buildGroups(base, t), [base, t]);
+  const groups = useMemo(
+    () => buildGroups(base, t, isSuperAdmin),
+    [base, t, isSuperAdmin],
+  );
 
   return (
     <div className="flex min-h-screen bg-muted/30">

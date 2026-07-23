@@ -47,11 +47,10 @@ function PostLoginResolver() {
     staleTime: 60_000,
   });
 
-  if (data.user.isSuperAdmin) {
-    return <Navigate to="/admin" replace />;
-  }
-
   if (data.memberships.length === 0) {
+    if (data.user.isSuperAdmin) {
+      return <Navigate to="/admin" replace />;
+    }
     return <Navigate to="/access-denied" replace />;
   }
 

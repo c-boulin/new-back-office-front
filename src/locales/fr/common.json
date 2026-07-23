@@ -38,6 +38,8 @@
     "analytics": "Analytique",
     "settings": "Paramètres",
     "superAdmin": "Super admin",
+    "superAdminConsole": "Console super admin",
+    "backToProducts": "Retour aux produits",
     "tenants": "Tenants",
     "animators": "Animateurs",
     "coaches": "Coachs",
@@ -52,7 +54,8 @@
       "animation": "Animation",
       "analysis": "Analyse",
       "moderation": "Modération",
-      "configuration": "Configuration"
+      "configuration": "Configuration",
+      "platform": "Plateforme"
     }
   },
   "pagination": {

@@ -51,11 +51,38 @@ describe("PostLoginRouter", () => {
     sessionStorage.clear();
   });
 
-  it("routes super admins to /admin", async () => {
+  it("routes super admins to /admin when they have no memberships", async () => {
     signInAs(superAdminFixture, []);
     const queryClient = seededClient(superAdminFixture, []);
     renderWithProviders(<Shell />, { route: "/", queryClient });
     expect(await screen.findByText("admin-shell")).toBeInTheDocument();
+  });
+
+  it("shows the product picker to super admins when they have multiple memberships", async () => {
+    const memberships = [
+      membershipFixture({ tenantId: "101", tenantSlug: "woozgo", tenantName: "Woozgo" }),
+      membershipFixture({
+        tenantId: "102",
+        tenantSlug: "weezchat-fr",
+        tenantName: "Weezchat FR",
+      }),
+    ];
+    signInAs(superAdminFixture, memberships);
+    const queryClient = seededClient(superAdminFixture, memberships);
+    renderWithProviders(<Shell />, { route: "/", queryClient });
+
+    expect(await screen.findByRole("radiogroup")).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: /Woozgo/i })).toBeInTheDocument();
+  });
+
+  it("auto-activates the only membership for a super admin too", async () => {
+    const memberships = [
+      membershipFixture({ tenantId: "101", tenantSlug: "woozgo", tenantName: "Woozgo" }),
+    ];
+    signInAs(superAdminFixture, memberships);
+    const queryClient = seededClient(superAdminFixture, memberships);
+    renderWithProviders(<Shell />, { route: "/", queryClient });
+    expect(await screen.findByTestId("tenant-shell")).toHaveTextContent("tenant:woozgo");
   });
 
   it("auto-activates the only membership and lands on that tenant", async () => {
