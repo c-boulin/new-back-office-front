@@ -1,4 +1,6 @@
 import type { TenantTheme } from "@/features/tenants/types";
+import { productColors } from "@/features/auth/products";
+import { useProductsStore } from "@/stores/productsStore";
 
 const CSS_VAR_MAP: Record<keyof TenantTheme, string> = {
   primary: "--primary",
@@ -64,6 +66,38 @@ export function applyTenantTheme(theme: Partial<TenantTheme> | null): void {
 export function resetTenantTheme(): void {
   const root = document.documentElement;
   Object.values(CSS_VAR_MAP).forEach((cssVar) => root.style.removeProperty(cssVar));
+}
+
+/**
+ * Compute a brand-only theme override ({primary, accent, ring, primaryForeground}) for
+ * a tenant, using the cached products list from `useProductsStore` when available so
+ * the backend-supplied color wins. Falls back to a deterministic derivation from slug
+ * when the tenant isn't cached (e.g. first render after a hard reload).
+ *
+ * Only brand tokens are returned — surface tokens (background, foreground, card, …)
+ * stay untouched so the app's light/dark toggle keeps working under every tenant.
+ */
+export function brandThemeForTenant(
+  tenantId: string,
+  tenantSlug: string,
+): Partial<TenantTheme> {
+  const numericId = Number(tenantId);
+  const product = Number.isFinite(numericId)
+    ? useProductsStore.getState().findById(numericId)
+    : null;
+  const { hue, accent } = productColors(numericId || tenantId, tenantSlug, product?.color ?? null);
+  return {
+    primary: hue,
+    accent,
+    ring: hue,
+    primaryForeground: "0 0% 100%",
+  };
+}
+
+/** Reset any prior tenant overrides, then apply the brand-only override. */
+export function applyBrandThemeForTenant(tenantId: string, tenantSlug: string): void {
+  resetTenantTheme();
+  applyTenantTheme(brandThemeForTenant(tenantId, tenantSlug));
 }
 
 /**

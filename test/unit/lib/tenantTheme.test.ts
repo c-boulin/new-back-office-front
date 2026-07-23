@@ -1,10 +1,14 @@
 import { describe, it, expect, afterEach, beforeEach, vi } from "vitest";
 import {
   applyTenantTheme,
+  applyBrandThemeForTenant,
+  brandThemeForTenant,
   resetTenantTheme,
   contrastRatio,
   __resetContrastWarnCacheForTests,
 } from "@/lib/tenantTheme";
+import { useProductsStore } from "@/stores/productsStore";
+import { rawProductToProduct } from "@/features/auth/products";
 
 const ALL_VARS = [
   "--primary",
@@ -151,7 +155,62 @@ describe("applyTenantTheme dev-only contrast warning", () => {
   });
 
   it("skips the warning when required tokens are missing", () => {
-    applyTenantTheme({ primary: "0 0% 55%" });
-    expect(warnSpy).not.toHaveBeenCalled();
+      applyTenantTheme({ primary: "0 0% 55%" });
+      expect(warnSpy).not.toHaveBeenCalled();
+    });
+});
+
+describe("brandThemeForTenant", () => {
+  afterEach(() => {
+    useProductsStore.getState().clear();
+    resetTenantTheme();
+  });
+
+  it("uses the cached product color from the products store when available", () => {
+    useProductsStore.getState().setProducts([
+      rawProductToProduct({ id: 42, name: "Custom", slug: "custom", color: "#199fe0" }),
+    ]);
+    const theme = brandThemeForTenant("42", "custom");
+    expect(theme.primary).toMatch(/^\d+ \d+% \d+%$/);
+    expect(theme.primary).toBe(theme.ring);
+    expect(theme.primaryForeground).toBe("0 0% 100%");
+    expect(theme.background).toBeUndefined();
+    expect(theme.foreground).toBeUndefined();
+    expect(theme.card).toBeUndefined();
+  });
+
+  it("falls back to the slug-derived pair when the tenant isn't cached", () => {
+    const theme = brandThemeForTenant("101", "woozgo");
+    expect(theme.primary).toBe("158 34% 52%");
+    expect(theme.accent).toBe("158 34% 62%");
+  });
+});
+
+describe("applyBrandThemeForTenant", () => {
+  afterEach(() => {
+    useProductsStore.getState().clear();
+    resetTenantTheme();
+  });
+
+  it("writes only brand tokens (leaving surface variables alone)", () => {
+    applyBrandThemeForTenant("101", "woozgo");
+    const root = document.documentElement;
+    expect(root.style.getPropertyValue("--primary")).toBe("158 34% 52%");
+    expect(root.style.getPropertyValue("--accent")).toBe("158 34% 62%");
+    expect(root.style.getPropertyValue("--ring")).toBe("158 34% 52%");
+    expect(root.style.getPropertyValue("--primary-foreground")).toBe("0 0% 100%");
+    expect(root.style.getPropertyValue("--background")).toBe("");
+    expect(root.style.getPropertyValue("--foreground")).toBe("");
+    expect(root.style.getPropertyValue("--card")).toBe("");
+  });
+
+  it("clears any prior full-theme override before applying", () => {
+    applyTenantTheme({ background: "0 0% 5%", foreground: "0 0% 95%", card: "0 0% 10%" });
+    applyBrandThemeForTenant("101", "woozgo");
+    const root = document.documentElement;
+    expect(root.style.getPropertyValue("--background")).toBe("");
+    expect(root.style.getPropertyValue("--foreground")).toBe("");
+    expect(root.style.getPropertyValue("--card")).toBe("");
+    expect(root.style.getPropertyValue("--primary")).toBe("158 34% 52%");
   });
 });

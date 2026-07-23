@@ -13,10 +13,11 @@ import {
 } from "@/components/ui/command";
 import { useAuthStore } from "@/stores/authStore";
 import { useTenantStore } from "@/stores/tenantStore";
-import { applyTenantTheme } from "@/lib/tenantTheme";
+import { applyBrandThemeForTenant } from "@/lib/tenantTheme";
 import { queryClient } from "@/lib/queryClient";
 import { cn } from "@/lib/utils";
 import { productColors } from "@/features/auth/products";
+import { useProductsStore } from "@/stores/productsStore";
 
 export function SidebarProductCard() {
   const { t } = useTranslation("common");
@@ -27,8 +28,13 @@ export function SidebarProductCard() {
   const [open, setOpen] = useState(false);
 
   const active = memberships.find((m) => m.tenantId === activeId);
+  const findProduct = useProductsStore((s) => s.findById);
   const activeColors = active
-    ? productColors(active.tenantId, active.tenantSlug)
+    ? productColors(
+        active.tenantId,
+        active.tenantSlug,
+        findProduct(Number(active.tenantId))?.color ?? null,
+      )
     : null;
 
   const gradient = activeColors
@@ -49,7 +55,7 @@ export function SidebarProductCard() {
       queryClient.removeQueries({ queryKey: ["tenant", activeId] });
     }
     setActiveTenant({ id: next.tenantId, slug: next.tenantSlug, theme: next.theme });
-    applyTenantTheme(next.theme);
+    applyBrandThemeForTenant(next.tenantId, next.tenantSlug);
     setOpen(false);
     navigate(`/t/${next.tenantSlug}`);
   };
@@ -93,7 +99,11 @@ export function SidebarProductCard() {
             <CommandEmpty>{t("productCard.empty")}</CommandEmpty>
             <CommandGroup>
               {memberships.map((m) => {
-                const itemHue = productColors(m.tenantId, m.tenantSlug).hue;
+                const itemHue = productColors(
+                  m.tenantId,
+                  m.tenantSlug,
+                  findProduct(Number(m.tenantId))?.color ?? null,
+                ).hue;
                 return (
                   <CommandItem
                     key={m.tenantId}

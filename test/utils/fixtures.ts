@@ -1,6 +1,7 @@
 import { useAuthStore } from "@/stores/authStore";
 import { useTenantStore } from "@/stores/tenantStore";
 import { useUiStore } from "@/stores/uiStore";
+import { useProductsStore } from "@/stores/productsStore";
 import type { AuthUser, TenantMembership } from "@/features/auth/types";
 
 export function resetStores() {
@@ -18,6 +19,7 @@ export function resetStores() {
     activeTheme: null,
   });
   useUiStore.setState({ sidebarOpen: true, colorScheme: "system" });
+  useProductsStore.setState({ products: [] });
 }
 
 export function signInAs(

@@ -15,7 +15,7 @@ import {
 import { useAuthStore } from "@/stores/authStore";
 import { useTenantStore } from "@/stores/tenantStore";
 import { cn } from "@/lib/utils";
-import { applyTenantTheme } from "@/lib/tenantTheme";
+import { applyBrandThemeForTenant } from "@/lib/tenantTheme";
 import { queryClient } from "@/lib/queryClient";
 
 export function TenantSwitcher() {
@@ -40,7 +40,7 @@ export function TenantSwitcher() {
       queryClient.removeQueries({ queryKey: ["tenant", activeId] });
     }
     setActiveTenant({ id: next.tenantId, slug: next.tenantSlug, theme: next.theme });
-    applyTenantTheme(next.theme);
+    applyBrandThemeForTenant(next.tenantId, next.tenantSlug);
     setOpen(false);
     navigate(`/t/${next.tenantSlug}`);
   };

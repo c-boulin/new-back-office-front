@@ -2,7 +2,7 @@ import { Navigate, Outlet, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useAuthStore } from "@/stores/authStore";
 import { useTenantStore } from "@/stores/tenantStore";
-import { applyTenantTheme } from "@/lib/tenantTheme";
+import { applyBrandThemeForTenant } from "@/lib/tenantTheme";
 
 export function RequireTenant() {
   const { tenantSlug } = useParams();
@@ -19,7 +19,7 @@ export function RequireTenant() {
         slug: membership.tenantSlug,
         theme: membership.theme,
       });
-      applyTenantTheme(membership.theme);
+      applyBrandThemeForTenant(membership.tenantId, membership.tenantSlug);
     }
   }, [membership, activeTenantId, setActiveTenant]);
 

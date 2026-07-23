@@ -5,7 +5,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { RouteBoundary } from "@/components/common/RouteBoundary";
 import { LoadingState } from "@/components/common/LoadingState";
 import { useTenantStore } from "@/stores/tenantStore";
-import { applyTenantTheme } from "@/lib/tenantTheme";
+import { applyBrandThemeForTenant } from "@/lib/tenantTheme";
 import { consumeSelectedProductId } from "@/features/auth/ssoCallback";
 import type { TenantMembership } from "@/features/auth/types";
 
@@ -49,7 +49,7 @@ function PostLoginResolver() {
 
   if (activeTenantSlug !== target.tenantSlug) {
     setActiveTenant({ id: target.tenantId, slug: target.tenantSlug, theme: target.theme });
-    applyTenantTheme(target.theme);
+    applyBrandThemeForTenant(target.tenantId, target.tenantSlug);
   }
 
   return <Navigate to={`/t/${target.tenantSlug}`} replace />;

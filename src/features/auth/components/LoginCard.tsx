@@ -11,6 +11,7 @@ import { AuthDivider } from "./AuthDivider";
 import { MicrosoftSsoButton } from "./MicrosoftSsoButton";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/common/EmptyState";
+import { useProductsStore } from "@/stores/productsStore";
 import type { Product } from "../products";
 
 function pickInitialProduct(products: readonly Product[]): Product | null {
@@ -31,6 +32,11 @@ export function LoginCard() {
     queryFn: fetchProducts,
     staleTime: 5 * 60_000,
   });
+
+  const setProductsCache = useProductsStore((s) => s.setProducts);
+  useEffect(() => {
+    if (productsQuery.data) setProductsCache(productsQuery.data);
+  }, [productsQuery.data, setProductsCache]);
 
   const [selected, setSelected] = useState<Product | null>(null);
 
