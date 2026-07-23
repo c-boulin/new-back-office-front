@@ -15,7 +15,6 @@ import enSubscriptions from "@/locales/en/subscriptions.json";
 import enAnalytics from "@/locales/en/analytics.json";
 import enSettings from "@/locales/en/settings.json";
 import enSuperAdmin from "@/locales/en/superAdmin.json";
-import enPermissions from "@/locales/en/permissions.json";
 
 import frCommon from "@/locales/fr/common.json";
 import frAuth from "@/locales/fr/auth.json";
@@ -30,7 +29,6 @@ import frSubscriptions from "@/locales/fr/subscriptions.json";
 import frAnalytics from "@/locales/fr/analytics.json";
 import frSettings from "@/locales/fr/settings.json";
 import frSuperAdmin from "@/locales/fr/superAdmin.json";
-import frPermissions from "@/locales/fr/permissions.json";
 
 export const supportedLngs = ["en", "fr"] as const;
 export type Locale = (typeof supportedLngs)[number];
@@ -49,7 +47,6 @@ const ns = [
   "analytics",
   "settings",
   "superAdmin",
-  "permissions",
 ] as const;
 
 void i18n
@@ -81,7 +78,6 @@ void i18n
         analytics: enAnalytics,
         settings: enSettings,
         superAdmin: enSuperAdmin,
-        permissions: enPermissions,
       },
       fr: {
         common: frCommon,
@@ -97,7 +93,6 @@ void i18n
         analytics: frAnalytics,
         settings: frSettings,
         superAdmin: frSuperAdmin,
-        permissions: frPermissions,
       },
     },
   });

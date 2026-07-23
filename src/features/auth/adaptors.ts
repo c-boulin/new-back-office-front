@@ -29,22 +29,19 @@ export function productToMembership(product: RawApiProduct): TenantMembership {
     tenantSlug: slug,
     tenantName: product.name,
     role: mapApiRoleName(product.role.name),
-    permissions: product.permissions ?? [],
+    permissions: [],
     theme: null,
     lastAccessedAt: null,
   };
 }
 
 export function apiUserToAuthUser(user: RawApiUser): AuthUser {
-  const roleName = user.role?.name.trim() ?? null;
   return {
     id: user.email,
     name: user.name,
     email: user.email,
     avatarUrl: null,
-    isSuperAdmin: roleName?.toLowerCase() === "super admin",
-    roleName,
-    permissions: user.permissions ?? [],
+    isSuperAdmin: false,
   };
 }
 

@@ -8,8 +8,6 @@ export type AuthUser = {
   email: string;
   avatarUrl: string | null;
   isSuperAdmin: boolean;
-  roleName: string | null;
-  permissions: string[];
 };
 
 export type MeResponse = {

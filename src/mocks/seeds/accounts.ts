@@ -1,5 +1,4 @@
 import type { RawApiUser } from "@/features/tenants/schemas";
-import { PERMISSIONS, PERMISSION_CATALOG } from "@/lib/permissions";
 
 export type MockAccount = {
   email: string;
@@ -16,28 +15,14 @@ const ALL_PRODUCTS = [
   { id: 106, name: "Swipi", slug: "swipi" },
 ] as const;
 
-const ALL_PERMISSIONS = [...PERMISSION_CATALOG];
-
-const MODERATOR_PERMISSIONS = [
-  PERMISSIONS.DASHBOARD_READ,
-  PERMISSIONS.USERS_READ,
-  PERMISSIONS.USERS_UPDATE,
-  PERMISSIONS.MODERATION_READ,
-  PERMISSIONS.MODERATION_UPDATE,
-  PERMISSIONS.SIGNALEMENT_READ,
-  PERMISSIONS.SIGNALEMENT_UPDATE,
-];
-
-function superAdmin(email: string, name: string): RawApiUser {
+function fullAccess(email: string, name: string): RawApiUser {
   return {
     name,
     email,
-    role: { id: "super-admin", name: "Super Admin" },
-    permissions: ALL_PERMISSIONS,
+    role: { id: "administrator", name: "administrator" },
     products: ALL_PRODUCTS.map((p) => ({
       ...p,
-      role: { id: "super-admin", name: "Super Admin" },
-      permissions: ALL_PERMISSIONS,
+      role: { id: "admin", name: "admin" },
     })),
   };
 }
@@ -46,7 +31,7 @@ export const accountSeeds: MockAccount[] = [
   {
     email: "admin@weezchat.fr",
     password: "admin123",
-    user: superAdmin("admin@weezchat.fr", "Admin Weezchat"),
+    user: fullAccess("admin@weezchat.fr", "Admin Weezchat"),
   },
   {
     email: "operator@watchtower.local",
@@ -54,18 +39,16 @@ export const accountSeeds: MockAccount[] = [
     user: {
       name: "Jamie Rivera",
       email: "operator@watchtower.local",
-      role: { id: "moderator", name: "Modérateur" },
-      permissions: MODERATOR_PERMISSIONS,
+      role: { id: "moderator", name: "moderator" },
       products: ALL_PRODUCTS.slice(0, 2).map((p) => ({
         ...p,
-        role: { id: "moderator", name: "Modérateur" },
-        permissions: MODERATOR_PERMISSIONS,
+        role: { id: "moderator", name: "moderator" },
       })),
     },
   },
   {
     email: "admin@watchtower.local",
     password: "admin",
-    user: superAdmin("admin@watchtower.local", "Alex Morgan"),
+    user: fullAccess("admin@watchtower.local", "Alex Morgan"),
   },
 ];

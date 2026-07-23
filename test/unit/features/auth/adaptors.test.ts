@@ -41,23 +41,22 @@ describe("productToMembership", () => {
     ).toBe("42");
   });
 
-  it("projects role name through the mapping and picks up product permissions", () => {
+  it("projects role name through the mapping and defaults theme + permissions", () => {
     const m = productToMembership({
       id: 69,
       name: "Luna",
       slug: "luna",
       role: { id: 1, name: "administrator" },
-      permissions: ["users.read"],
     });
     expect(m.role).toBe("admin");
-    expect(m.permissions).toEqual(["users.read"]);
+    expect(m.permissions).toEqual([]);
     expect(m.theme).toBeNull();
     expect(m.lastAccessedAt).toBeNull();
   });
 });
 
 describe("apiUserToAuthUser", () => {
-  it("derives id from email and forces isSuperAdmin=false for non-super-admin roles", () => {
+  it("derives id from email and forces isSuperAdmin=false", () => {
     const u = apiUserToAuthUser({
       name: "Alice",
       email: "alice@example.com",
@@ -70,22 +69,7 @@ describe("apiUserToAuthUser", () => {
       email: "alice@example.com",
       avatarUrl: null,
       isSuperAdmin: false,
-      roleName: "admin",
-      permissions: [],
     });
-  });
-
-  it("marks isSuperAdmin=true when the role name is Super Admin", () => {
-    const u = apiUserToAuthUser({
-      name: "Root",
-      email: "root@example.com",
-      role: { id: 1, name: "Super Admin" },
-      permissions: ["dashboard.read", "users.read"],
-      products: [],
-    });
-    expect(u.isSuperAdmin).toBe(true);
-    expect(u.roleName).toBe("Super Admin");
-    expect(u.permissions).toEqual(["dashboard.read", "users.read"]);
   });
 });
 

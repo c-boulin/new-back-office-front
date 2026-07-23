@@ -1,11 +1,16 @@
-import { RouteBoundary } from "@/components/common/RouteBoundary";
-import { LoadingState } from "@/components/common/LoadingState";
-import { RolesManager } from "@/features/permissions/components/RolesManager";
+import { useTranslation } from "react-i18next";
+import { ShieldCheck } from "lucide-react";
+import { PlaceholderPage } from "@/components/common/PlaceholderPage";
 
 export function PermissionsPage() {
+  const { t } = useTranslation("common");
   return (
-    <RouteBoundary loadingFallback={<LoadingState className="p-10" />}>
-      <RolesManager />
-    </RouteBoundary>
+    <PlaceholderPage
+      title={t("nav.permissions")}
+      description={t("placeholders.permissions.description")}
+      emptyTitle={t("placeholders.permissions.emptyTitle")}
+      emptyDescription={t("placeholders.permissions.emptyDescription")}
+      icon={ShieldCheck}
+    />
   );
 }

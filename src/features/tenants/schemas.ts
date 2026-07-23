@@ -44,14 +44,12 @@ export const apiProductSchema = z.object({
   name: z.string(),
   slug: z.string().nullable().optional(),
   role: apiRoleSchema,
-  permissions: z.array(z.string()).optional(),
 });
 
 export const apiUserSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   role: apiRoleSchema.nullable().optional(),
-  permissions: z.array(z.string()).optional(),
   products: z.array(apiProductSchema),
 });
 

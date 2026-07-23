@@ -50,8 +50,6 @@ export const superAdminFixture: AuthUser = {
   email: "admin@example.com",
   name: "Super Admin",
   isSuperAdmin: true,
-  roleName: "Super Admin",
-  permissions: [],
   avatarUrl: null,
 };
 
@@ -60,8 +58,6 @@ export const operatorFixture: AuthUser = {
   email: "operator@example.com",
   name: "Operator",
   isSuperAdmin: false,
-  roleName: "Modérateur",
-  permissions: [],
   avatarUrl: null,
 };
 
