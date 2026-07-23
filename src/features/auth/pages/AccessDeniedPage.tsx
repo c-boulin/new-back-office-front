@@ -6,6 +6,7 @@ import { useTenantStore } from "@/stores/tenantStore";
 import { queryClient } from "@/lib/queryClient";
 import { resetTenantTheme } from "@/lib/tenantTheme";
 import { logoutRequest } from "@/features/auth/api";
+import { consumeSelectedProductId } from "@/features/auth/ssoCallback";
 import { ShieldOff } from "lucide-react";
 import { useDefaultTheme } from "@/hooks/useDefaultTheme";
 
@@ -21,6 +22,7 @@ export function AccessDeniedPage() {
     queryClient.removeQueries();
     clearTenant();
     resetTenantTheme();
+    consumeSelectedProductId();
     clear();
     navigate("/login", { replace: true });
   };

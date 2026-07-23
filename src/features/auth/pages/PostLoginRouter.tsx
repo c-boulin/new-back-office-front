@@ -6,7 +6,7 @@ import { RouteBoundary } from "@/components/common/RouteBoundary";
 import { LoadingState } from "@/components/common/LoadingState";
 import { useTenantStore } from "@/stores/tenantStore";
 import { applyBrandThemeForTenant } from "@/lib/tenantTheme";
-import { consumeSelectedProductId } from "@/features/auth/ssoCallback";
+import { readSelectedProductId } from "@/features/auth/ssoCallback";
 import type { TenantMembership } from "@/features/auth/types";
 
 function pickTargetMembership(
@@ -40,7 +40,7 @@ function PostLoginResolver() {
     return <Navigate to="/admin" replace />;
   }
 
-  const selectedProductId = consumeSelectedProductId();
+  const selectedProductId = readSelectedProductId();
   const target = pickTargetMembership(data.memberships, selectedProductId);
 
   if (!target) {

@@ -8,6 +8,7 @@ import { useTenantStore } from "@/stores/tenantStore";
 import { queryClient } from "@/lib/queryClient";
 import { resetTenantTheme } from "@/lib/tenantTheme";
 import { logoutRequest } from "@/features/auth/api";
+import { consumeSelectedProductId } from "@/features/auth/ssoCallback";
 
 function initials(name: string) {
   return name
@@ -33,6 +34,7 @@ export function SidebarUserCard() {
     queryClient.removeQueries();
     clearTenant();
     resetTenantTheme();
+    consumeSelectedProductId();
     clearAuth();
     navigate("/login", { replace: true });
   };
