@@ -24,7 +24,7 @@ describe("password login flow", () => {
   it("submits operator credentials, populates auth store, and navigates to /", async () => {
     renderWithProviders(<AppShell />, { route: "/login" });
 
-    await userEvent.type(screen.getByLabelText(/email/i), "operator@watchtower.local");
+    await userEvent.type(await screen.findByLabelText(/email/i), "operator@watchtower.local");
     await userEvent.type(screen.getByLabelText(/^password$/i), "operator");
 
     await userEvent.click(screen.getByRole("button", { name: /^sign in$/i }));
@@ -42,7 +42,7 @@ describe("password login flow", () => {
   it("leaves the auth store in idle state after a rejected login", async () => {
     renderWithProviders(<AppShell />, { route: "/login" });
 
-    await userEvent.type(screen.getByLabelText(/email/i), "nobody@example.com");
+    await userEvent.type(await screen.findByLabelText(/email/i), "nobody@example.com");
     await userEvent.type(screen.getByLabelText(/^password$/i), "wrong");
     await userEvent.click(screen.getByRole("button", { name: /^sign in$/i }));
 

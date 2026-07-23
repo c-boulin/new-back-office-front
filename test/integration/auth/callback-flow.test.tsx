@@ -28,6 +28,7 @@ function Shell() {
 describe("SSO callback flow", () => {
   beforeEach(() => {
     resetStores();
+    sessionStorage.clear();
     ssoLoginMock.mockReset();
   });
 
@@ -43,7 +44,8 @@ describe("SSO callback flow", () => {
     expect(ssoLoginMock).not.toHaveBeenCalled();
   });
 
-  it("calls ssoLogin with a valid sesame_token and navigates home", async () => {
+  it("calls ssoLogin with token + persisted product id and navigates home", async () => {
+    sessionStorage.setItem("auth.sso.productId", "42");
     ssoLoginMock.mockResolvedValueOnce({
       accessToken: "at",
       refreshToken: "rt",
@@ -56,11 +58,33 @@ describe("SSO callback flow", () => {
       },
       memberships: [],
     });
-    const token = "AbCdEfGhIjKlMnOpQrStUvWxYz1234"; // 30 chars, matches regex
+    const token = "AbCdEfGhIjKlMnOpQrStUvWxYz1234";
     renderWithProviders(<Shell />, {
       route: `/auth/callback?status=ok&sesame_token=${token}`,
     });
     expect(await screen.findByText("home-screen")).toBeInTheDocument();
-    expect(ssoLoginMock).toHaveBeenCalledWith(token);
+    expect(ssoLoginMock).toHaveBeenCalledWith(token, 42);
+    expect(sessionStorage.getItem("auth.sso.productId")).toBeNull();
+  });
+
+  it("falls back to the env default product id when nothing was persisted", async () => {
+    ssoLoginMock.mockResolvedValueOnce({
+      accessToken: "at",
+      refreshToken: "rt",
+      user: {
+        id: "op@example.com",
+        email: "op@example.com",
+        name: "Op",
+        avatarUrl: null,
+        isSuperAdmin: false,
+      },
+      memberships: [],
+    });
+    const token = "AbCdEfGhIjKlMnOpQrStUvWxYz1234";
+    renderWithProviders(<Shell />, {
+      route: `/auth/callback?status=ok&sesame_token=${token}`,
+    });
+    expect(await screen.findByText("home-screen")).toBeInTheDocument();
+    expect(ssoLoginMock).toHaveBeenCalledWith(token, 69);
   });
 });

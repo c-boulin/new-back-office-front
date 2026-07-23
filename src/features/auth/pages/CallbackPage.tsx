@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import { Loader as Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { ssoLogin } from "../api";
+import { consumeSsoProductId } from "../ssoCallback";
+import { env } from "@/lib/env";
 import { useAuthStore } from "@/stores/authStore";
 import { queryClient } from "@/lib/queryClient";
 import { ErrorState } from "@/components/common/ErrorState";
@@ -35,7 +37,7 @@ export function CallbackPage() {
 
     void (async () => {
       try {
-        const session = await ssoLogin(token);
+        const session = await ssoLogin(token, consumeSsoProductId() ?? env.defaultProductId);
         if (cancelled) return;
         setSession({
           accessToken: session.accessToken,

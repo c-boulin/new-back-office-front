@@ -1,15 +1,16 @@
 import { Check } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
-import { PRODUCT_CATALOG, type CatalogProduct } from "./product-catalog";
+import type { Product } from "../products";
 
 export type ProductPickerProps = {
-  value: CatalogProduct;
-  onChange: (product: CatalogProduct) => void;
+  products: readonly Product[];
+  value: Product | null;
+  onChange: (product: Product) => void;
   disabled?: boolean;
 };
 
-export function ProductPicker({ value, onChange, disabled }: ProductPickerProps) {
+export function ProductPicker({ products, value, onChange, disabled }: ProductPickerProps) {
   const { t } = useTranslation("auth");
 
   return (
@@ -22,8 +23,8 @@ export function ProductPicker({ value, onChange, disabled }: ProductPickerProps)
         aria-label={t("login.chooseProduct")}
         className="grid grid-cols-3 gap-2"
       >
-        {PRODUCT_CATALOG.map((product) => {
-          const active = product.id === value.id;
+        {products.map((product) => {
+          const active = value?.id === product.id;
           return (
             <button
               key={product.id}

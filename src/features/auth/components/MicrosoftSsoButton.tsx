@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/authStore";
 import { AppError } from "@/lib/httpClient";
 import { ssoInit } from "../api";
-import { getSsoCallbackUrl } from "../ssoCallback";
+import { getSsoCallbackUrl, saveSsoProductId } from "../ssoCallback";
 
 function MicrosoftLogo() {
   return (
@@ -19,7 +19,11 @@ function MicrosoftLogo() {
   );
 }
 
-export function MicrosoftSsoButton() {
+export type MicrosoftSsoButtonProps = {
+  productId: number;
+};
+
+export function MicrosoftSsoButton({ productId }: MicrosoftSsoButtonProps) {
   const { t } = useTranslation("auth");
   const markAuthenticating = useAuthStore((s) => s.markAuthenticating);
   const [pending, setPending] = useState(false);
@@ -28,7 +32,8 @@ export function MicrosoftSsoButton() {
     setPending(true);
     markAuthenticating();
     try {
-      const url = await ssoInit(getSsoCallbackUrl());
+      saveSsoProductId(productId);
+      const url = await ssoInit(getSsoCallbackUrl(), productId);
       window.location.assign(url);
     } catch (err) {
       const detail =

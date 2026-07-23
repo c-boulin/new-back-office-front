@@ -16,7 +16,7 @@ import { useTenantStore } from "@/stores/tenantStore";
 import { applyTenantTheme } from "@/lib/tenantTheme";
 import { queryClient } from "@/lib/queryClient";
 import { cn } from "@/lib/utils";
-import { findProduct } from "@/features/auth/components/product-catalog";
+import { productColors } from "@/features/auth/products";
 
 export function SidebarProductCard() {
   const { t } = useTranslation("common");
@@ -27,12 +27,12 @@ export function SidebarProductCard() {
   const [open, setOpen] = useState(false);
 
   const active = memberships.find((m) => m.tenantId === activeId);
-  const catalogEntry = active ? findProduct(active.tenantSlug) : undefined;
+  const activeColors = active
+    ? productColors(active.tenantId, active.tenantSlug)
+    : null;
 
-  const hue = catalogEntry?.hue ?? "var(--primary)";
-  const accent = catalogEntry?.accent ?? hue;
-  const gradient = catalogEntry
-    ? `linear-gradient(135deg, hsl(${hue}) 0%, hsl(${accent}) 100%)`
+  const gradient = activeColors
+    ? `linear-gradient(135deg, hsl(${activeColors.hue}) 0%, hsl(${activeColors.accent}) 100%)`
     : `linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%)`;
 
   if (!active) return null;
@@ -93,8 +93,7 @@ export function SidebarProductCard() {
             <CommandEmpty>{t("productCard.empty")}</CommandEmpty>
             <CommandGroup>
               {memberships.map((m) => {
-                const entry = findProduct(m.tenantSlug);
-                const itemHue = entry?.hue;
+                const itemHue = productColors(m.tenantId, m.tenantSlug).hue;
                 return (
                   <CommandItem
                     key={m.tenantId}
@@ -105,7 +104,7 @@ export function SidebarProductCard() {
                     <span
                       aria-hidden
                       className="h-2.5 w-2.5 shrink-0 rounded-full"
-                      style={{ backgroundColor: itemHue ? `hsl(${itemHue})` : "hsl(var(--primary))" }}
+                      style={{ backgroundColor: `hsl(${itemHue})` }}
                     />
                     <span className="truncate">{m.tenantName}</span>
                   </CommandItem>

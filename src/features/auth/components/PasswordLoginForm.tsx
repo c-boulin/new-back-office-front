@@ -23,10 +23,10 @@ import { passwordLogin } from "../api";
 import { useAuthStore } from "@/stores/authStore";
 
 export type PasswordLoginFormProps = {
-  productName: string;
+  productId: number;
 };
 
-export function PasswordLoginForm({ productName: _productName }: PasswordLoginFormProps) {
+export function PasswordLoginForm({ productId }: PasswordLoginFormProps) {
   const { t } = useTranslation("auth");
   const navigate = useNavigate();
   const setSession = useAuthStore((s) => s.setSession);
@@ -41,7 +41,7 @@ export function PasswordLoginForm({ productName: _productName }: PasswordLoginFo
 
   const onSubmit = form.handleSubmit(async (values) => {
     try {
-      const session = await passwordLogin(values);
+      const session = await passwordLogin(values, productId);
       setSession({
         accessToken: session.accessToken,
         refreshToken: session.refreshToken,
