@@ -23,6 +23,7 @@ type AuthState = {
   setUser: (user: AuthUser, memberships: TenantMembership[]) => void;
   markAuthenticating: () => void;
   markSessionExpired: () => void;
+  resetToIdle: () => void;
   clear: () => void;
 };
 
@@ -63,6 +64,10 @@ export const useAuthStore = create<AuthState>()(
         set((state) => {
           state.status = "expired";
           state.accessToken = null;
+        }),
+      resetToIdle: () =>
+        set((state) => {
+          state.status = "idle";
         }),
       clear: () =>
         set((state) => {

@@ -43,7 +43,7 @@ export const httpClient: AxiosInstance = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-const REAL_BACKEND_PREFIXES = ["/v1/auth/sso/"] as const;
+const REAL_BACKEND_PREFIXES = ["/v1/auth/sso/", "/v1/products"] as const;
 
 function shouldBypassMockAdapter(url: string | undefined): boolean {
   if (!env.auth.ssoBypassMock) return false;
