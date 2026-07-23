@@ -23,8 +23,8 @@ export function RequireTenant() {
     }
   }, [membership, activeTenantId, setActiveTenant]);
 
-  if (!tenantSlug) return <Navigate to="/tenants" replace />;
-  if (!membership) return <Navigate to="/tenants" replace />;
+  if (!tenantSlug) return <Navigate to="/" replace />;
+  if (!membership) return <Navigate to="/" replace />;
 
   return <Outlet />;
 }

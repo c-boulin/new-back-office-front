@@ -74,15 +74,15 @@ describe("route guards", () => {
           <Route path="/t/:tenantSlug" element={<RequireTenant />}>
             <Route index element={<div>tenant-shell</div>} />
           </Route>
-          <Route path="/tenants" element={<div>tenant-chooser</div>} />
+          <Route path="/" element={<div>post-login</div>} />
         </Routes>
       );
     }
 
-    it("redirects to /tenants when slug does not match a membership", async () => {
+    it("redirects to the post-login resolver when slug does not match a membership", async () => {
       signInAs(operatorFixture, [membershipFixture({ tenantSlug: "luna", tenantId: "t_luna" })]);
       renderWithProviders(<Shell />, { route: "/t/unknown" });
-      expect(await screen.findByText("tenant-chooser")).toBeInTheDocument();
+      expect(await screen.findByText("post-login")).toBeInTheDocument();
     });
 
     it("renders the tenant outlet when slug matches", async () => {

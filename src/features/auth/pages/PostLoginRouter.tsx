@@ -6,6 +6,20 @@ import { RouteBoundary } from "@/components/common/RouteBoundary";
 import { LoadingState } from "@/components/common/LoadingState";
 import { useTenantStore } from "@/stores/tenantStore";
 import { applyTenantTheme } from "@/lib/tenantTheme";
+import { consumeSelectedProductId } from "@/features/auth/ssoCallback";
+import type { TenantMembership } from "@/features/auth/types";
+
+function pickTargetMembership(
+  memberships: TenantMembership[],
+  selectedProductId: number | null,
+): TenantMembership | null {
+  if (memberships.length === 0) return null;
+  if (selectedProductId !== null) {
+    const match = memberships.find((m) => m.tenantId === String(selectedProductId));
+    if (match) return match;
+  }
+  return memberships[0];
+}
 
 function PostLoginResolver() {
   const setUser = useAuthStore((s) => s.setUser);
@@ -26,20 +40,19 @@ function PostLoginResolver() {
     return <Navigate to="/admin" replace />;
   }
 
-  if (data.memberships.length === 0) {
+  const selectedProductId = consumeSelectedProductId();
+  const target = pickTargetMembership(data.memberships, selectedProductId);
+
+  if (!target) {
     return <Navigate to="/access-denied" replace />;
   }
 
-  if (data.memberships.length === 1) {
-    const only = data.memberships[0];
-    if (activeTenantSlug !== only.tenantSlug) {
-      setActiveTenant({ id: only.tenantId, slug: only.tenantSlug, theme: only.theme });
-      applyTenantTheme(only.theme);
-    }
-    return <Navigate to={`/t/${only.tenantSlug}`} replace />;
+  if (activeTenantSlug !== target.tenantSlug) {
+    setActiveTenant({ id: target.tenantId, slug: target.tenantSlug, theme: target.theme });
+    applyTenantTheme(target.theme);
   }
 
-  return <Navigate to="/tenants" replace />;
+  return <Navigate to={`/t/${target.tenantSlug}`} replace />;
 }
 
 export function PostLoginRouter() {

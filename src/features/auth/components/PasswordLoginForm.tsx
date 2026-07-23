@@ -20,6 +20,7 @@ import { queryClient } from "@/lib/queryClient";
 import { cn } from "@/lib/utils";
 import { passwordCredentialsSchema, type PasswordCredentialsInput } from "../password/schemas";
 import { passwordLogin } from "../api";
+import { saveSelectedProductId } from "../ssoCallback";
 import { useAuthStore } from "@/stores/authStore";
 
 export type PasswordLoginFormProps = {
@@ -41,6 +42,7 @@ export function PasswordLoginForm({ productId }: PasswordLoginFormProps) {
 
   const onSubmit = form.handleSubmit(async (values) => {
     try {
+      saveSelectedProductId(productId);
       const session = await passwordLogin(values, productId);
       setSession({
         accessToken: session.accessToken,

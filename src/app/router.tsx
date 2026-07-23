@@ -25,11 +25,6 @@ const AccessDeniedPage = lazy(() =>
 const PostLoginRouter = lazy(() =>
   import("@/features/auth/pages/PostLoginRouter").then((m) => ({ default: m.PostLoginRouter })),
 );
-const TenantChooserPage = lazy(() =>
-  import("@/features/tenants/pages/TenantChooserPage").then((m) => ({
-    default: m.TenantChooserPage,
-  })),
-);
 const TenantDashboardPage = lazy(() =>
   import("@/features/dashboard/pages/TenantDashboardPage").then((m) => ({
     default: m.TenantDashboardPage,
@@ -113,7 +108,6 @@ export const router = createBrowserRouter(
       element: <RequireAuth />,
       children: [
         { path: "/", element: <PostLoginRouter /> },
-        { path: "/tenants", element: <TenantChooserPage /> },
         {
           path: "/admin",
           element: <RequireSuperAdmin />,

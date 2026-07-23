@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Loader as Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { ssoLogin } from "../api";
-import { consumeSsoProductId } from "../ssoCallback";
+import { consumeSelectedProductId, readSelectedProductId } from "../ssoCallback";
 import { env } from "@/lib/env";
 import { useAuthStore } from "@/stores/authStore";
 import { queryClient } from "@/lib/queryClient";
@@ -37,7 +37,10 @@ export function CallbackPage() {
 
     void (async () => {
       try {
-        const session = await ssoLogin(token, consumeSsoProductId() ?? env.defaultProductId);
+        // Read (do not consume): PostLoginRouter will consume the id
+        // to route straight to the selected product.
+        const productId = readSelectedProductId() ?? env.defaultProductId;
+        const session = await ssoLogin(token, productId);
         if (cancelled) return;
         setSession({
           accessToken: session.accessToken,
@@ -52,6 +55,8 @@ export function CallbackPage() {
         navigate("/", { replace: true });
       } catch (err) {
         console.error("[CallbackPage] SSO login failed", err);
+        // Failure — drop the stashed id so a manual retry from /login doesn't reuse it.
+        consumeSelectedProductId();
         if (!cancelled) {
           setError(t("errors.generic"));
           toast.error(t("errors.generic"));
