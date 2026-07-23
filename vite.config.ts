@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "node:path";
 // @ts-expect-error - JS plugin, no types needed.
@@ -8,16 +8,16 @@ import { jsxTailGuard } from "./scripts/jsx-tail-guard.mjs";
 // Local `vite` dev still runs at the root, so base is command-dependent.
 const DEPLOY_BASE = "/pocs/bolt-dating-front-back-office/";
 
-function resolveBase(command: "serve" | "build"): string {
-  const override = process.env.VITE_BASE_PATH;
+function resolveBase(command: "serve" | "build", envOverride: string | undefined): string {
+  const override = envOverride ?? process.env.VITE_BASE_PATH;
   if (override && override.startsWith("/") && override.endsWith("/")) {
     return override;
   }
   return command === "build" ? DEPLOY_BASE : "/";
 }
 
-export default defineConfig(({ command }) => ({
-  base: resolveBase(command),
+export default defineConfig(({ command, mode }) => ({
+  base: resolveBase(command, loadEnv(mode, process.cwd(), "VITE_").VITE_BASE_PATH),
   plugins: [jsxTailGuard(), react()],
   resolve: {
     alias: {
