@@ -121,7 +121,7 @@ export function ReportsList({
         const item = row.original;
         const isOpen = item.status === "open" || item.status === "in_review";
         return (
-          <PermissionGate require={PERMISSIONS.MODERATION_ACT}>
+          <PermissionGate require={PERMISSIONS.SIGNALEMENT_UPDATE}>
             <div className="flex justify-end gap-1">
               <Button
                 size="sm"
@@ -171,7 +171,7 @@ export function ReportsList({
             </div>
             <p className="text-sm">{sanitizeText(item.description)}</p>
             {item.status === "open" || item.status === "in_review" ? (
-              <PermissionGate require={PERMISSIONS.MODERATION_ACT}>
+              <PermissionGate require={PERMISSIONS.SIGNALEMENT_UPDATE}>
                 <div className="flex gap-2 pt-1">
                   <Button size="sm" onClick={() => onResolve(item)}>
                     {t("actions.resolve")}

@@ -130,7 +130,7 @@ export function UserDetailSheet({
 
             <Separator className="my-4" />
 
-            <PermissionGate require={PERMISSIONS.USERS_MODERATE}>
+            <PermissionGate require={PERMISSIONS.USERS_UPDATE}>
               <div className="flex flex-wrap gap-2">
                 {!user.isVerified ? (
                   <Button

@@ -55,6 +55,8 @@ describe("SSO callback flow", () => {
         name: "Op",
         avatarUrl: null,
         isSuperAdmin: false,
+        roleName: null,
+        permissions: [],
       },
       memberships: [],
     });
@@ -77,6 +79,8 @@ describe("SSO callback flow", () => {
         name: "Op",
         avatarUrl: null,
         isSuperAdmin: false,
+        roleName: null,
+        permissions: [],
       },
       memberships: [],
     });

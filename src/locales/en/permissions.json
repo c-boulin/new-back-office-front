@@ -1,0 +1,74 @@
+{
+  "pageTitle": "Access management",
+  "pageDescription": "Create, duplicate and configure the roles used across your team.",
+  "actions": {
+    "newRole": "New role",
+    "createRole": "Create role",
+    "duplicate": "Duplicate",
+    "rename": "Rename",
+    "delete": "Delete",
+    "save": "Save",
+    "discard": "Discard changes",
+    "cancel": "Cancel"
+  },
+  "list": {
+    "title": "Roles",
+    "searchPlaceholder": "Search a role",
+    "counter": "{{granted}}/{{total}}",
+    "counterLabel": "{{granted}} out of {{total}} permissions",
+    "empty": "No role matches your search.",
+    "locked": "Locked"
+  },
+  "editor": {
+    "title": "Role details",
+    "roleName": "Role name",
+    "roleColor": "Color",
+    "grantAll": "Enable all",
+    "grantNone": "Disable all",
+    "lockedNotice": "This role is locked and cannot be edited.",
+    "unsaved": "Unsaved changes",
+    "pickRole": "Pick a role to view its permissions.",
+    "confirmDeleteTitle": "Delete role \"{{label}}\"?",
+    "confirmDeleteDescription": "Users assigned to this role will lose the associated permissions. This cannot be undone."
+  },
+  "sections": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "animators": "Animators",
+    "coachs": "Coaches",
+    "coach-ia": "AI coach",
+    "statistics": "Statistics",
+    "moderation": "Moderation",
+    "signalement": "Reports",
+    "product-config": "Product config",
+    "settings": "Access management"
+  },
+  "actionsLabels": {
+    "create": "Create",
+    "read": "Read",
+    "update": "Update",
+    "delete": "Delete"
+  },
+  "groups": {
+    "main": "Main",
+    "animation": "Animation",
+    "analysis": "Analysis",
+    "moderation": "Moderation",
+    "configuration": "Configuration"
+  },
+  "colors": {
+    "error": "Red",
+    "warning": "Orange",
+    "info": "Blue",
+    "success": "Green",
+    "primary": "Primary",
+    "secondary": "Neutral"
+  },
+  "toast": {
+    "saved": "Role updated",
+    "created": "Role created",
+    "deleted": "Role deleted",
+    "error": "Could not save the changes."
+  },
+  "loadError": "Could not load roles."
+}

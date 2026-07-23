@@ -17,11 +17,11 @@ describe("PermissionGate", () => {
 
   it("renders children when the permission is granted", () => {
     signInAs(operatorFixture, [
-      membershipFixture({ permissions: [PERMISSIONS.USERS_MODERATE] }),
+      membershipFixture({ permissions: [PERMISSIONS.USERS_UPDATE] }),
     ]);
     activateTenant("t_luna", "luna");
     renderWithProviders(
-      <PermissionGate require={PERMISSIONS.USERS_MODERATE}>
+      <PermissionGate require={PERMISSIONS.USERS_UPDATE}>
         <button>Ban</button>
       </PermissionGate>,
     );
@@ -34,7 +34,7 @@ describe("PermissionGate", () => {
     ]);
     activateTenant("t_luna", "luna");
     renderWithProviders(
-      <PermissionGate require={PERMISSIONS.USERS_MODERATE} fallback={<span>Locked</span>}>
+      <PermissionGate require={PERMISSIONS.USERS_UPDATE} fallback={<span>Locked</span>}>
         <button>Ban</button>
       </PermissionGate>,
     );
@@ -45,7 +45,7 @@ describe("PermissionGate", () => {
   it("bypasses check for super-admins", () => {
     signInAs(superAdminFixture, []);
     renderWithProviders(
-      <PermissionGate require={PERMISSIONS.SETTINGS_WRITE}>
+      <PermissionGate require={PERMISSIONS.SETTINGS_UPDATE}>
         <button>Edit</button>
       </PermissionGate>,
     );

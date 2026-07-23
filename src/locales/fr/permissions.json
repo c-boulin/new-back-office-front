@@ -1,0 +1,74 @@
+{
+  "pageTitle": "Gestion des droits",
+  "pageDescription": "Créez, dupliquez et paramétrez les rôles appliqués à votre équipe.",
+  "actions": {
+    "newRole": "Nouveau rôle",
+    "createRole": "Créer le rôle",
+    "duplicate": "Dupliquer",
+    "rename": "Renommer",
+    "delete": "Supprimer",
+    "save": "Enregistrer",
+    "discard": "Annuler les modifications",
+    "cancel": "Annuler"
+  },
+  "list": {
+    "title": "Rôles",
+    "searchPlaceholder": "Rechercher un rôle",
+    "counter": "{{granted}}/{{total}}",
+    "counterLabel": "{{granted}} droits sur {{total}}",
+    "empty": "Aucun rôle ne correspond à votre recherche.",
+    "locked": "Non modifiable"
+  },
+  "editor": {
+    "title": "Détails du rôle",
+    "roleName": "Nom du rôle",
+    "roleColor": "Couleur",
+    "grantAll": "Tout activer",
+    "grantNone": "Tout désactiver",
+    "lockedNotice": "Ce rôle est verrouillé et ne peut pas être modifié.",
+    "unsaved": "Modifications non enregistrées",
+    "pickRole": "Sélectionnez un rôle pour voir ses droits.",
+    "confirmDeleteTitle": "Supprimer le rôle « {{label}} » ?",
+    "confirmDeleteDescription": "Les utilisateurs rattachés à ce rôle perdront leurs droits associés. Cette action est irréversible."
+  },
+  "sections": {
+    "dashboard": "Tableau de bord",
+    "users": "Utilisateurs",
+    "animators": "Animateurs",
+    "coachs": "Coachs",
+    "coach-ia": "Coach IA",
+    "statistics": "Statistiques",
+    "moderation": "Modération",
+    "signalement": "Signalement",
+    "product-config": "Configuration Produit",
+    "settings": "Gestion des droits"
+  },
+  "actionsLabels": {
+    "create": "Créer",
+    "read": "Lire",
+    "update": "Modifier",
+    "delete": "Supprimer"
+  },
+  "groups": {
+    "main": "Principal",
+    "animation": "Animation",
+    "analysis": "Analyse",
+    "moderation": "Modération",
+    "configuration": "Configuration"
+  },
+  "colors": {
+    "error": "Rouge",
+    "warning": "Orange",
+    "info": "Bleu",
+    "success": "Vert",
+    "primary": "Primaire",
+    "secondary": "Neutre"
+  },
+  "toast": {
+    "saved": "Rôle mis à jour",
+    "created": "Rôle créé",
+    "deleted": "Rôle supprimé",
+    "error": "Impossible d'enregistrer les modifications."
+  },
+  "loadError": "Impossible de charger les rôles."
+}

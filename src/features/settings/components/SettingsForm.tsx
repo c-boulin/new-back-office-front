@@ -126,7 +126,7 @@ export function SettingsForm() {
         </CardContent>
       </Card>
 
-      <PermissionGate require={PERMISSIONS.SETTINGS_WRITE}>
+      <PermissionGate require={PERMISSIONS.PRODUCT_CONFIG_UPDATE}>
         <div className="flex justify-end gap-2">
           <Button
             type="button"

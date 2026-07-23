@@ -1,6 +1,11 @@
+import { useMemo } from "react";
 import { useAuthStore } from "@/stores/authStore";
 import { useTenantStore } from "@/stores/tenantStore";
-import { hasPermission, type Permission } from "@/lib/permissions";
+import {
+  hasPermission,
+  PERMISSION_CATALOG,
+  type Permission,
+} from "@/lib/permissions";
 
 export function usePermissions() {
   const user = useAuthStore((s) => s.user);
@@ -8,14 +13,19 @@ export function usePermissions() {
   const activeTenantId = useTenantStore((s) => s.activeTenantId);
 
   const membership = memberships.find((m) => m.tenantId === activeTenantId);
-  const scoped: string[] = user?.isSuperAdmin
-    ? ["super_admin"]
-    : (membership?.permissions ?? []);
+  const isSuperAdmin = Boolean(user?.isSuperAdmin);
+
+  const permissions = useMemo(() => {
+    if (isSuperAdmin) return [...PERMISSION_CATALOG];
+    if (membership && membership.permissions.length > 0) return membership.permissions;
+    return user?.permissions ?? [];
+  }, [isSuperAdmin, membership, user?.permissions]);
 
   return {
-    isSuperAdmin: Boolean(user?.isSuperAdmin),
+    isSuperAdmin,
     role: membership?.role,
-    permissions: scoped,
-    can: (required: Permission | Permission[]) => hasPermission(scoped, required),
+    roleName: user?.roleName ?? null,
+    permissions,
+    can: (required: Permission | Permission[]) => hasPermission(permissions, required),
   };
 }

@@ -23,57 +23,71 @@ import { TopBar } from "./TopBar";
 import { LoadingState } from "@/components/common/LoadingState";
 import { SessionExpiredDialog } from "@/components/common/SessionExpiredDialog";
 import { SkipLink } from "@/components/common/SkipLink";
+import { PERMISSIONS, type Permission } from "@/lib/permissions";
+import { usePermissions } from "@/hooks/usePermissions";
 
-type NavGroup = { key: string; items: SidebarNavItem[] };
+type GuardedNavItem = SidebarNavItem & { permission?: Permission };
+type NavGroup = { key: string; items: GuardedNavItem[] };
 
 function buildGroups(base: string, t: (key: string) => string): NavGroup[] {
   const item = (
     slug: string,
     icon: LucideIcon,
     labelKey: string,
+    permission?: Permission,
     end = false,
-  ): SidebarNavItem => ({
+  ): GuardedNavItem => ({
     to: slug ? `${base}/${slug}` : base,
     icon,
     label: t(labelKey),
     end,
+    permission,
   });
   return [
     {
       key: "main",
       items: [
-        item("", LayoutDashboard, "nav.dashboard", true),
-        item("users", Users, "nav.users"),
+        item("", LayoutDashboard, "nav.dashboard", PERMISSIONS.DASHBOARD_READ, true),
+        item("users", Users, "nav.users", PERMISSIONS.USERS_READ),
       ],
     },
     {
       key: "animation",
       items: [
-        item("animators", Mic, "nav.animators"),
-        item("coaches", UserCog, "nav.coaches"),
-        item("coach-ai", Sparkles, "nav.coachAi"),
+        item("animators", Mic, "nav.animators", PERMISSIONS.ANIMATORS_READ),
+        item("coaches", UserCog, "nav.coaches", PERMISSIONS.COACHS_READ),
+        item("coach-ai", Sparkles, "nav.coachAi", PERMISSIONS.COACH_IA_READ),
       ],
     },
     {
       key: "analysis",
-      items: [item("analytics", ChartBar, "nav.analytics")],
+      items: [item("analytics", ChartBar, "nav.analytics", PERMISSIONS.STATISTICS_READ)],
     },
     {
       key: "moderation",
       items: [
-        item("moderation", ShieldAlert, "nav.moderation"),
-        item("reports", Flag, "nav.reports"),
+        item("moderation", ShieldAlert, "nav.moderation", PERMISSIONS.MODERATION_READ),
+        item("reports", Flag, "nav.reports", PERMISSIONS.SIGNALEMENT_READ),
         item("messages", MessageSquareHeart, "nav.messages"),
       ],
     },
     {
       key: "configuration",
       items: [
-        item("product-config", Settings2, "nav.productConfig"),
-        item("permissions", ShieldCheck, "nav.permissions"),
+        item("product-config", Settings2, "nav.productConfig", PERMISSIONS.PRODUCT_CONFIG_READ),
+        item("permissions", ShieldCheck, "nav.permissions", PERMISSIONS.SETTINGS_READ),
       ],
     },
   ];
+}
+
+function filterGroups(groups: NavGroup[], can: (p: Permission) => boolean): NavGroup[] {
+  return groups
+    .map((g) => ({
+      ...g,
+      items: g.items.filter((i) => !i.permission || can(i.permission)),
+    }))
+    .filter((g) => g.items.length > 0);
 }
 
 function GroupedSidebarNav({ groups, t }: { groups: NavGroup[]; t: (key: string) => string }) {
@@ -92,8 +106,12 @@ export function TenantLayout() {
   const { t } = useTranslation("common");
   const { tenantSlug } = useParams();
   const base = `/t/${tenantSlug}`;
+  const { can } = usePermissions();
 
-  const groups = useMemo(() => buildGroups(base, t), [base, t]);
+  const groups = useMemo(
+    () => filterGroups(buildGroups(base, t), can),
+    [base, t, can],
+  );
 
   return (
     <div className="flex min-h-screen bg-muted/30">

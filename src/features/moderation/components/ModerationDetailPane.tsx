@@ -90,7 +90,7 @@ export function ModerationDetailPane({
       </section>
 
       {item.status === "pending" ? (
-        <PermissionGate require={PERMISSIONS.MODERATION_ACT}>
+        <PermissionGate require={PERMISSIONS.MODERATION_UPDATE}>
           <footer className="mt-auto flex flex-wrap items-center gap-2 border-t pt-4">
             <Button onClick={() => onApprove(item)} className="gap-1.5">
               <Check className="h-4 w-4" aria-hidden />

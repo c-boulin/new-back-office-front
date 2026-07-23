@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { renderHook } from "@testing-library/react";
 import { usePermissions } from "@/hooks/usePermissions";
-import { PERMISSIONS } from "@/lib/permissions";
+import { PERMISSIONS, PERMISSION_TOTAL } from "@/lib/permissions";
 import {
   resetStores,
   signInAs,
@@ -16,15 +16,18 @@ describe("usePermissions", () => {
     resetStores();
   });
 
-  it("marks super-admin and allows any permission", () => {
+  it("marks super admins and grants the full catalog", () => {
     signInAs(superAdminFixture, []);
     const { result } = renderHook(() => usePermissions());
     expect(result.current.isSuperAdmin).toBe(true);
-    expect(result.current.can(PERMISSIONS.SETTINGS_WRITE)).toBe(true);
-    expect(result.current.can([PERMISSIONS.USERS_MODERATE, PERMISSIONS.ANALYTICS_READ])).toBe(true);
+    expect(result.current.permissions).toHaveLength(PERMISSION_TOTAL);
+    expect(result.current.can(PERMISSIONS.SETTINGS_UPDATE)).toBe(true);
+    expect(result.current.can([PERMISSIONS.USERS_DELETE, PERMISSIONS.MODERATION_UPDATE])).toBe(
+      true,
+    );
   });
 
-  it("returns scoped permissions of the active tenant membership", () => {
+  it("returns the scoped permissions of the active tenant membership", () => {
     const membership = membershipFixture({
       tenantId: "t_luna",
       permissions: [PERMISSIONS.USERS_READ],
@@ -34,15 +37,17 @@ describe("usePermissions", () => {
     const { result } = renderHook(() => usePermissions());
     expect(result.current.isSuperAdmin).toBe(false);
     expect(result.current.can(PERMISSIONS.USERS_READ)).toBe(true);
-    expect(result.current.can(PERMISSIONS.USERS_MODERATE)).toBe(false);
+    expect(result.current.can(PERMISSIONS.USERS_UPDATE)).toBe(false);
     expect(result.current.role).toBe("admin");
   });
 
-  it("returns no permissions when the active tenant has no matching membership", () => {
-    signInAs(operatorFixture, [membershipFixture({ tenantId: "t_other" })]);
-    activateTenant("t_luna", "luna");
+  it("falls back to the session-scoped permissions when no tenant is active", () => {
+    signInAs(
+      { ...operatorFixture, permissions: [PERMISSIONS.SETTINGS_READ] },
+      [],
+    );
     const { result } = renderHook(() => usePermissions());
-    expect(result.current.permissions).toEqual([]);
-    expect(result.current.can(PERMISSIONS.USERS_READ)).toBe(false);
+    expect(result.current.permissions).toEqual([PERMISSIONS.SETTINGS_READ]);
+    expect(result.current.can(PERMISSIONS.SETTINGS_READ)).toBe(true);
   });
 });
