@@ -15,14 +15,38 @@ const ALL_PRODUCTS = [
   { id: 106, name: "Swipi", slug: "swipi" },
 ] as const;
 
-function fullAccess(email: string, name: string): RawApiUser {
+const FULL_PERMISSIONS = [
+  "dashboard.read",
+  "users.read",
+  "users.write",
+  "users.moderate",
+  "moderation.read",
+  "moderation.act",
+  "analytics.read",
+  "subscriptions.read",
+  "subscriptions.write",
+  "settings.write",
+  "tenant.admin",
+];
+
+const MODERATOR_PERMISSIONS = [
+  "dashboard.read",
+  "users.read",
+  "users.moderate",
+  "moderation.read",
+  "moderation.act",
+];
+
+function superAdmin(email: string, name: string): RawApiUser {
   return {
     name,
     email,
-    role: { id: "administrator", name: "administrator" },
+    isSuperAdmin: true,
+    role: null,
     products: ALL_PRODUCTS.map((p) => ({
       ...p,
       role: { id: "admin", name: "admin" },
+      permissions: FULL_PERMISSIONS,
     })),
   };
 }
@@ -31,7 +55,17 @@ export const accountSeeds: MockAccount[] = [
   {
     email: "admin@weezchat.fr",
     password: "admin123",
-    user: fullAccess("admin@weezchat.fr", "Admin Weezchat"),
+    user: {
+      name: "Admin Weezchat",
+      email: "admin@weezchat.fr",
+      isSuperAdmin: false,
+      role: null,
+      products: ALL_PRODUCTS.map((p) => ({
+        ...p,
+        role: { id: "admin", name: "admin" },
+        permissions: FULL_PERMISSIONS,
+      })),
+    },
   },
   {
     email: "operator@watchtower.local",
@@ -39,16 +73,18 @@ export const accountSeeds: MockAccount[] = [
     user: {
       name: "Jamie Rivera",
       email: "operator@watchtower.local",
-      role: { id: "moderator", name: "moderator" },
+      isSuperAdmin: false,
+      role: null,
       products: ALL_PRODUCTS.slice(0, 2).map((p) => ({
         ...p,
         role: { id: "moderator", name: "moderator" },
+        permissions: MODERATOR_PERMISSIONS,
       })),
     },
   },
   {
     email: "admin@watchtower.local",
     password: "admin",
-    user: fullAccess("admin@watchtower.local", "Alex Morgan"),
+    user: superAdmin("admin@watchtower.local", "Alex Morgan"),
   },
 ];

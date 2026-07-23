@@ -1,10 +1,22 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { useProductsStore } from "@/stores/productsStore";
-import { rawProductToProduct } from "@/features/auth/products";
+import { apiProductToProduct } from "@/features/auth/products";
 
 const sample = () => [
-  rawProductToProduct({ id: 1, name: "Alpha", slug: "alpha", color: "#3fb28c" }),
-  rawProductToProduct({ id: 2, name: "Beta", slug: "beta", color: null }),
+  apiProductToProduct({
+    id: 1,
+    name: "Alpha",
+    slug: "alpha",
+    role: { id: 1, name: "admin" },
+    permissions: [],
+  }),
+  apiProductToProduct({
+    id: 2,
+    name: "Beta",
+    slug: "beta",
+    role: { id: 2, name: "admin" },
+    permissions: [],
+  }),
 ];
 
 describe("useProductsStore", () => {

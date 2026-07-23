@@ -13,7 +13,6 @@ import { useAuthStore } from "@/stores/authStore";
 import { useTenantStore } from "@/stores/tenantStore";
 import { queryClient } from "@/lib/queryClient";
 import { resetTenantTheme } from "@/lib/tenantTheme";
-import { consumeSelectedProductId } from "@/features/auth/ssoCallback";
 
 export function SessionExpiredDialog() {
   const status = useAuthStore((s) => s.status);
@@ -27,7 +26,6 @@ export function SessionExpiredDialog() {
     queryClient.removeQueries();
     clearTenant();
     resetTenantTheme();
-    consumeSelectedProductId();
     clear();
     navigate("/login", { replace: true });
   };

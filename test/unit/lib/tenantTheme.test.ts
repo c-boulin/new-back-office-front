@@ -8,7 +8,7 @@ import {
   __resetContrastWarnCacheForTests,
 } from "@/lib/tenantTheme";
 import { useProductsStore } from "@/stores/productsStore";
-import { rawProductToProduct } from "@/features/auth/products";
+import { apiProductToProduct } from "@/features/auth/products";
 
 const ALL_VARS = [
   "--primary",
@@ -168,7 +168,13 @@ describe("brandThemeForTenant", () => {
 
   it("uses the cached product color from the products store when available", () => {
     useProductsStore.getState().setProducts([
-      rawProductToProduct({ id: 42, name: "Custom", slug: "custom", color: "#199fe0" }),
+      apiProductToProduct({
+        id: 42,
+        name: "Custom",
+        slug: "custom",
+        role: { id: 1, name: "admin" },
+        permissions: [],
+      }),
     ]);
     const theme = brandThemeForTenant("42", "custom");
     expect(theme.primary).toMatch(/^\d+ \d+% \d+%$/);

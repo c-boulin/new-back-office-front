@@ -4,9 +4,9 @@ import { useTranslation } from "react-i18next";
 import { Loader as Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { ssoLogin } from "../api";
-import { consumeSelectedProductId, readSelectedProductId } from "../ssoCallback";
-import { env } from "@/lib/env";
+import { membershipToProduct } from "../products";
 import { useAuthStore } from "@/stores/authStore";
+import { useProductsStore } from "@/stores/productsStore";
 import { queryClient } from "@/lib/queryClient";
 import { ErrorState } from "@/components/common/ErrorState";
 
@@ -18,6 +18,7 @@ export function CallbackPage() {
   const [params] = useSearchParams();
   const setSession = useAuthStore((s) => s.setSession);
   const setUser = useAuthStore((s) => s.setUser);
+  const setProducts = useProductsStore((s) => s.setProducts);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -37,10 +38,7 @@ export function CallbackPage() {
 
     void (async () => {
       try {
-        // Read (do not consume): PostLoginRouter will consume the id
-        // to route straight to the selected product.
-        const productId = readSelectedProductId() ?? env.defaultProductId;
-        const session = await ssoLogin(token, productId);
+        const session = await ssoLogin(token);
         if (cancelled) return;
         setSession({
           accessToken: session.accessToken,
@@ -48,6 +46,7 @@ export function CallbackPage() {
           method: "sso",
         });
         setUser(session.user, session.memberships);
+        setProducts(session.memberships.map(membershipToProduct));
         queryClient.setQueryData(["auth", "me"], {
           user: session.user,
           memberships: session.memberships,
@@ -55,8 +54,6 @@ export function CallbackPage() {
         navigate("/", { replace: true });
       } catch (err) {
         console.error("[CallbackPage] SSO login failed", err);
-        // Failure — drop the stashed id so a manual retry from /login doesn't reuse it.
-        consumeSelectedProductId();
         if (!cancelled) {
           setError(t("errors.generic"));
           toast.error(t("errors.generic"));
@@ -67,7 +64,7 @@ export function CallbackPage() {
     return () => {
       cancelled = true;
     };
-  }, [navigate, params, setSession, setUser, t]);
+  }, [navigate, params, setSession, setUser, setProducts, t]);
 
   if (error) {
     return (

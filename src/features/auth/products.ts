@@ -1,19 +1,5 @@
-import { z } from "zod";
-import { validateAndAdapt } from "@/lib/validatorAdaptor";
-
-export const productSchema = z.object({
-  id: z.number().int().positive(),
-  name: z.string().min(1),
-  slug: z.string().nullable(),
-  color: z.string().nullable().optional(),
-});
-
-export const productsResponseSchema = z.object({
-  data: z.array(productSchema),
-});
-
-export type RawProduct = z.infer<typeof productSchema>;
-export type RawProductsResponse = z.infer<typeof productsResponseSchema>;
+import type { TenantMembership } from "@/features/tenants/types";
+import type { RawApiProduct } from "@/features/tenants/schemas";
 
 export type Product = {
   id: number;
@@ -147,16 +133,31 @@ export function productColors(
   };
 }
 
-export function rawProductToProduct(raw: RawProduct): Product {
-  const color = raw.color ?? null;
-  const { hue, accent } = productColors(raw.id, raw.slug, color);
-  return { id: raw.id, name: raw.name, slug: raw.slug, color, hue, accent };
+/** Build a UI `Product` from a raw API product returned by /v1/auth/{login,me}. */
+export function apiProductToProduct(raw: RawApiProduct): Product {
+  const slug = raw.slug && raw.slug.length > 0 ? raw.slug : null;
+  const { hue, accent } = productColors(raw.id, slug, null);
+  return {
+    id: raw.id,
+    name: raw.name,
+    slug,
+    color: null,
+    hue,
+    accent,
+  };
 }
 
-export function productsResponseToList(raw: RawProductsResponse): Product[] {
-  return raw.data.map(rawProductToProduct);
-}
-
-export function parseProducts(raw: unknown): Product[] {
-  return validateAndAdapt(raw, productsResponseSchema, productsResponseToList);
+/** Build a UI `Product` from a `TenantMembership` (cached in the auth store). */
+export function membershipToProduct(m: TenantMembership): Product {
+  const numericId = Number(m.tenantId);
+  const id = Number.isFinite(numericId) ? numericId : 0;
+  const { hue, accent } = productColors(id || m.tenantId, m.tenantSlug, null);
+  return {
+    id,
+    name: m.tenantName,
+    slug: m.tenantSlug,
+    color: null,
+    hue,
+    accent,
+  };
 }

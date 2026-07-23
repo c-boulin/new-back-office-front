@@ -1,9 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { screen } from "@testing-library/react";
-import { StrictMode } from "react";
+import userEvent from "@testing-library/user-event";
 import { Route, Routes, useParams } from "react-router-dom";
+import { QueryClient } from "@tanstack/react-query";
 import { PostLoginRouter } from "@/features/auth/pages/PostLoginRouter";
-import { renderWithProviders } from "@test/utils/renderWithProviders";
+import { makeTestQueryClient, renderWithProviders } from "@test/utils/renderWithProviders";
 import {
   resetStores,
   signInAs,
@@ -29,21 +30,19 @@ function TenantEcho() {
 
 function Shell() {
   return (
-    <StrictMode>
-      <Routes>
-        <Route path="/" element={<PostLoginRouter />} />
-        <Route path="/admin" element={<div>admin-shell</div>} />
-        <Route path="/access-denied" element={<div>access-denied</div>} />
-        <Route path="/t/:tenantSlug" element={<TenantEcho />} />
-      </Routes>
-    </StrictMode>
+    <Routes>
+      <Route path="/" element={<PostLoginRouter />} />
+      <Route path="/admin" element={<div>admin-shell</div>} />
+      <Route path="/access-denied" element={<div>access-denied</div>} />
+      <Route path="/t/:tenantSlug" element={<TenantEcho />} />
+    </Routes>
   );
 }
 
-function seedMe(memberships: ReturnType<typeof membershipFixture>[]) {
-  const user = { ...operatorFixture };
-  signInAs(user, memberships);
-  return { user, memberships };
+function seededClient(user: unknown, memberships: unknown): QueryClient {
+  const client = makeTestQueryClient();
+  client.setQueryData(["auth", "me"], { user, memberships });
+  return client;
 }
 
 describe("PostLoginRouter", () => {
@@ -54,81 +53,58 @@ describe("PostLoginRouter", () => {
 
   it("routes super admins to /admin", async () => {
     signInAs(superAdminFixture, []);
-    const { queryClient } = renderWithProviders(<Shell />, { route: "/" });
-    queryClient.setQueryData(["auth", "me"], {
-      user: superAdminFixture,
-      memberships: [],
-    });
+    const queryClient = seededClient(superAdminFixture, []);
+    renderWithProviders(<Shell />, { route: "/", queryClient });
     expect(await screen.findByText("admin-shell")).toBeInTheDocument();
   });
 
-  it("routes to the selected product's tenant when its id is persisted", async () => {
+  it("auto-activates the only membership and lands on that tenant", async () => {
     const memberships = [
       membershipFixture({ tenantId: "101", tenantSlug: "woozgo", tenantName: "Woozgo" }),
-      membershipFixture({
-        tenantId: "102",
-        tenantSlug: "weezchat-fr",
-        tenantName: "Weezchat FR",
-      }),
-      membershipFixture({
-        tenantId: "106",
-        tenantSlug: "swipi",
-        tenantName: "Swipi",
-      }),
     ];
-    const seeded = seedMe(memberships);
-    sessionStorage.setItem("auth.selectedProductId", "102");
-
-    const { queryClient } = renderWithProviders(<Shell />, { route: "/" });
-    queryClient.setQueryData(["auth", "me"], seeded);
-
-    expect(await screen.findByTestId("tenant-shell")).toHaveTextContent("tenant:weezchat-fr");
-  });
-
-  it("keeps routing to the selected tenant even after a StrictMode double render", async () => {
-    const memberships = [
-      membershipFixture({ tenantId: "101", tenantSlug: "woozgo", tenantName: "Woozgo" }),
-      membershipFixture({
-        tenantId: "106",
-        tenantSlug: "swipi",
-        tenantName: "Swipi",
-      }),
-    ];
-    const seeded = seedMe(memberships);
-    sessionStorage.setItem("auth.selectedProductId", "106");
-
-    const { queryClient } = renderWithProviders(<Shell />, { route: "/" });
-    queryClient.setQueryData(["auth", "me"], seeded);
-
-    expect(await screen.findByTestId("tenant-shell")).toHaveTextContent("tenant:swipi");
-    // Regression guard: the id must survive the render so a second pass (StrictMode / re-render)
-    // doesn't fall back to the first membership.
-    expect(sessionStorage.getItem("auth.selectedProductId")).toBe("106");
-  });
-
-  it("falls back to the first membership when no id is persisted", async () => {
-    const memberships = [
-      membershipFixture({ tenantId: "101", tenantSlug: "woozgo", tenantName: "Woozgo" }),
-      membershipFixture({
-        tenantId: "102",
-        tenantSlug: "weezchat-fr",
-        tenantName: "Weezchat FR",
-      }),
-    ];
-    const seeded = seedMe(memberships);
-
-    const { queryClient } = renderWithProviders(<Shell />, { route: "/" });
-    queryClient.setQueryData(["auth", "me"], seeded);
-
+    signInAs(operatorFixture, memberships);
+    const queryClient = seededClient(operatorFixture, memberships);
+    renderWithProviders(<Shell />, { route: "/", queryClient });
     expect(await screen.findByTestId("tenant-shell")).toHaveTextContent("tenant:woozgo");
   });
 
+  it("shows the product picker when the user has more than one membership", async () => {
+    const memberships = [
+      membershipFixture({ tenantId: "101", tenantSlug: "woozgo", tenantName: "Woozgo" }),
+      membershipFixture({
+        tenantId: "102",
+        tenantSlug: "weezchat-fr",
+        tenantName: "Weezchat FR",
+      }),
+    ];
+    signInAs(operatorFixture, memberships);
+    const queryClient = seededClient(operatorFixture, memberships);
+    renderWithProviders(<Shell />, { route: "/", queryClient });
+
+    expect(await screen.findByRole("radiogroup")).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: /Woozgo/i })).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: /Weezchat FR/i })).toBeInTheDocument();
+  });
+
+  it("navigates to the chosen product tenant when Continue is clicked", async () => {
+    const memberships = [
+      membershipFixture({ tenantId: "101", tenantSlug: "woozgo", tenantName: "Woozgo" }),
+      membershipFixture({ tenantId: "106", tenantSlug: "swipi", tenantName: "Swipi" }),
+    ];
+    signInAs(operatorFixture, memberships);
+    const queryClient = seededClient(operatorFixture, memberships);
+    renderWithProviders(<Shell />, { route: "/", queryClient });
+
+    await userEvent.click(await screen.findByRole("radio", { name: /Swipi/i }));
+    await userEvent.click(screen.getByRole("button", { name: /continue/i }));
+
+    expect(await screen.findByTestId("tenant-shell")).toHaveTextContent("tenant:swipi");
+  });
+
   it("redirects to /access-denied when the user has no memberships", async () => {
-    const seeded = seedMe([]);
-
-    const { queryClient } = renderWithProviders(<Shell />, { route: "/" });
-    queryClient.setQueryData(["auth", "me"], seeded);
-
+    signInAs(operatorFixture, []);
+    const queryClient = seededClient(operatorFixture, []);
+    renderWithProviders(<Shell />, { route: "/", queryClient });
     expect(await screen.findByText("access-denied")).toBeInTheDocument();
   });
 });

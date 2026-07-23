@@ -25,10 +25,22 @@ function Shell() {
   );
 }
 
+const ssoSessionFixture = {
+  accessToken: "at",
+  refreshToken: "rt",
+  user: {
+    id: "op@example.com",
+    email: "op@example.com",
+    name: "Op",
+    avatarUrl: null,
+    isSuperAdmin: false,
+  },
+  memberships: [],
+};
+
 describe("SSO callback flow", () => {
   beforeEach(() => {
     resetStores();
-    sessionStorage.clear();
     ssoLoginMock.mockReset();
   });
 
@@ -44,58 +56,23 @@ describe("SSO callback flow", () => {
     expect(ssoLoginMock).not.toHaveBeenCalled();
   });
 
-  it("calls ssoLogin with the persisted product id and leaves it for the post-login router", async () => {
-    sessionStorage.setItem("auth.selectedProductId", "42");
-    ssoLoginMock.mockResolvedValueOnce({
-      accessToken: "at",
-      refreshToken: "rt",
-      user: {
-        id: "op@example.com",
-        email: "op@example.com",
-        name: "Op",
-        avatarUrl: null,
-        isSuperAdmin: false,
-      },
-      memberships: [],
-    });
+  it("calls ssoLogin with only the token and continues to the home route", async () => {
+    ssoLoginMock.mockResolvedValueOnce(ssoSessionFixture);
     const token = "AbCdEfGhIjKlMnOpQrStUvWxYz1234";
     renderWithProviders(<Shell />, {
       route: `/auth/callback?status=ok&sesame_token=${token}`,
     });
     expect(await screen.findByText("home-screen")).toBeInTheDocument();
-    expect(ssoLoginMock).toHaveBeenCalledWith(token, 42);
-    expect(sessionStorage.getItem("auth.selectedProductId")).toBe("42");
+    expect(ssoLoginMock).toHaveBeenCalledWith(token);
+    expect(ssoLoginMock).toHaveBeenCalledTimes(1);
   });
 
-  it("falls back to the env default product id when nothing was persisted", async () => {
-    ssoLoginMock.mockResolvedValueOnce({
-      accessToken: "at",
-      refreshToken: "rt",
-      user: {
-        id: "op@example.com",
-        email: "op@example.com",
-        name: "Op",
-        avatarUrl: null,
-        isSuperAdmin: false,
-      },
-      memberships: [],
-    });
-    const token = "AbCdEfGhIjKlMnOpQrStUvWxYz1234";
-    renderWithProviders(<Shell />, {
-      route: `/auth/callback?status=ok&sesame_token=${token}`,
-    });
-    expect(await screen.findByText("home-screen")).toBeInTheDocument();
-    expect(ssoLoginMock).toHaveBeenCalledWith(token, 69);
-  });
-
-  it("drops the persisted product id when the SSO login fails", async () => {
-    sessionStorage.setItem("auth.selectedProductId", "42");
+  it("surfaces an error when the SSO login fails", async () => {
     ssoLoginMock.mockRejectedValueOnce(new Error("boom"));
     const token = "AbCdEfGhIjKlMnOpQrStUvWxYz1234";
     renderWithProviders(<Shell />, {
       route: `/auth/callback?status=ok&sesame_token=${token}`,
     });
     expect(await screen.findByRole("alert")).toBeInTheDocument();
-    expect(sessionStorage.getItem("auth.selectedProductId")).toBeNull();
   });
 });

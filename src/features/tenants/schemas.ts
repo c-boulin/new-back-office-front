@@ -44,11 +44,13 @@ export const apiProductSchema = z.object({
   name: z.string(),
   slug: z.string().nullable().optional(),
   role: apiRoleSchema,
+  permissions: z.array(z.string()).optional(),
 });
 
 export const apiUserSchema = z.object({
   name: z.string(),
   email: z.string().email(),
+  isSuperAdmin: z.boolean().optional(),
   role: apiRoleSchema.nullable().optional(),
   products: z.array(apiProductSchema),
 });

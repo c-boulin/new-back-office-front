@@ -43,7 +43,7 @@ export const httpClient: AxiosInstance = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-const REAL_BACKEND_PREFIXES = ["/v1/auth/sso/", "/v1/products"] as const;
+const REAL_BACKEND_PREFIXES = ["/v1/auth/sso/"] as const;
 
 function shouldBypassMockAdapter(url: string | undefined): boolean {
   if (!env.auth.ssoBypassMock) return false;
@@ -67,17 +67,11 @@ function isAuthEndpoint(url: string | undefined): boolean {
   return stripped.startsWith("/v1/auth/") || stripped === "/v1/auth";
 }
 
-function isPublicEndpoint(url: string | undefined): boolean {
-  if (!url) return false;
-  const stripped = url.split("?")[0];
-  return stripped === "/v1/products" || stripped.startsWith("/v1/products?");
-}
-
 httpClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = useAuthStore.getState().accessToken;
   if (token) config.headers.set("Authorization", `Bearer ${token}`);
 
-  if (!isAuthEndpoint(config.url) && !isPublicEndpoint(config.url)) {
+  if (!isAuthEndpoint(config.url)) {
     const activeTenantId = useTenantStore.getState().activeTenantId;
     if (activeTenantId !== null) {
       const params = (config.params ?? {}) as Record<string, unknown>;

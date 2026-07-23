@@ -29,7 +29,7 @@ export function productToMembership(product: RawApiProduct): TenantMembership {
     tenantSlug: slug,
     tenantName: product.name,
     role: mapApiRoleName(product.role.name),
-    permissions: [],
+    permissions: product.permissions ?? [],
     theme: null,
     lastAccessedAt: null,
   };
@@ -41,7 +41,7 @@ export function apiUserToAuthUser(user: RawApiUser): AuthUser {
     name: user.name,
     email: user.email,
     avatarUrl: null,
-    isSuperAdmin: false,
+    isSuperAdmin: user.isSuperAdmin === true,
   };
 }
 

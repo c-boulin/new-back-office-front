@@ -20,18 +20,16 @@ import { queryClient } from "@/lib/queryClient";
 import { cn } from "@/lib/utils";
 import { passwordCredentialsSchema, type PasswordCredentialsInput } from "../password/schemas";
 import { passwordLogin } from "../api";
-import { saveSelectedProductId } from "../ssoCallback";
+import { membershipToProduct } from "../products";
 import { useAuthStore } from "@/stores/authStore";
+import { useProductsStore } from "@/stores/productsStore";
 
-export type PasswordLoginFormProps = {
-  productId: number;
-};
-
-export function PasswordLoginForm({ productId }: PasswordLoginFormProps) {
+export function PasswordLoginForm() {
   const { t } = useTranslation("auth");
   const navigate = useNavigate();
   const setSession = useAuthStore((s) => s.setSession);
   const setUser = useAuthStore((s) => s.setUser);
+  const setProducts = useProductsStore((s) => s.setProducts);
   const [showPassword] = useState(false);
 
   const form = useForm<PasswordCredentialsInput>({
@@ -42,14 +40,14 @@ export function PasswordLoginForm({ productId }: PasswordLoginFormProps) {
 
   const onSubmit = form.handleSubmit(async (values) => {
     try {
-      saveSelectedProductId(productId);
-      const session = await passwordLogin(values, productId);
+      const session = await passwordLogin(values);
       setSession({
         accessToken: session.accessToken,
         refreshToken: session.refreshToken,
         method: "password",
       });
       setUser(session.user, session.memberships);
+      setProducts(session.memberships.map(membershipToProduct));
       queryClient.setQueryData(["auth", "me"], {
         user: session.user,
         memberships: session.memberships,

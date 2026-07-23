@@ -2,10 +2,11 @@ import { describe, it, expect } from "vitest";
 import {
   hexToHslTriplet,
   lightenTriplet,
-  parseProducts,
   productColors,
-  productsResponseToList,
+  apiProductToProduct,
+  membershipToProduct,
 } from "@/features/auth/products";
+import { membershipFixture } from "@test/utils/fixtures";
 
 describe("hexToHslTriplet", () => {
   it("converts #RRGGBB to an HSL triplet", () => {
@@ -82,49 +83,46 @@ describe("productColors", () => {
   });
 });
 
-describe("productsResponseToList", () => {
-  it("maps every entry through the color derivation", () => {
-    const list = productsResponseToList({
-      data: [
-        { id: 1, name: "Alpha", slug: "alpha", color: null },
-        { id: 2, name: "Beta", slug: null },
-      ],
+describe("apiProductToProduct", () => {
+  it("builds a UI product from an API product entry", () => {
+    const product = apiProductToProduct({
+      id: 101,
+      name: "Woozgo",
+      slug: "woozgo",
+      role: { id: 1, name: "admin" },
+      permissions: ["dashboard.read"],
     });
-    expect(list).toHaveLength(2);
-    expect(list[0]).toMatchObject({ id: 1, name: "Alpha", slug: "alpha", color: null });
-    expect(list[1]).toMatchObject({ id: 2, name: "Beta", slug: null, color: null });
-    expect(list[0].hue).toBeTruthy();
-    expect(list[1].hue).toBeTruthy();
+    expect(product.id).toBe(101);
+    expect(product.name).toBe("Woozgo");
+    expect(product.slug).toBe("woozgo");
+    expect(product.color).toBeNull();
+    expect(product.hue).toBe("158 34% 52%");
+    expect(product.accent).toBe("158 34% 62%");
   });
 
-  it("uses the server hex when provided", () => {
-    const [product] = productsResponseToList({
-      data: [{ id: 7, name: "Custom", slug: "custom", color: "#199fe0" }],
+  it("falls back to a null slug when the API sends null/empty", () => {
+    const product = apiProductToProduct({
+      id: 42,
+      name: "NoSlug",
+      slug: null,
+      role: { id: 1, name: "admin" },
+      permissions: [],
     });
-    expect(product.color).toBe("#199fe0");
-    expect(product.hue).toBe(hexToHslTriplet("#199fe0"));
+    expect(product.slug).toBeNull();
+    expect(product.hue).toMatch(/\d+ \d+% \d+%/);
   });
 });
 
-describe("parseProducts", () => {
-  it("accepts a valid API payload with an optional color", () => {
-    const list = parseProducts({
-      data: [{ id: 69, name: "Woozgo", slug: "woozgo", color: "#3fb28c" }],
+describe("membershipToProduct", () => {
+  it("re-derives colors from the cached membership", () => {
+    const product = membershipToProduct(
+      membershipFixture({ tenantId: "101", tenantSlug: "woozgo", tenantName: "Woozgo" }),
+    );
+    expect(product).toMatchObject({
+      id: 101,
+      name: "Woozgo",
+      slug: "woozgo",
+      hue: "158 34% 52%",
     });
-    expect(list).toHaveLength(1);
-    expect(list[0].name).toBe("Woozgo");
-    expect(list[0].color).toBe("#3fb28c");
-  });
-
-  it("accepts an entry without a color field", () => {
-    const list = parseProducts({
-      data: [{ id: 1, name: "NoColor", slug: "nc" }],
-    });
-    expect(list[0].color).toBeNull();
-  });
-
-  it("rejects a malformed payload", () => {
-    expect(() => parseProducts({ wrong: [] })).toThrow();
-    expect(() => parseProducts({ data: [{ id: "nope", name: "x", slug: null }] })).toThrow();
   });
 });

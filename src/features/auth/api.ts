@@ -6,43 +6,31 @@ import {
   ssoInitResponseSchema,
 } from "@/features/tenants/schemas";
 import { loginResponseToSession, meResponseToMe } from "./adaptors";
-import {
-  productsResponseSchema,
-  productsResponseToList,
-  type Product,
-} from "./products";
 import type { AuthSession, MeResponse, PasswordCredentials } from "./types";
 
 export async function passwordLogin(
   credentials: PasswordCredentials,
-  productId: number,
 ): Promise<AuthSession> {
   const { data } = await httpClient.post("/v1/auth/login", {
     email: credentials.email,
     password: credentials.password,
-    product_id: productId,
   });
   return validateAndAdapt(data, loginResponseSchema, loginResponseToSession);
 }
 
-export async function ssoInit(callbackUrl: string, productId: number): Promise<string> {
+export async function ssoInit(callbackUrl: string): Promise<string> {
   const { data } = await httpClient.get("/v1/auth/sso/init", {
     params: {
       callback_url: callbackUrl,
-      product_id: productId,
     },
   });
   const parsed = validateAndAdapt(data, ssoInitResponseSchema, (r) => r);
   return parsed.data.url;
 }
 
-export async function ssoLogin(
-  sesameToken: string,
-  productId: number,
-): Promise<AuthSession> {
+export async function ssoLogin(sesameToken: string): Promise<AuthSession> {
   const { data } = await httpClient.post("/v1/auth/sso/login", {
     sesame_token: sesameToken,
-    product_id: productId,
   });
   return validateAndAdapt(data, loginResponseSchema, loginResponseToSession);
 }
@@ -58,9 +46,4 @@ export async function logoutRequest(): Promise<void> {
 export async function fetchMe(): Promise<MeResponse> {
   const { data } = await httpClient.get("/v1/auth/me");
   return validateAndAdapt(data, meResponseSchema, meResponseToMe);
-}
-
-export async function fetchProducts(): Promise<Product[]> {
-  const { data } = await httpClient.get("/v1/products");
-  return validateAndAdapt(data, productsResponseSchema, productsResponseToList);
 }

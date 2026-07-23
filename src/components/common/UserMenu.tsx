@@ -15,7 +15,6 @@ import { useAuthStore } from "@/stores/authStore";
 import { useTenantStore } from "@/stores/tenantStore";
 import { queryClient } from "@/lib/queryClient";
 import { logoutRequest } from "@/features/auth/api";
-import { consumeSelectedProductId } from "@/features/auth/ssoCallback";
 import { resetTenantTheme } from "@/lib/tenantTheme";
 
 function initials(name: string) {
@@ -41,7 +40,6 @@ export function UserMenu() {
     queryClient.removeQueries();
     clearTenant();
     resetTenantTheme();
-    consumeSelectedProductId();
     clearAuth();
     navigate("/login", { replace: true });
   };
