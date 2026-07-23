@@ -2,16 +2,12 @@
 // tokens (bare `)`, `}`, `);`, `)}` on their own lines) to certain source
 // files. Babel refuses to parse those files and Vite serves the module as
 // a 500, surfacing to the browser as "Failed to fetch dynamically imported
-// module". This plugin:
-//   1. `transform` hook: strips trailing close-only lines from every .ts/.tsx
-//      file if — and only if — doing so restores paren/brace balance. Runs
-//      on both dev-serve and build.
-//   2. `configureServer` hook: attaches an fs.watch on src/ and re-heals the
-//      file on disk within milliseconds of any modification, so tsc and other
-//      external tooling also see a clean file.
+// module". The `transform` hook strips trailing close-only lines from every
+// .ts/.tsx file if — and only if — doing so restores paren/brace balance.
+// Runs on both dev-serve and build.
 
-import { readFileSync, writeFileSync, watch, existsSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { resolve } from "node:path";
 
 function balanceCounts(src) {
   const stripped = src
@@ -57,50 +53,23 @@ function healSource(code) {
 
 /** @returns {import('vite').Plugin} */
 export function jsxTailGuard() {
-  let srcDir = "";
-
   return {
     name: "jsx-tail-guard",
     enforce: "pre",
 
     configResolved(cfg) {
-      srcDir = resolve(cfg.root, "src");
-    },
-
-    configureServer(server) {
-      if (!existsSync(srcDir)) return;
-      const healOnDisk = (fullPath) => {
-        try {
-          if (!/\.(ts|tsx)$/.test(fullPath)) return;
-          const src = readFileSync(fullPath, "utf8");
-          const healed = healSource(src);
-          if (!healed) return;
-          writeFileSync(fullPath, healed.code);
-          server.config.logger.warn(
-            `[jsx-tail-guard] healed on disk: ${fullPath} (removed ${healed.removed} orphan line(s))`,
-          );
-          const mod = server.moduleGraph.getModuleById(fullPath);
-          if (mod) server.moduleGraph.invalidateModule(mod);
-        } catch {
-          // best-effort
-        }
-      };
-
-      // Initial scan of known-fragile files.
-      const initialTargets = [
-        join(srcDir, "features/superAdmin/pages/TenantsListPage.tsx"),
-      ];
-      for (const p of initialTargets) if (existsSync(p)) healOnDisk(p);
-
-      // Watch the whole src tree; recursive is supported on Linux since Node 20.
+      const initialTarget = resolve(
+        cfg.root,
+        "src/features/superAdmin/pages/TenantsListPage.tsx",
+      );
+      if (!existsSync(initialTarget)) return;
       try {
-        watch(srcDir, { recursive: true }, (_event, filename) => {
-          if (!filename) return;
-          const full = join(srcDir, filename.toString());
-          healOnDisk(full);
-        });
+        const src = readFileSync(initialTarget, "utf8");
+        const healed = healSource(src);
+        if (!healed) return;
+        writeFileSync(initialTarget, healed.code);
       } catch {
-        // recursive watch unsupported; fall back silently — transform hook still guards.
+        // best-effort
       }
     },
 
