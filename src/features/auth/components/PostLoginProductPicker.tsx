@@ -36,7 +36,7 @@ function enrich(
   });
 }
 
-export function PostLoginProductPicker({ memberships }: PostLoginProductPickerProps) {
+function PostLoginProductPicker({ memberships }: PostLoginProductPickerProps) {
   const { t } = useTranslation("auth");
   const navigate = useNavigate();
   const setActiveTenant = useTenantStore((s) => s.setActiveTenant);
@@ -115,5 +115,4 @@ export function PostLoginProductPicker({ memberships }: PostLoginProductPickerPr
   );
 }
 
-
-export { PostLoginProductPicker }
+export { PostLoginProductPicker };
