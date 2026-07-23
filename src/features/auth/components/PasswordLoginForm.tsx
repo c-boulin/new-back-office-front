@@ -19,7 +19,7 @@ import { AppError } from "@/lib/httpClient";
 import { queryClient } from "@/lib/queryClient";
 import { cn } from "@/lib/utils";
 import { passwordCredentialsSchema, type PasswordCredentialsInput } from "../password/schemas";
-import { passwordLogin } from "../api";
+import { passwordLogin, fetchProducts } from "../api";
 import { membershipToProduct } from "../products";
 import { useAuthStore } from "@/stores/authStore";
 import { useProductsStore } from "@/stores/productsStore";
@@ -52,6 +52,22 @@ export function PasswordLoginForm() {
         user: session.user,
         memberships: session.memberships,
       });
+
+      const catalog = await queryClient
+        .fetchQuery({
+          queryKey: ["auth", "products"],
+          queryFn: fetchProducts,
+          staleTime: 5 * 60_000,
+        })
+        .catch((err) => {
+          console.warn(
+            "[PasswordLoginForm] GET /v1/products failed — colors will fall back to derived values",
+            err,
+          );
+          return [];
+        });
+      if (catalog.length > 0) setProducts(catalog);
+
       navigate("/", { replace: true });
     } catch (error) {
       const messageKey =

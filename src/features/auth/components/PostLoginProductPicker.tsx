@@ -17,10 +17,7 @@ export type PostLoginProductPickerProps = {
   memberships: TenantMembership[];
 };
 
-function enrich(
-  memberships: TenantMembership[],
-  catalog: Product[],
-): Product[] {
+function enrich(memberships: TenantMembership[], catalog: Product[]): Product[] {
   return memberships.map((m) => {
     const derived = membershipToProduct(m);
     const bySlug = catalog.find((p) => p.slug && p.slug === m.tenantSlug);

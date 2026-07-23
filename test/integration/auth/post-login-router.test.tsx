@@ -20,6 +20,7 @@ vi.mock("@/features/auth/api", async (importActual) => {
     fetchMe: vi.fn().mockImplementation(async () => {
       throw new Error("fetchMe should not be called when [\"auth\", \"me\"] is pre-seeded");
     }),
+    fetchProducts: vi.fn().mockResolvedValue([]),
   };
 });
 
