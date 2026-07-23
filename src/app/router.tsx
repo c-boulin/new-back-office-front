@@ -7,6 +7,11 @@ import { RequireAuth } from "./guards/RequireAuth";
 import { RequireSuperAdmin } from "./guards/RequireSuperAdmin";
 import { RequireTenant } from "./guards/RequireTenant";
 import { RouteErrorFallback } from "@/components/common/RouteErrorFallback";
+import { normalizeSsoCallbackLocation } from "@/features/auth/ssoBootRedirect";
+
+// Must run before createBrowserRouter reads window.location, otherwise an
+// S3 SSO return on .../index.html?sesame_token=... never matches /auth/callback.
+normalizeSsoCallbackLocation();
 
 const LoginPage = lazy(() =>
   import("@/features/auth/pages/LoginPage").then((m) => ({ default: m.LoginPage })),
