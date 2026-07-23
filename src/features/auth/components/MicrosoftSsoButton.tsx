@@ -117,7 +117,7 @@ export function MicrosoftSsoButton() {
       size="lg"
       onClick={() => void onClick()}
       disabled={pending}
-      className="h-11 w-full gap-3 rounded-full border-border bg-card font-medium text-foreground hover:bg-muted/60"
+      className="h-11 w-full gap-3 rounded-full border-border bg-card font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground hover:border-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       {pending ? (
         <>
