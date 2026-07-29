@@ -33,6 +33,25 @@ describe("roleFromRaw", () => {
   it("passes a null createdAt through", () => {
     expect(roleFromRaw({ ...raw, createdAt: null }).createdAt).toBeNull();
   });
+
+  it("defaults a missing createdAt to null", () => {
+    const { createdAt, ...rest } = raw;
+    void createdAt;
+    expect(roleFromRaw(rest).createdAt).toBeNull();
+  });
+
+  it("falls back to a safe color when the value is unknown", () => {
+    expect(roleFromRaw({ ...raw, color: "teal" }).color).toBe("secondary");
+  });
+
+  it("coerces a numeric id to a string", () => {
+    expect(roleFromRaw({ ...raw, id: 7 }).id).toBe("7");
+  });
+
+  it("treats an unexpected permissions shape as all-false", () => {
+    const role = roleFromRaw({ ...raw, permissions: ["users.read"] });
+    expect(role.permissions.users.read).toBe(false);
+  });
 });
 
 describe("rolesFromRaw", () => {

@@ -1,4 +1,4 @@
-import type { ZodSchema, ZodTypeDef } from "zod";
+import type { ZodIssue, ZodSchema, ZodTypeDef } from "zod";
 
 export class ValidationError extends Error {
   override readonly name = "ValidationError";
@@ -8,6 +8,14 @@ export class ValidationError extends Error {
   ) {
     super(message);
   }
+}
+
+function summarizeIssues(issues: ZodIssue[]): string {
+  const paths = issues
+    .slice(0, 5)
+    .map((issue) => issue.path.join(".") || "(root)")
+    .join(", ");
+  return paths ? `Response failed validation at: ${paths}` : "Response failed validation";
 }
 
 /**
@@ -23,7 +31,7 @@ export function validateAndAdapt<Raw, Domain, Def extends ZodTypeDef>(
 ): Domain {
   const result = schema.safeParse(raw);
   if (!result.success) {
-    throw new ValidationError("Response failed validation", result.error.issues);
+    throw new ValidationError(summarizeIssues(result.error.issues), result.error.issues);
   }
   return adapt(result.data);
 }

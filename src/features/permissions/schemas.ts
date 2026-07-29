@@ -10,12 +10,12 @@ export const roleColorSchema = z.enum([
 ]);
 
 export const roleSchema = z.object({
-  id: z.string(),
-  label: z.string(),
-  color: roleColorSchema,
-  isLocked: z.boolean(),
-  permissions: z.record(z.string(), z.record(z.string(), z.boolean())),
-  createdAt: z.string().nullable(),
+  id: z.union([z.string(), z.number()]),
+  label: z.string().optional(),
+  color: z.string().optional(),
+  isLocked: z.boolean().optional(),
+  permissions: z.unknown().optional(),
+  createdAt: z.string().nullish(),
 });
 
 // The live API returns a bare array; a { data: [...] } envelope is also

@@ -19,14 +19,22 @@ describe("roleSchema", () => {
     expect(roleSchema.safeParse({ ...validRole, createdAt: null }).success).toBe(true);
   });
 
-  it("rejects an unknown color", () => {
-    expect(roleSchema.safeParse({ ...validRole, color: "teal" }).success).toBe(false);
+  it("accepts an unknown color (normalized later by the adaptor)", () => {
+    expect(roleSchema.safeParse({ ...validRole, color: "teal" }).success).toBe(true);
   });
 
-  it("rejects a missing isLocked flag", () => {
+  it("accepts a missing isLocked flag", () => {
     const { isLocked, ...rest } = validRole;
     void isLocked;
-    expect(roleSchema.safeParse(rest).success).toBe(false);
+    expect(roleSchema.safeParse(rest).success).toBe(true);
+  });
+
+  it("accepts a numeric id", () => {
+    expect(roleSchema.safeParse({ ...validRole, id: 42 }).success).toBe(true);
+  });
+
+  it("rejects a non-object payload", () => {
+    expect(roleSchema.safeParse("nope").success).toBe(false);
   });
 });
 
@@ -40,9 +48,7 @@ describe("rolesResponseSchema", () => {
     expect(rolesResponseSchema.safeParse([validRole]).success).toBe(true);
   });
 
-  it("rejects a malformed role in the array", () => {
-    expect(rolesResponseSchema.safeParse([{ ...validRole, color: "teal" }]).success).toBe(
-      false,
-    );
+  it("rejects a non-list payload", () => {
+    expect(rolesResponseSchema.safeParse({ roles: [validRole] }).success).toBe(false);
   });
 });
