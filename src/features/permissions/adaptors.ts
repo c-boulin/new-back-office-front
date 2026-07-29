@@ -15,5 +15,6 @@ export function roleFromRaw(raw: RawRole): Role {
 }
 
 export function rolesFromRaw(raw: RawRolesResponse): Role[] {
-  return raw.data.map(roleFromRaw);
+  const items = Array.isArray(raw) ? raw : raw.data;
+  return items.map(roleFromRaw);
 }

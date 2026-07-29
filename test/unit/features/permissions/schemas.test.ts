@@ -36,7 +36,13 @@ describe("rolesResponseSchema", () => {
     expect(parsed.success).toBe(true);
   });
 
-  it("rejects a bare array", () => {
-    expect(rolesResponseSchema.safeParse([validRole]).success).toBe(false);
+  it("parses a bare array", () => {
+    expect(rolesResponseSchema.safeParse([validRole]).success).toBe(true);
+  });
+
+  it("rejects a malformed role in the array", () => {
+    expect(rolesResponseSchema.safeParse([{ ...validRole, color: "teal" }]).success).toBe(
+      false,
+    );
   });
 });

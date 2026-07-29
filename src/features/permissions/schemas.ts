@@ -18,9 +18,12 @@ export const roleSchema = z.object({
   createdAt: z.string().nullable(),
 });
 
-export const rolesResponseSchema = z.object({
-  data: z.array(roleSchema),
-});
+// The live API returns a bare array; a { data: [...] } envelope is also
+// accepted so the code keeps working if the backend later wraps it.
+export const rolesResponseSchema = z.union([
+  z.array(roleSchema),
+  z.object({ data: z.array(roleSchema) }),
+]);
 
 export type RawRole = z.infer<typeof roleSchema>;
 export type RawRolesResponse = z.infer<typeof rolesResponseSchema>;
