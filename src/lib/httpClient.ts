@@ -101,10 +101,9 @@ async function refreshAccessToken(): Promise<string | null> {
         state.markSessionExpired();
         return null;
       }
-      const response = await axios.post<{ access_token: string }>(
+      const response = await httpClient.post<{ access_token: string }>(
         "/v1/auth/refresh",
         { refresh_token: state.refreshToken },
-        { baseURL: env.apiBaseUrl, timeout: 20_000 },
       );
       const token = response.data.access_token;
       if (!token) {
