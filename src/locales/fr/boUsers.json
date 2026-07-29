@@ -1,0 +1,61 @@
+{
+  "page": {
+    "title": "Gestion des permissions",
+    "description": "Gérez les utilisateurs du back-office, leurs accès par produit et les rôles."
+  },
+  "tabs": {
+    "users": "Utilisateurs & rôles",
+    "roles": "Rôles & permissions"
+  },
+  "list": {
+    "empty": {
+      "title": "Aucun utilisateur",
+      "description": "Invitez votre premier utilisateur du back-office pour commencer."
+    }
+  },
+  "columns": {
+    "user": "Utilisateur",
+    "products": "Produits & rôles",
+    "lastLogin": "Dernière connexion",
+    "actions": "Actions"
+  },
+  "noAssignments": "Aucun produit attribué",
+  "never": "Jamais",
+  "actions": {
+    "create": "Inviter / Créer un utilisateur",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "addAssignment": "Ajouter un produit",
+    "removeAssignment": "Retirer le produit"
+  },
+  "form": {
+    "createTitle": "Inviter un utilisateur",
+    "editTitle": "Modifier l'utilisateur",
+    "description": "Renseignez les informations de l'utilisateur et attribuez un rôle pour chaque produit.",
+    "nameField": "Nom",
+    "namePlaceholder": "ex. Jeanne Dupont",
+    "emailField": "E-mail",
+    "emailPlaceholder": "nom@entreprise.com",
+    "assignments": "Accès aux produits",
+    "selectProduct": "Sélectionner un produit",
+    "selectRole": "Sélectionner un rôle",
+    "lockedRole": "verrouillé",
+    "nameRequired": "Veuillez saisir un nom.",
+    "emailInvalid": "Veuillez saisir une adresse e-mail valide.",
+    "assignmentRequired": "Attribuez au moins un produit et un rôle.",
+    "duplicateProduct": "Chaque produit ne peut être attribué qu'une seule fois.",
+    "loadError": "Impossible de charger les produits ou les rôles. Veuillez réessayer."
+  },
+  "delete": {
+    "title": "Supprimer l'utilisateur",
+    "description": "Voulez-vous vraiment supprimer « {{name}} » ? Cette action est irréversible."
+  },
+  "toast": {
+    "created": "Utilisateur créé et invité",
+    "updated": "Utilisateur mis à jour",
+    "deleted": "Utilisateur supprimé",
+    "error": "Une erreur est survenue. Veuillez réessayer."
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "page": {
+    "title": "Permissions management",
+    "description": "Manage backoffice users, their product access, and roles."
+  },
+  "tabs": {
+    "users": "Users & roles",
+    "roles": "Roles & permissions"
+  },
+  "list": {
+    "empty": {
+      "title": "No users yet",
+      "description": "Invite your first backoffice user to get started."
+    }
+  },
+  "columns": {
+    "user": "User",
+    "products": "Products & roles",
+    "lastLogin": "Last login",
+    "actions": "Actions"
+  },
+  "noAssignments": "No products assigned",
+  "never": "Never",
+  "actions": {
+    "create": "Invite / Create user",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "addAssignment": "Add product",
+    "removeAssignment": "Remove product"
+  },
+  "form": {
+    "createTitle": "Invite user",
+    "editTitle": "Edit user",
+    "description": "Set the user's details and assign a role for each product.",
+    "nameField": "Name",
+    "namePlaceholder": "e.g. Jane Doe",
+    "emailField": "Email",
+    "emailPlaceholder": "name@company.com",
+    "assignments": "Product access",
+    "selectProduct": "Select a product",
+    "selectRole": "Select a role",
+    "lockedRole": "locked",
+    "nameRequired": "Please enter a name.",
+    "emailInvalid": "Please enter a valid email address.",
+    "assignmentRequired": "Assign at least one product and role.",
+    "duplicateProduct": "Each product can only be assigned once.",
+    "loadError": "Could not load products or roles. Please try again."
+  },
+  "delete": {
+    "title": "Delete user",
+    "description": "Are you sure you want to delete \"{{name}}\"? This cannot be undone."
+  },
+  "toast": {
+    "created": "User created and invited",
+    "updated": "User updated",
+    "deleted": "User deleted",
+    "error": "Something went wrong. Please try again."
+  }
+}

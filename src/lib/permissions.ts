@@ -3,6 +3,8 @@ export const PERMISSIONS = {
   TENANT_ADMIN: "tenant.admin",
   USERS_READ: "users.read",
   USERS_WRITE: "users.write",
+  USERS_UPDATE: "users.update",
+  USERS_DELETE: "users.delete",
   USERS_MODERATE: "users.moderate",
   MODERATION_READ: "moderation.read",
   MODERATION_ACT: "moderation.act",

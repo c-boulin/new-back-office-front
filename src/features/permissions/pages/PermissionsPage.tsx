@@ -1,122 +1,71 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
 import { Plus } from "lucide-react";
 import { PageHeader } from "@/components/common/PageHeader";
-import { RouteBoundary } from "@/components/common/RouteBoundary";
-import { ConfirmDialog } from "@/components/common/ConfirmDialog";
+import { PermissionGate } from "@/components/common/PermissionGate";
 import { Button } from "@/components/ui/button";
-import { RolesTable } from "@/features/permissions/components/RolesTable";
-import { RoleFormDialog } from "@/features/permissions/components/RoleFormDialog";
-import { createRole, deleteRole, updateRole } from "@/features/permissions/api";
-import { useActiveTenant } from "@/hooks/useActiveTenant";
-import { AppError } from "@/lib/httpClient";
-import type { Role, RoleWriteBody } from "@/features/permissions/types";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RolesTab } from "@/features/permissions/components/RolesTab";
+import { BoUsersTab } from "@/features/boUsers/components/BoUsersTab";
+import { useUrlState, urlEnum } from "@/hooks/useUrlState";
+import { PERMISSIONS } from "@/lib/permissions";
 
-function errorMessage(error: unknown, fallback: string): string {
-  if (error instanceof AppError && error.message) return error.message;
-  return fallback;
-}
+const TABS = ["users", "roles"] as const;
+type TabId = (typeof TABS)[number];
+
+const tabSpec = {
+  tab: urlEnum<TabId>(TABS, "users"),
+};
 
 export function PermissionsPage() {
-  const { t } = useTranslation("roles");
-  const { id: tenantId } = useActiveTenant();
-  const queryClient = useQueryClient();
+  const { t } = useTranslation("boUsers");
+  const { t: tRoles } = useTranslation("roles");
+  const [state, setState] = useUrlState(tabSpec);
 
-  const [formOpen, setFormOpen] = useState(false);
-  const [editing, setEditing] = useState<Role | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<Role | null>(null);
+  const [rolesCreateOpen, setRolesCreateOpen] = useState(false);
+  const [usersCreateOpen, setUsersCreateOpen] = useState(false);
 
-  const invalidate = () =>
-    queryClient.invalidateQueries({ queryKey: ["tenant", tenantId, "roles"] });
-
-  const createMutation = useMutation({
-    mutationFn: (body: RoleWriteBody) => createRole(body),
-    onSuccess: () => {
-      toast.success(t("toast.created"));
-      setFormOpen(false);
-      void invalidate();
-    },
-    onError: (error) => toast.error(errorMessage(error, t("toast.error"))),
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: ({ id, body }: { id: string; body: RoleWriteBody }) => updateRole(id, body),
-    onSuccess: () => {
-      toast.success(t("toast.updated"));
-      setFormOpen(false);
-      void invalidate();
-    },
-    onError: (error) => toast.error(errorMessage(error, t("toast.error"))),
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => deleteRole(id),
-    onSuccess: () => {
-      toast.success(t("toast.deleted"));
-      setDeleteTarget(null);
-      void invalidate();
-    },
-    onError: (error) => toast.error(errorMessage(error, t("toast.error"))),
-  });
-
-  const pending = createMutation.isPending || updateMutation.isPending;
-
-  const handleSubmit = (body: RoleWriteBody) => {
-    if (editing) {
-      updateMutation.mutate({ id: editing.id, body });
-    } else {
-      createMutation.mutate(body);
-    }
-  };
+  const cta =
+    state.tab === "roles" ? (
+      <Button
+        onClick={() => {
+          setRolesCreateOpen(true);
+        }}
+      >
+        <Plus />
+        {tRoles("actions.create")}
+      </Button>
+    ) : (
+      <PermissionGate require={PERMISSIONS.USERS_UPDATE}>
+        <Button
+          onClick={() => {
+            setUsersCreateOpen(true);
+          }}
+        >
+          <Plus />
+          {t("actions.create")}
+        </Button>
+      </PermissionGate>
+    );
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title={t("list.title")}
-        description={t("list.description")}
-        actions={
-          <Button
-            onClick={() => {
-              setEditing(null);
-              setFormOpen(true);
-            }}
-          >
-            <Plus />
-            {t("actions.create")}
-          </Button>
-        }
-      />
+      <PageHeader title={t("page.title")} description={t("page.description")} actions={cta} />
 
-      <RouteBoundary>
-        <RolesTable
-          onOpen={(role) => {
-            setEditing(role);
-            setFormOpen(true);
-          }}
-          onDelete={(role) => setDeleteTarget(role)}
-        />
-      </RouteBoundary>
+      <Tabs value={state.tab} onValueChange={(value) => setState({ tab: value as TabId })}>
+        <TabsList>
+          <TabsTrigger value="users">{t("tabs.users")}</TabsTrigger>
+          <TabsTrigger value="roles">{t("tabs.roles")}</TabsTrigger>
+        </TabsList>
 
-      <RoleFormDialog
-        open={formOpen}
-        onOpenChange={setFormOpen}
-        role={editing}
-        pending={pending}
-        onSubmit={handleSubmit}
-      />
+        <TabsContent value="users">
+          <BoUsersTab createOpen={usersCreateOpen} onCreateOpenChange={setUsersCreateOpen} />
+        </TabsContent>
 
-      <ConfirmDialog
-        open={Boolean(deleteTarget)}
-        onOpenChange={(open) => !open && setDeleteTarget(null)}
-        title={t("delete.title")}
-        description={t("delete.description", { label: deleteTarget?.label ?? "" })}
-        confirmLabel={t("actions.delete")}
-        destructive
-        loading={deleteMutation.isPending}
-        onConfirm={() => deleteTarget && deleteMutation.mutate(deleteTarget.id)}
-      />
+        <TabsContent value="roles">
+          <RolesTab createOpen={rolesCreateOpen} onCreateOpenChange={setRolesCreateOpen} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
