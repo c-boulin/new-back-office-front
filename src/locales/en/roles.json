@@ -1,0 +1,78 @@
+{
+  "list": {
+    "title": "Roles & permissions",
+    "description": "Define team roles and control what each role can access."
+  },
+  "actions": {
+    "create": "Create role",
+    "edit": "Edit",
+    "view": "View",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close"
+  },
+  "columns": {
+    "label": "Role",
+    "color": "Color",
+    "status": "Status",
+    "created": "Created",
+    "actions": "Actions"
+  },
+  "locked": "Locked",
+  "editable": "Editable",
+  "empty": {
+    "title": "No roles yet",
+    "description": "Create your first role to start assigning permissions."
+  },
+  "form": {
+    "createTitle": "Create role",
+    "editTitle": "Edit role",
+    "viewTitle": "Role details",
+    "description": "Set a name, a color and the permissions granted to this role.",
+    "labelField": "Name",
+    "labelPlaceholder": "e.g. Moderator",
+    "labelRequired": "Please enter a name.",
+    "colorField": "Color"
+  },
+  "matrix": {
+    "title": "Permissions",
+    "section": "Section"
+  },
+  "actionLabels": {
+    "create": "Create",
+    "read": "Read",
+    "update": "Update",
+    "delete": "Delete"
+  },
+  "sections": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "animators": "Animators",
+    "coachs": "Coaches",
+    "coach-ia": "Coach IA",
+    "statistics": "Statistics",
+    "moderation": "Moderation",
+    "signalement": "Reports",
+    "product-config": "Product config",
+    "settings": "Settings"
+  },
+  "colors": {
+    "error": "Red",
+    "warning": "Orange",
+    "info": "Blue",
+    "success": "Green",
+    "primary": "Primary",
+    "secondary": "Gray"
+  },
+  "delete": {
+    "title": "Delete role",
+    "description": "Are you sure you want to delete \"{{label}}\"? This cannot be undone."
+  },
+  "toast": {
+    "created": "Role created",
+    "updated": "Role updated",
+    "deleted": "Role deleted",
+    "error": "Something went wrong. Please try again."
+  }
+}

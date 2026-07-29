@@ -76,7 +76,7 @@ function buildGroups(
       key: "configuration",
       items: [
         item("product-config", Settings2, "nav.productConfig"),
-        item("permissions", ShieldCheck, "nav.permissions"),
+        ...(isSuperAdmin ? [item("permissions", ShieldCheck, "nav.permissions")] : []),
       ],
     },
   ];

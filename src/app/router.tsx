@@ -144,7 +144,10 @@ export const router = createBrowserRouter(
                 { path: "coaches", element: <CoachesPage /> },
                 { path: "coach-ai", element: <CoachAiPage /> },
                 { path: "product-config", element: <ProductConfigPage /> },
-                { path: "permissions", element: <PermissionsPage /> },
+                {
+                  element: <RequireSuperAdmin />,
+                  children: [{ path: "permissions", element: <PermissionsPage /> }],
+                },
               ],
             },
           ],
