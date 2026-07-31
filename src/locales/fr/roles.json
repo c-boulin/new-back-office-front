@@ -53,10 +53,22 @@
     "coach-ia": "Coach IA",
     "statistics": "Statistiques",
     "moderation": "Modération",
-    "signalement": "Signalements",
-    "product-config": "Configuration produit",
-    "settings": "Paramètres"
+    "signalement": "Signalement",
+    "product-config": "Configuration Produit",
+    "settings": "Gestion des droits"
   },
+  "sectionGroups": {
+    "principal": "Principal",
+    "animation": "Animation",
+    "analyse": "Analyse",
+    "moderation": "Modération",
+    "configuration": "Configuration"
+  },
+  "rolesCount": "Rôles ({{count}})",
+  "nonModifiable": "Non modifiable",
+  "permissionsGranted": "{{count}}/{{total}} permissions accordées",
+  "noRoleSelected": "Sélectionnez un rôle",
+  "noRoleSelectedDesc": "Cliquez sur un rôle dans la liste pour voir ses permissions.",
   "colors": {
     "error": "Rouge",
     "warning": "Orange",

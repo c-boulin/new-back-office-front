@@ -26,16 +26,7 @@ export function PermissionsPage() {
   const [usersCreateOpen, setUsersCreateOpen] = useState(false);
 
   const cta =
-    state.tab === "roles" ? (
-      <Button
-        onClick={() => {
-          setRolesCreateOpen(true);
-        }}
-      >
-        <Plus />
-        {tRoles("actions.create")}
-      </Button>
-    ) : (
+    state.tab === "roles" ? null : (
       <PermissionGate require={PERMISSIONS.USERS_UPDATE}>
         <Button
           onClick={() => {
@@ -55,7 +46,7 @@ export function PermissionsPage() {
       <Tabs value={state.tab} onValueChange={(value) => setState({ tab: value as TabId })}>
         <TabsList>
           <TabsTrigger value="users">{t("tabs.users")}</TabsTrigger>
-          <TabsTrigger value="roles">{t("tabs.roles")}</TabsTrigger>
+          <TabsTrigger value="roles">{tRoles("tabs.roles")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="users">

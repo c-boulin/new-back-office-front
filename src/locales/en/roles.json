@@ -57,6 +57,18 @@
     "product-config": "Product config",
     "settings": "Settings"
   },
+  "sectionGroups": {
+    "principal": "Principal",
+    "animation": "Animation",
+    "analyse": "Analytics",
+    "moderation": "Moderation",
+    "configuration": "Configuration"
+  },
+  "rolesCount": "Roles ({{count}})",
+  "nonModifiable": "Non-editable",
+  "permissionsGranted": "{{count}}/{{total}} permissions granted",
+  "noRoleSelected": "Select a role",
+  "noRoleSelectedDesc": "Click a role in the list to view its permissions.",
   "colors": {
     "error": "Red",
     "warning": "Orange",
