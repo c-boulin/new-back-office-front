@@ -51,7 +51,7 @@ export const env = {
   auth: {
     passwordEnabled,
     ssoEnabled,
-    ssoBypassMock: readBool("VITE_AUTH_SSO_REAL", false),
+    real: readBool("VITE_AUTH_REAL", false),
   },
   mock: {
     api: readBool("VITE_MOCK_API", false),
