@@ -93,7 +93,7 @@ export function RolesTab({ createOpen, onCreateOpenChange }: RolesTabProps) {
 
   return (
     <>
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,15rem)_minmax(0,1fr)]">
+      <div className="grid grid-cols-[220px_1fr] items-start gap-0">
         <RolesSidebar
           roles={roles}
           selectedId={selectedId}
@@ -102,7 +102,9 @@ export function RolesTab({ createOpen, onCreateOpenChange }: RolesTabProps) {
           onDelete={(role) => setDeleteTarget(role)}
           onAdd={() => onCreateOpenChange(true)}
         />
-        <RoleDetailPanel role={selectedRole} />
+        <div className="pl-8">
+          <RoleDetailPanel role={selectedRole} />
+        </div>
       </div>
 
       <RoleFormDialog

@@ -56,9 +56,9 @@ export function RolesSidebar({
   const { t } = useTranslation("roles");
 
   return (
-    <aside className="flex flex-col gap-2 rounded-2xl border bg-card p-3 shadow-sm">
-      <header className="flex items-center justify-between px-1 py-0.5">
-        <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+    <aside className="flex flex-col border-r pr-5">
+      <header className="mb-3 flex items-center justify-between">
+        <span className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
           {t("rolesCount", { count: roles.length })}
         </span>
         <Button
@@ -84,16 +84,16 @@ export function RolesSidebar({
                 type="button"
                 onClick={() => onSelect(role)}
                 className={cn(
-                  "group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all",
+                  "group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors",
                   isSelected
-                    ? "border border-primary/30 bg-primary/5 ring-1 ring-primary/20"
-                    : "hover:bg-muted/60",
+                    ? "border bg-card shadow-sm"
+                    : "hover:bg-muted/50",
                 )}
                 aria-current={isSelected ? "true" : undefined}
               >
                 <span
                   className={cn(
-                    "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-bold uppercase",
+                    "flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold uppercase",
                     COLOR_BG[role.color],
                     COLOR_TEXT[role.color],
                   )}
@@ -102,7 +102,7 @@ export function RolesSidebar({
                 </span>
 
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold leading-tight">{role.label}</p>
+                  <p className="truncate text-sm font-semibold">{role.label}</p>
                   <p className="text-xs text-muted-foreground">
                     {granted}/{total} permissions
                   </p>
@@ -113,7 +113,7 @@ export function RolesSidebar({
                 ) : (
                   <div
                     className={cn(
-                      "flex shrink-0 items-center gap-1",
+                      "flex shrink-0 items-center gap-0.5",
                       isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100",
                     )}
                   >
