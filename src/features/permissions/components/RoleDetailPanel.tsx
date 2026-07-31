@@ -258,5 +258,4 @@ export function RoleDetailPanel({ role }: RoleDetailPanelProps) {
   );
 }
 
-
 export { RoleDetailPanel }
