@@ -47,7 +47,7 @@ const REAL_BACKEND_PREFIXES = ["/v1/auth/sso/", "/v1/products"] as const;
 
 // These have no mock handler, so they must reach the real backend even when the
 // SSO bypass flag is off — routing them through the adapter would 404.
-const ALWAYS_REAL_BACKEND_PREFIXES = ["/v1/roles", "/v1/bo-users"] as const;
+const ALWAYS_REAL_BACKEND_PREFIXES = ["/v1/roles"] as const;
 
 function shouldBypassMockAdapter(url: string | undefined): boolean {
   if (!url) return false;

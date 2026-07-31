@@ -8,6 +8,7 @@ import * as reports from "./handlers/reports";
 import * as messages from "./handlers/messages";
 import * as tenantData from "./handlers/tenantData";
 import * as productConfig from "./handlers/productConfig";
+import * as boUsers from "./handlers/boUsers";
 
 export type MockRequest = {
   method: string;
@@ -84,6 +85,11 @@ const routes: Array<{ method: string; pattern: string; handler: Route }> = [
 
   { method: "GET", pattern: "/v1/product-config", handler: (r) => ok(productConfig.get(tenantHeader(r))) },
   { method: "PATCH", pattern: "/v1/product-config", handler: (r) => ok(productConfig.update(tenantHeader(r), r.body)) },
+
+  { method: "GET", pattern: "/v1/bo-users", handler: (r) => ok(boUsers.list(r.params)) },
+  { method: "POST", pattern: "/v1/bo-users", handler: (r) => { const u = boUsers.create(r.body); return ok(u, 201); } },
+  { method: "PUT", pattern: "/v1/bo-users/:id", handler: (r, p) => ok(boUsers.update(Number(p.id), r.body)) },
+  { method: "DELETE", pattern: "/v1/bo-users/:id", handler: (_, p) => { boUsers.remove(Number(p.id)); return ok(null, 204); } },
 
   { method: "GET", pattern: "/moderation", handler: (r) => ok(moderation.list(tenantHeader(r), r.params)) },
   { method: "GET", pattern: "/moderation/stats", handler: (r) => ok(moderation.stats(tenantHeader(r))) },
