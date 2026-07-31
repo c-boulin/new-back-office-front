@@ -1,16 +1,25 @@
-import { useTranslation } from "react-i18next";
-import { Settings2 } from "lucide-react";
-import { PlaceholderPage } from "@/components/common/PlaceholderPage";
+import { useState } from "react";
+import { RouteBoundary } from "@/components/common/RouteBoundary";
+import { useProductsStore } from "@/stores/productsStore";
+import { useActiveTenant } from "@/hooks/useActiveTenant";
+import { ProductConfigForm } from "@/features/productConfig/components/ProductConfigForm";
 
 export function ProductConfigPage() {
-  const { t } = useTranslation("common");
+  const products = useProductsStore((s) => s.products);
+  const { id: activeTenantId } = useActiveTenant();
+
+  const initialProductId = products.length > 0 ? String(products[0].id) : activeTenantId ?? "";
+  const [selectedProductId, setSelectedProductId] = useState(initialProductId);
+
   return (
-    <PlaceholderPage
-      title={t("nav.productConfig")}
-      description={t("placeholders.productConfig.description")}
-      emptyTitle={t("placeholders.productConfig.emptyTitle")}
-      emptyDescription={t("placeholders.productConfig.emptyDescription")}
-      icon={Settings2}
-    />
+    <div className="space-y-6">
+      <RouteBoundary>
+        <ProductConfigForm
+          key={selectedProductId}
+          selectedProductId={selectedProductId}
+          onSelectProduct={setSelectedProductId}
+        />
+      </RouteBoundary>
+    </div>
   );
 }

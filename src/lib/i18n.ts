@@ -17,6 +17,7 @@ import enSettings from "@/locales/en/settings.json";
 import enSuperAdmin from "@/locales/en/superAdmin.json";
 import enRoles from "@/locales/en/roles.json";
 import enBoUsers from "@/locales/en/boUsers.json";
+import enProductConfig from "@/locales/en/productConfig.json";
 
 import frCommon from "@/locales/fr/common.json";
 import frAuth from "@/locales/fr/auth.json";
@@ -33,6 +34,7 @@ import frSettings from "@/locales/fr/settings.json";
 import frSuperAdmin from "@/locales/fr/superAdmin.json";
 import frRoles from "@/locales/fr/roles.json";
 import frBoUsers from "@/locales/fr/boUsers.json";
+import frProductConfig from "@/locales/fr/productConfig.json";
 
 export const supportedLngs = ["en", "fr"] as const;
 export type Locale = (typeof supportedLngs)[number];
@@ -53,6 +55,7 @@ const ns = [
   "superAdmin",
   "roles",
   "boUsers",
+  "productConfig",
 ] as const;
 
 void i18n
@@ -86,6 +89,7 @@ void i18n
         superAdmin: enSuperAdmin,
         roles: enRoles,
         boUsers: enBoUsers,
+        productConfig: enProductConfig,
       },
       fr: {
         common: frCommon,
@@ -103,6 +107,7 @@ void i18n
         superAdmin: frSuperAdmin,
         roles: frRoles,
         boUsers: frBoUsers,
+        productConfig: frProductConfig,
       },
     },
   });

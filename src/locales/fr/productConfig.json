@@ -1,0 +1,104 @@
+{
+  "title": "Configuration du produit",
+  "subtitle": "Configurez le comportement de ce produit : inscription, matching, contenu et liens légaux.",
+  "tabs": {
+    "product": "Produit"
+  },
+  "summary": {
+    "productId": "ID produit",
+    "reset": "Réinitialiser",
+    "save": "Enregistrer"
+  },
+  "cards": {
+    "registration": {
+      "title": "Inscription",
+      "subtitle": "Exigences et règles d'inscription"
+    },
+    "relations": {
+      "title": "Relations et Matching",
+      "subtitle": "Distance, inactivité et limites de propositions"
+    },
+    "suggestions": {
+      "title": "Suggestions",
+      "subtitle": "Combien de profils sont suggérés et à quelle fréquence"
+    },
+    "photos": {
+      "title": "Photos et Médias",
+      "subtitle": "Limites de photos et paramètres vidéo"
+    },
+    "quizz": {
+      "title": "Quizz",
+      "subtitle": "Paramètres du questionnaire d'intégration"
+    },
+    "contentTypes": {
+      "title": "Types de contenu par défaut",
+      "subtitle": "Types de contenu activés par défaut"
+    },
+    "likes": {
+      "title": "Likes",
+      "subtitle": "Limites quotidiennes pour les utilisateurs gratuits"
+    },
+    "legalLinks": {
+      "title": "Liens légaux",
+      "subtitle": "URLs des pages légales affichées dans l'application"
+    }
+  },
+  "fields": {
+    "email": "Email",
+    "phone": "Numéro de téléphone",
+    "sameSex": "Matching même sexe",
+    "minAge": "Âge minimum",
+    "photoRequired": "Photo requise",
+    "maxDistanceKm": "Distance max",
+    "inactivityPeriodDays": "Période d'inactivité",
+    "unlimitedMessages": "Messages illimités",
+    "maxPropositions": "Max propositions",
+    "propositionPeriodHours": "Période de proposition",
+    "periodHours": "Période",
+    "maxProfilePhotos": "Max photos de profil",
+    "maxStoryPhotos": "Max photos de story",
+    "videoEnabled": "Vidéo activée",
+    "quizzEnabled": "Quizz activé",
+    "minQuestions": "Questions min",
+    "freeLikesPerDay": "Likes gratuits par jour",
+    "unlimitedLikes": "Likes illimités"
+  },
+  "suffixes": {
+    "km": "km",
+    "days": "j",
+    "hours": "h",
+    "photos": "photos",
+    "questions": "questions",
+    "likes": "likes"
+  },
+  "options": {
+    "required": "Requis",
+    "optional": "Optionnel",
+    "yes": "Oui",
+    "no": "Non"
+  },
+  "contentTypes": {
+    "photo": "Photo",
+    "story": "Story",
+    "event": "Événement",
+    "externalLink": "Lien externe",
+    "video": "Vidéo"
+  },
+  "legalLinks": {
+    "termsUrl": "Conditions d'utilisation",
+    "privacyUrl": "Politique de confidentialité",
+    "cookiesUrl": "Politique de cookies",
+    "legalNoticeUrl": "Mentions légales",
+    "refundPolicyUrl": "Politique de remboursement",
+    "communityGuidelinesUrl": "Charte de communauté",
+    "safetyTipsUrl": "Conseils de sécurité",
+    "antiHarassmentPolicyUrl": "Politique anti-harcèlement",
+    "dataProcessingUrl": "Traitement des données",
+    "ageRatingUrl": "Classification par âge",
+    "contactUrl": "Contact"
+  },
+  "toast": {
+    "saved": "Configuration enregistrée",
+    "error": "Échec de l'enregistrement"
+  }
+}

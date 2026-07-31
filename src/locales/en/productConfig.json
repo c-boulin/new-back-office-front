@@ -1,0 +1,104 @@
+{
+  "title": "Product configuration",
+  "subtitle": "Configure the behavior of this product: registration, matching, content, and legal links.",
+  "tabs": {
+    "product": "Product"
+  },
+  "summary": {
+    "productId": "Product ID",
+    "reset": "Reset",
+    "save": "Save changes"
+  },
+  "cards": {
+    "registration": {
+      "title": "Registration",
+      "subtitle": "Sign-up requirements and rules"
+    },
+    "relations": {
+      "title": "Relations and Matching",
+      "subtitle": "Distance, inactivity, and proposition limits"
+    },
+    "suggestions": {
+      "title": "Suggestions",
+      "subtitle": "How many profiles are suggested and how often"
+    },
+    "photos": {
+      "title": "Photos and Media",
+      "subtitle": "Photo limits and video settings"
+    },
+    "quizz": {
+      "title": "Quizz",
+      "subtitle": "Onboarding questionnaire settings"
+    },
+    "contentTypes": {
+      "title": "Default Content Types",
+      "subtitle": "Which content types are enabled by default"
+    },
+    "likes": {
+      "title": "Likes",
+      "subtitle": "Daily limits for free users"
+    },
+    "legalLinks": {
+      "title": "Legal Links",
+      "subtitle": "URLs for legal pages shown in the app"
+    }
+  },
+  "fields": {
+    "email": "Email",
+    "phone": "Phone number",
+    "sameSex": "Same-sex matching",
+    "minAge": "Minimum age",
+    "photoRequired": "Photo required",
+    "maxDistanceKm": "Max distance",
+    "inactivityPeriodDays": "Inactivity period",
+    "unlimitedMessages": "Unlimited messages",
+    "maxPropositions": "Max propositions",
+    "propositionPeriodHours": "Proposition period",
+    "periodHours": "Period",
+    "maxProfilePhotos": "Max profile photos",
+    "maxStoryPhotos": "Max story photos",
+    "videoEnabled": "Video enabled",
+    "quizzEnabled": "Quizz enabled",
+    "minQuestions": "Min questions",
+    "freeLikesPerDay": "Free likes per day",
+    "unlimitedLikes": "Unlimited likes"
+  },
+  "suffixes": {
+    "km": "km",
+    "days": "days",
+    "hours": "h",
+    "photos": "photos",
+    "questions": "questions",
+    "likes": "likes"
+  },
+  "options": {
+    "required": "Required",
+    "optional": "Optional",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "contentTypes": {
+    "photo": "Photo",
+    "story": "Story",
+    "event": "Event",
+    "externalLink": "External Link",
+    "video": "Video"
+  },
+  "legalLinks": {
+    "termsUrl": "Terms of Service",
+    "privacyUrl": "Privacy Policy",
+    "cookiesUrl": "Cookies Policy",
+    "legalNoticeUrl": "Legal Notice",
+    "refundPolicyUrl": "Refund Policy",
+    "communityGuidelinesUrl": "Community Guidelines",
+    "safetyTipsUrl": "Safety Tips",
+    "antiHarassmentPolicyUrl": "Anti-Harassment Policy",
+    "dataProcessingUrl": "Data Processing Agreement",
+    "ageRatingUrl": "Age Rating",
+    "contactUrl": "Contact"
+  },
+  "toast": {
+    "saved": "Configuration saved",
+    "error": "Failed to save configuration"
+  }
+}

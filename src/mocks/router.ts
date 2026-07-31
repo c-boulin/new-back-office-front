@@ -7,6 +7,7 @@ import * as moderation from "./handlers/moderation";
 import * as reports from "./handlers/reports";
 import * as messages from "./handlers/messages";
 import * as tenantData from "./handlers/tenantData";
+import * as productConfig from "./handlers/productConfig";
 
 export type MockRequest = {
   method: string;
@@ -80,6 +81,9 @@ const routes: Array<{ method: string; pattern: string; handler: Route }> = [
   { method: "GET", pattern: "/analytics/overview", handler: (r) => ok(tenantData.analytics(tenantHeader(r))) },
   { method: "GET", pattern: "/settings", handler: (r) => ok(tenantData.settings(tenantHeader(r))) },
   { method: "PATCH", pattern: "/settings", handler: (r) => ok(tenantData.updateSettings(tenantHeader(r), r.body)) },
+
+  { method: "GET", pattern: "/v1/product-config", handler: (r) => ok(productConfig.get(tenantHeader(r))) },
+  { method: "PATCH", pattern: "/v1/product-config", handler: (r) => ok(productConfig.update(tenantHeader(r), r.body)) },
 
   { method: "GET", pattern: "/moderation", handler: (r) => ok(moderation.list(tenantHeader(r), r.params)) },
   { method: "GET", pattern: "/moderation/stats", handler: (r) => ok(moderation.stats(tenantHeader(r))) },
