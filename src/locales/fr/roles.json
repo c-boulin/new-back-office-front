@@ -64,6 +64,10 @@
     "moderation": "Modération",
     "configuration": "Configuration"
   },
+  "tabs": {
+    "roles": "Configuration des rôles",
+    "users": "Affectation des utilisateurs"
+  },
   "rolesCount": "Rôles ({{count}})",
   "nonModifiable": "Non modifiable",
   "permissionsGranted": "{{count}}/{{total}} permissions accordées",

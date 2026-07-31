@@ -6,10 +6,11 @@ import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 import { RoleFormDialog } from "@/features/permissions/components/RoleFormDialog";
 import { RolesSidebar } from "@/features/permissions/components/RolesSidebar";
 import { RoleDetailPanel } from "@/features/permissions/components/RoleDetailPanel";
+import { buildPermissionMatrix } from "@/features/permissions/matrix";
 import { createRole, deleteRole, listRoles, updateRole } from "@/features/permissions/api";
 import { useActiveTenant } from "@/hooks/useActiveTenant";
 import { AppError } from "@/lib/httpClient";
-import type { Role, RoleWriteBody } from "@/features/permissions/types";
+import type { PermissionMatrix, Role, RoleWriteBody } from "@/features/permissions/types";
 
 function errorMessage(error: unknown, fallback: string): string {
   if (error instanceof AppError && error.message) return error.message;
@@ -80,6 +81,17 @@ export function RolesTab({ createOpen, onCreateOpenChange }: RolesTabProps) {
   });
 
   const pending = createMutation.isPending || updateMutation.isPending;
+  const selectedRole = roles.find((r) => r.id === selectedId) ?? null;
+
+  const handleToggle = (section: string, action: string, value: boolean) => {
+    if (!selectedRole || selectedRole.isLocked) return;
+    const nextMatrix: PermissionMatrix = buildPermissionMatrix(selectedRole.permissions);
+    nextMatrix[section] = { ...nextMatrix[section], [action]: value };
+    updateMutation.mutate({
+      id: selectedRole.id,
+      body: { label: selectedRole.label, color: selectedRole.color, permissions: nextMatrix },
+    });
+  };
 
   const handleSubmit = (body: RoleWriteBody) => {
     if (editing) {
@@ -89,11 +101,9 @@ export function RolesTab({ createOpen, onCreateOpenChange }: RolesTabProps) {
     }
   };
 
-  const selectedRole = roles.find((r) => r.id === selectedId) ?? null;
-
   return (
     <>
-      <div className="grid grid-cols-[220px_1fr] items-start gap-0">
+      <div className="grid grid-cols-[288px_1fr] items-start gap-0">
         <RolesSidebar
           roles={roles}
           selectedId={selectedId}
@@ -103,7 +113,7 @@ export function RolesTab({ createOpen, onCreateOpenChange }: RolesTabProps) {
           onAdd={() => onCreateOpenChange(true)}
         />
         <div className="pl-8">
-          <RoleDetailPanel role={selectedRole} />
+          <RoleDetailPanel role={selectedRole} onToggle={handleToggle} />
         </div>
       </div>
 

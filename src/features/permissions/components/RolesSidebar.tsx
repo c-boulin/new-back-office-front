@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { Role, RoleColor } from "@/features/permissions/types";
 
-const COLOR_BG: Record<RoleColor, string> = {
+const AVATAR_BG: Record<RoleColor, string> = {
   error: "bg-red-500",
   warning: "bg-orange-400",
   info: "bg-blue-500",
@@ -13,7 +13,7 @@ const COLOR_BG: Record<RoleColor, string> = {
   secondary: "bg-secondary",
 };
 
-const COLOR_TEXT: Record<RoleColor, string> = {
+const AVATAR_TEXT: Record<RoleColor, string> = {
   error: "text-white",
   warning: "text-white",
   info: "text-white",
@@ -22,16 +22,33 @@ const COLOR_TEXT: Record<RoleColor, string> = {
   secondary: "text-secondary-foreground",
 };
 
-function countPermissions(role: Role): number {
-  return Object.values(role.permissions).reduce(
-    (total, actions) => total + Object.values(actions).filter(Boolean).length,
-    0,
-  );
-}
+const SELECTED_TINT: Record<RoleColor, string> = {
+  error: "bg-red-50 border-l-2 border-red-500",
+  warning: "bg-orange-50 border-l-2 border-orange-500",
+  info: "bg-blue-50 border-l-2 border-blue-500",
+  success: "bg-emerald-50 border-l-2 border-emerald-500",
+  primary: "bg-primary/5 border-l-2 border-primary",
+  secondary: "bg-muted/40 border-l-2 border-muted-foreground/60",
+};
 
-function totalPermissions(role: Role): number {
+const TOTAL_ACTIONS = Object.values(
+  {
+    dashboard: ["read"],
+    users: ["read", "update", "delete"],
+    animators: ["create", "read", "update", "delete"],
+    coachs: ["create", "read", "update", "delete"],
+    "coach-ia": ["read", "update"],
+    statistics: ["read"],
+    moderation: ["read", "update"],
+    signalement: ["read", "update"],
+    "product-config": ["create", "read", "update", "delete"],
+    settings: ["create", "read", "update", "delete"],
+  } as const,
+).reduce((sum, actions) => sum + actions.length, 0);
+
+function countGranted(role: Role): number {
   return Object.values(role.permissions).reduce(
-    (total, actions) => total + Object.keys(actions).length,
+    (sum, actions) => sum + Object.values(actions).filter(Boolean).length,
     0,
   );
 }
@@ -74,8 +91,7 @@ export function RolesSidebar({
 
       <ul className="flex flex-col gap-1">
         {roles.map((role) => {
-          const granted = countPermissions(role);
-          const total = totalPermissions(role);
+          const granted = countGranted(role);
           const isSelected = role.id === selectedId;
 
           return (
@@ -86,7 +102,7 @@ export function RolesSidebar({
                 className={cn(
                   "group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors",
                   isSelected
-                    ? "border bg-card shadow-sm"
+                    ? SELECTED_TINT[role.color]
                     : "hover:bg-muted/50",
                 )}
                 aria-current={isSelected ? "true" : undefined}
@@ -94,8 +110,8 @@ export function RolesSidebar({
                 <span
                   className={cn(
                     "flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold uppercase",
-                    COLOR_BG[role.color],
-                    COLOR_TEXT[role.color],
+                    AVATAR_BG[role.color],
+                    AVATAR_TEXT[role.color],
                   )}
                 >
                   {role.label.slice(0, 2)}
@@ -104,7 +120,7 @@ export function RolesSidebar({
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold">{role.label}</p>
                   <p className="text-xs text-muted-foreground">
-                    {granted}/{total} permissions
+                    {t("permissionsGranted", { count: granted, total: TOTAL_ACTIONS })}
                   </p>
                 </div>
 

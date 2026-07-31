@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { PermissionMatrix } from "./PermissionMatrix";
+import { PermissionPillMatrix } from "./PermissionPillMatrix";
 import { buildPermissionMatrix } from "@/features/permissions/matrix";
 import { ROLE_COLORS } from "@/features/permissions/types";
 import type {
@@ -146,7 +146,7 @@ function RoleForm({ role, readOnly, pending, onCancel, onSubmit }: RoleFormProps
 
       <div className="space-y-2">
         <Label>{t("matrix.title")}</Label>
-        <PermissionMatrix value={matrix} onToggle={toggle} readOnly={readOnly} />
+        <PermissionPillMatrix value={matrix} onToggle={toggle} readOnly={readOnly} />
       </div>
 
       <DialogFooter>
