@@ -23,12 +23,12 @@ const AVATAR_TEXT: Record<RoleColor, string> = {
 };
 
 const SELECTED_TINT: Record<RoleColor, string> = {
-  error: "bg-red-50 border-l-2 border-red-500",
-  warning: "bg-orange-50 border-l-2 border-orange-500",
-  info: "bg-blue-50 border-l-2 border-blue-500",
-  success: "bg-emerald-50 border-l-2 border-emerald-500",
-  primary: "bg-primary/5 border-l-2 border-primary",
-  secondary: "bg-muted/40 border-l-2 border-muted-foreground/60",
+  error: "bg-red-500/20 border-l-2 border-red-500",
+  warning: "bg-orange-500/20 border-l-2 border-orange-500",
+  info: "bg-blue-500/20 border-l-2 border-blue-500",
+  success: "bg-emerald-500/20 border-l-2 border-emerald-500",
+  primary: "bg-primary/20 border-l-2 border-primary",
+  secondary: "bg-muted/60 border-l-2 border-muted-foreground/60",
 };
 
 const TOTAL_ACTIONS = Object.values(
@@ -118,8 +118,8 @@ export function RolesSidebar({
                 </span>
 
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold">{role.label}</p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className={cn("truncate text-sm font-semibold", isSelected && "text-foreground")}>{role.label}</p>
+                  <p className={cn("text-xs", isSelected ? "text-foreground/70" : "text-muted-foreground")}>
                     {t("permissionsGranted", { count: granted, total: TOTAL_ACTIONS })}
                   </p>
                 </div>

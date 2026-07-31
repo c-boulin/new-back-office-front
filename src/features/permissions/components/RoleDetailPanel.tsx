@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Lock, Plus, Eye, RefreshCw, Trash2 } from "lucide-react";
+import { Lock } from "lucide-react";
 import { EmptyState } from "@/components/common/EmptyState";
 import { PermissionPillMatrix } from "./PermissionPillMatrix";
 import type { Role, RoleColor } from "@/features/permissions/types";
@@ -30,22 +30,6 @@ const ROLE_BADGE_OUTLINE: Record<RoleColor, string> = {
   primary: "border-primary text-primary",
   secondary: "border-secondary-foreground text-secondary-foreground",
 };
-
-const LEGEND_ICON_CLASS: Record<string, string> = {
-  create: "text-emerald-600",
-  read: "text-blue-600",
-  update: "text-orange-500",
-  delete: "text-red-500",
-};
-
-const ACTION_ICON: Record<string, React.ElementType> = {
-  create: Plus,
-  read: Eye,
-  update: RefreshCw,
-  delete: Trash2,
-};
-
-const ACTIONS_ORDER = ["create", "read", "update", "delete"] as const;
 
 function countGranted(role: Role): number {
   return Object.values(role.permissions).reduce(
@@ -101,21 +85,6 @@ export function RoleDetailPanel({ role, onToggle }: RoleDetailPanelProps) {
         <p className="text-sm text-muted-foreground">
           {t("permissionsGranted", { count: granted, total })}
         </p>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-5">
-        {ACTIONS_ORDER.map((action) => {
-          const LegendIcon = ACTION_ICON[action] ?? Eye;
-          return (
-            <span
-              key={action}
-              className={`inline-flex items-center gap-1.5 text-xs font-medium ${LEGEND_ICON_CLASS[action] ?? ""}`}
-            >
-              <LegendIcon className="h-3.5 w-3.5" aria-hidden />
-              {t(`actionLabels.${action}`)}
-            </span>
-          );
-        })}
       </div>
 
       <PermissionPillMatrix
