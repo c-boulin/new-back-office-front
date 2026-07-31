@@ -43,18 +43,21 @@ export const httpClient: AxiosInstance = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-const REAL_BACKEND_PREFIXES = ["/v1/auth/", "/v1/products"] as const;
-
-// These have no mock handler, so they must reach the real backend even when the
-// SSO bypass flag is off — routing them through the adapter would 404.
-const ALWAYS_REAL_BACKEND_PREFIXES = ["/v1/roles"] as const;
+// Auth, products, roles and back-office users always reach the real backend,
+// even when the mock adapter is active — the rest of the app stays mockable.
+const ALWAYS_REAL_BACKEND_PREFIXES = [
+  "/v1/auth",
+  "/v1/products",
+  "/v1/roles",
+  "/v1/bo-users",
+] as const;
 
 function shouldBypassMockAdapter(url: string | undefined): boolean {
   if (!url) return false;
   const path = url.split("?")[0];
-  if (ALWAYS_REAL_BACKEND_PREFIXES.some((prefix) => path.startsWith(prefix))) return true;
-  if (!env.auth.real) return false;
-  return REAL_BACKEND_PREFIXES.some((prefix) => path.startsWith(prefix));
+  return ALWAYS_REAL_BACKEND_PREFIXES.some(
+    (prefix) => path === prefix || path.startsWith(prefix + "/") || path.startsWith(prefix),
+  );
 }
 
 if (env.mock.api) {

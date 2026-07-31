@@ -2,10 +2,38 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Route, Routes } from "react-router-dom";
+import { AppError } from "@/lib/httpClient";
 import { LoginPage } from "@/features/auth/pages/LoginPage";
 import { useAuthStore } from "@/stores/authStore";
 import { renderWithProviders } from "@test/utils/renderWithProviders";
-import { resetStores } from "@test/utils/fixtures";
+import { resetStores, membershipFixture } from "@test/utils/fixtures";
+
+const passwordLoginMock = vi.fn();
+const fetchProductsMock = vi.fn();
+
+vi.mock("@/features/auth/api", async (importActual) => {
+  const actual = await importActual<typeof import("@/features/auth/api")>();
+  return {
+    ...actual,
+    passwordLogin: (...args: Parameters<typeof actual.passwordLogin>) =>
+      passwordLoginMock(...args),
+    fetchProducts: (...args: Parameters<typeof actual.fetchProducts>) =>
+      fetchProductsMock(...args),
+  };
+});
+
+const operatorSession = {
+  accessToken: "at-operator",
+  refreshToken: "rt-operator",
+  user: {
+    id: "operator@watchtower.local",
+    email: "operator@watchtower.local",
+    name: "Jamie Rivera",
+    isSuperAdmin: false,
+    avatarUrl: null,
+  },
+  memberships: [membershipFixture()],
+};
 
 function AppShell() {
   return (
@@ -19,9 +47,13 @@ function AppShell() {
 describe("password login flow", () => {
   beforeEach(() => {
     resetStores();
+    passwordLoginMock.mockReset();
+    fetchProductsMock.mockReset();
+    fetchProductsMock.mockResolvedValue([]);
   });
 
   it("submits operator credentials, populates auth store, and navigates to /", async () => {
+    passwordLoginMock.mockResolvedValueOnce(operatorSession);
     renderWithProviders(<AppShell />, { route: "/login" });
 
     await userEvent.type(await screen.findByLabelText(/email/i), "operator@watchtower.local");
@@ -40,6 +72,9 @@ describe("password login flow", () => {
   });
 
   it("leaves the auth store in idle state after a rejected login", async () => {
+    passwordLoginMock.mockRejectedValueOnce(
+      new AppError("unauthorized", "Invalid credentials", 401),
+    );
     renderWithProviders(<AppShell />, { route: "/login" });
 
     await userEvent.type(await screen.findByLabelText(/email/i), "nobody@example.com");
