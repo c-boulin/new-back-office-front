@@ -1,21 +1,5 @@
 import { useTranslation } from "react-i18next";
-import {
-  LayoutDashboard,
-  Users,
-  UserCog,
-  GraduationCap,
-  Bot,
-  BarChart2,
-  Shield,
-  Flag,
-  Settings2,
-  ShieldCheck,
-  Lock,
-  Plus,
-  Eye,
-  RefreshCw,
-  Trash2,
-} from "lucide-react";
+import { LayoutDashboard, Users, UserCog, GraduationCap, Bot, ChartBar as BarChart2, Shield, Flag, Settings2, ShieldCheck, Lock, Plus, Eye, RefreshCw, Trash2 } from "lucide-react";
 import { EmptyState } from "@/components/common/EmptyState";
 import type { Role, RoleColor } from "@/features/permissions/types";
 
@@ -257,5 +241,3 @@ export function RoleDetailPanel({ role }: RoleDetailPanelProps) {
     </div>
   );
 }
-
-export { RoleDetailPanel }
