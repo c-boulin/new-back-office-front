@@ -25,6 +25,7 @@ import { LoadingState } from "@/components/common/LoadingState";
 import { fetchProducts } from "@/features/auth/api";
 import { listRoles } from "@/features/permissions/api";
 import { useActiveTenant } from "@/hooks/useActiveTenant";
+import { usePermissions } from "@/hooks/usePermissions";
 import type { BoUser, BoUserWriteBody } from "@/features/boUsers/types";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -86,6 +87,7 @@ function newRow(productId: number | null = null, roleId: string | null = null): 
 function BoUserForm({ user, pending, onCancel, onSubmit }: BoUserFormProps) {
   const { t } = useTranslation("boUsers");
   const { id: tenantId } = useActiveTenant();
+  const { isSuperAdmin } = usePermissions();
 
   const [name, setName] = useState(user?.name ?? "");
   const [email, setEmail] = useState(user?.email ?? "");
@@ -213,12 +215,15 @@ function BoUserForm({ user, pending, onCancel, onSubmit }: BoUserFormProps) {
                     <SelectValue placeholder={t("form.selectRole")} />
                   </SelectTrigger>
                   <SelectContent>
-                    {roles.map((role) => (
-                      <SelectItem key={role.id} value={role.id} disabled={role.isLocked}>
-                        {role.label}
-                        {role.isLocked ? ` (${t("form.lockedRole")})` : ""}
-                      </SelectItem>
-                    ))}
+                    {roles.map((role) => {
+                      const locked = role.isLocked && !isSuperAdmin;
+                      return (
+                        <SelectItem key={role.id} value={role.id} disabled={locked}>
+                          {role.label}
+                          {locked ? ` (${t("form.lockedRole")})` : ""}
+                        </SelectItem>
+                      );
+                    })}
                   </SelectContent>
                 </Select>
                 <Button
