@@ -1,0 +1,25 @@
+{
+  "title": "Messages",
+  "description": "Passez en revue les conversations signalées et l'activité de messagerie.",
+  "filters": {
+    "flaggedOnly": "Signalés uniquement"
+  },
+  "columns": {
+    "participants": "Participants",
+    "preview": "Dernier message",
+    "count": "Messages",
+    "flag": "Signalement",
+    "lastActivity": "Dernière activité"
+  },
+  "flags": {
+    "harassment": "Harcèlement",
+    "spam": "Spam",
+    "explicit": "Explicite",
+    "underage": "Mineur",
+    "none": "OK"
+  },
+  "empty": {
+    "title": "Aucune conversation",
+    "description": "Les fils correspondant à vos filtres apparaîtront ici."
+  }
+}

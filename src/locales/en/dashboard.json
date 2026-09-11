@@ -1,0 +1,16 @@
+{
+  "title": "Dashboard",
+  "description": "Real-time overview of activity, growth, and safety on this tenant.",
+  "sections": {
+    "engagement": "Engagement over time",
+    "activity": "Recent activity"
+  },
+  "activity": {
+    "match": "matched with",
+    "message": "sent a message to",
+    "report": "reported",
+    "signup": "signed up",
+    "verify": "was verified",
+    "ban": "was banned"
+  }
+}

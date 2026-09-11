@@ -1,0 +1,14 @@
+{
+  "title": "Analytique",
+  "description": "Rétention, entonnoir et engagement.",
+  "stats": {
+    "dau": "Utilisateurs actifs quotidiens",
+    "mau": "Utilisateurs actifs mensuels",
+    "stickiness": "Stickiness (DAU / MAU)"
+  },
+  "sections": {
+    "retention": "Courbe de rétention",
+    "funnel": "Entonnoir d'onboarding",
+    "activity": "Activité par heure"
+  }
+}
