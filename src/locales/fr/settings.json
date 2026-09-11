@@ -1,0 +1,30 @@
+{
+  "title": "Paramètres du tenant",
+  "description": "Gérez la marque, les contacts et les fonctionnalités de ce tenant.",
+  "sections": {
+    "general": "Général",
+    "brand": "Marque",
+    "features": "Fonctionnalités"
+  },
+  "fields": {
+    "tenantName": "Nom du tenant",
+    "supportEmail": "Email support",
+    "timezone": "Fuseau horaire",
+    "locale": "Langue par défaut",
+    "brandPrimary": "Couleur primaire (HSL)",
+    "brandAccent": "Couleur d'accent (HSL)"
+  },
+  "features": {
+    "premium": "Offre Premium",
+    "moderation": "Modération automatique",
+    "video": "Profils vidéo",
+    "ai_matching": "Matching IA"
+  },
+  "actions": {
+    "save": "Enregistrer",
+    "cancel": "Annuler"
+  },
+  "toast": {
+    "saved": "Paramètres enregistrés"
+  }
+}

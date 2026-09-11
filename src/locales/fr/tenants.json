@@ -1,0 +1,42 @@
+{
+  "chooser": {
+    "title": "Choisissez un tenant",
+    "description": "Sélectionnez le produit que vous souhaitez administrer.",
+    "search": "Rechercher un tenant",
+    "empty": "Aucun tenant ne correspond à votre recherche.",
+    "role": "Rôle",
+    "lastAccessed": "Dernier accès",
+    "brand": "Watchtower",
+    "back": "Retour"
+  },
+  "switcher": {
+    "placeholder": "Changer de tenant",
+    "search": "Rechercher un tenant",
+    "empty": "Aucun tenant trouvé"
+  },
+  "list": {
+    "title": "Tenants",
+    "description": "Gérez tous les produits opérés sur cette plateforme.",
+    "create": "Nouveau tenant",
+    "search": "Rechercher par nom ou identifiant",
+    "filters": {
+      "all": "Tous",
+      "status": "Statut"
+    },
+    "empty": {
+      "title": "Aucun tenant trouvé",
+      "description": "Essayez d'ajuster vos filtres."
+    },
+    "columns": {
+      "name": "Tenant",
+      "status": "Statut",
+      "users": "Utilisateurs",
+      "created": "Créé le"
+    }
+  },
+  "status": {
+    "active": "Actif",
+    "suspended": "Suspendu",
+    "provisioning": "En cours de création"
+  }
+}

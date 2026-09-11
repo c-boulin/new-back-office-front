@@ -1,0 +1,20 @@
+{
+  "title": "Subscriptions",
+  "description": "Revenue, plans, and churn across the tenant.",
+  "stats": {
+    "active": "Active subscribers",
+    "mrr": "Monthly recurring revenue",
+    "arpu": "ARPU",
+    "churn": "Churn rate"
+  },
+  "sections": {
+    "plans": "Plans",
+    "revenue": "Revenue by month"
+  },
+  "columns": {
+    "plan": "Plan",
+    "price": "Price",
+    "active": "Active",
+    "churn": "Churn"
+  }
+}

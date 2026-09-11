@@ -1,0 +1,46 @@
+{
+  "dashboard": {
+    "title": "Vue plateforme",
+    "description": "Activité, croissance et santé de la plateforme, tous tenants confondus.",
+    "stats": {
+      "tenants": "Tenants actifs",
+      "tenants_hint": "Toutes régions",
+      "users": "Utilisateurs totaux",
+      "users_hint": "30 derniers jours",
+      "uptime": "Disponibilité",
+      "uptime_hint": "30 derniers jours"
+    },
+    "sections": {
+      "activity": "Activité récente",
+      "activity_empty": "Le flux d'événements plateforme apparaîtra ici."
+    }
+  },
+  "tenants": {
+    "title": "Tenants",
+    "description": "Tous les tenants hébergés sur cette plateforme."
+  },
+  "admins": {
+    "title": "Administrateurs plateforme",
+    "description": "Personnes ayant accès à la console super admin.",
+    "filters": {
+      "role": "Rôle",
+      "all": "Tous les rôles"
+    },
+    "columns": {
+      "name": "Nom",
+      "email": "Email",
+      "role": "Rôle",
+      "lastActive": "Dernière activité",
+      "createdAt": "Ajouté"
+    },
+    "roles": {
+      "owner": "Propriétaire",
+      "admin": "Admin",
+      "read_only": "Lecture seule"
+    },
+    "empty": {
+      "title": "Aucun administrateur",
+      "description": "Personne n'a encore d'accès plateforme."
+    }
+  }
+}

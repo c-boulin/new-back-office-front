@@ -1,0 +1,108 @@
+{
+  "actions": {
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "retry": "Retry",
+    "search": "Search",
+    "close": "Close",
+    "back": "Back",
+    "reset": "Reset"
+  },
+  "confirm": {
+    "typePrompt": "Type {{value}} to confirm"
+  },
+  "empty": {
+    "title": "No results",
+    "description": "There is nothing to show here yet."
+  },
+  "errors": {
+    "title": "Something went wrong",
+    "description": "We could not load this content. Please try again.",
+    "routeTitle": "This page failed to load"
+  },
+  "menu": {
+    "logout": "Sign out"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "moderation": "Moderation",
+    "reports": "Reports",
+    "matches": "Matches",
+    "messages": "Messages",
+    "subscriptions": "Subscriptions",
+    "analytics": "Analytics",
+    "settings": "Settings",
+    "animators": "Animators",
+    "coaches": "Coaches",
+    "coachAi": "AI coach",
+    "productConfig": "Product config",
+    "permissions": "Permissions",
+    "openMenu": "Open navigation",
+    "mobileTitle": "Navigation",
+    "mobileDescription": "Browse the application",
+    "groups": {
+      "main": "Main",
+      "animation": "Animation",
+      "analysis": "Analysis",
+      "moderation": "Moderation",
+      "configuration": "Configuration"
+    }
+  },
+  "pagination": {
+    "page": "Page {{page}} of {{total}}",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "skipToContent": "Skip to main content",
+  "connectivity": {
+    "offline": "You are offline. Some features may be unavailable."
+  },
+  "themeToggle": {
+    "switchToDark": "Switch to dark mode",
+    "switchToLight": "Switch to light mode"
+  },
+  "roles": {
+    "superAdmin": "Super admin",
+    "admin": "Administrator",
+    "operator": "Operator",
+    "owner": "Owner",
+    "moderator": "Moderator",
+    "viewer": "Viewer"
+  },
+  "productCard": {
+    "label": "Active product",
+    "switch": "Switch product",
+    "search": "Search product",
+    "empty": "No product found"
+  },
+  "placeholders": {
+    "animators": {
+      "description": "Manage animators, their schedules and performance.",
+      "emptyTitle": "Animators coming soon",
+      "emptyDescription": "This module will be available soon."
+    },
+    "coaches": {
+      "description": "Manage coaches supporting your users.",
+      "emptyTitle": "Coaches coming soon",
+      "emptyDescription": "This module will be available soon."
+    },
+    "coachAi": {
+      "description": "Configure the AI assistant offered to your users.",
+      "emptyTitle": "AI coach coming soon",
+      "emptyDescription": "This module will be available soon."
+    },
+    "productConfig": {
+      "description": "Configure your product's behaviour and appearance.",
+      "emptyTitle": "Configuration coming soon",
+      "emptyDescription": "This module will be available soon."
+    },
+    "permissions": {
+      "description": "Control team roles and access.",
+      "emptyTitle": "Permissions coming soon",
+      "emptyDescription": "This module will be available soon."
+    }
+  }
+}
