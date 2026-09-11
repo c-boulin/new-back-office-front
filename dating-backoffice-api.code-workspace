@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "../dating-backoffice-api"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../../dating-libs-database"
+		},
+		{
+			"path": "../../smartqa/api"
+		}
+	],
+	"settings": {}
+}

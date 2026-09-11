@@ -1,0 +1,96 @@
+{
+  "title": "Configuration produit",
+  "subtitle": "Configurez le comportement de ce produit : inscription, matching, contenu et liens légaux.",
+  "summary": {
+    "reset": "Annuler les modifications",
+    "save": "Enregistrer",
+    "resetToDefault": "Réinitialiser aux valeurs par défaut",
+    "resetToDefaultDescription": "Cela réinitialisera toutes les valeurs de configuration aux valeurs d'usine. Cette action est irréversible."
+  },
+  "cards": {
+    "registration": {
+      "title": "Inscription",
+      "subtitle": "Exigences et règles d'inscription"
+    },
+    "relations": {
+      "title": "Relations et Matching",
+      "subtitle": "Distance, inactivité et limites de propositions"
+    },
+    "suggestions": {
+      "title": "Suggestions",
+      "subtitle": "Plage de période de suggestions"
+    },
+    "photos": {
+      "title": "Photos",
+      "subtitle": "Limites de photos"
+    },
+    "quizz": {
+      "title": "Quizz",
+      "subtitle": "Paramètres du questionnaire d'intégration"
+    },
+    "contentTypes": {
+      "title": "Types de contenu par défaut",
+      "subtitle": "Types de contenu activés par défaut"
+    },
+    "likes": {
+      "title": "Likes",
+      "subtitle": "Limites pour les utilisateurs gratuits"
+    },
+    "legalLinks": {
+      "title": "Liens légaux",
+      "subtitle": "URLs des pages légales affichées dans l'application"
+    }
+  },
+  "fields": {
+    "identificationEmail": "Inscription email",
+    "identificationPhoneNumber": "Inscription numéro de téléphone",
+    "allowSameSexRelationship": "Permettre relations même sexe",
+    "matchUnlimitedMessages": "Match unlimited messages",
+    "defaultDistance": "Distance par défaut",
+    "activePresentationDuration": "Durée d'inactivité",
+    "maxPropositionRequestPerUser": "Max propositions utilisateur",
+    "suggestionPeriodMin": "Période suggestion min (heures)",
+    "suggestionPeriodMax": "Période suggestion max (heures)",
+    "freeLikes": "Free Likes",
+    "unlimitedLikes": "Unlimited Likes",
+    "maxProfilePhotos": "Maximum photos de profils",
+    "maxStoryPhotos": "Maximum photos par story",
+    "quizzRequired": "Quizz requis"
+  },
+  "suffixes": {
+    "hours": "h",
+    "photos": "photos"
+  },
+  "options": {
+    "required": "Obligatoire",
+    "not_required": "Non obligatoire"
+  },
+  "contentTypes": {
+    "photo": "Photo",
+    "story": "Story",
+    "event": "Événement",
+    "externallink": "Lien externe"
+  },
+  "legalLinks": {
+    "cgu": "CGU",
+    "legal": "Legal",
+    "subscription": "Abonnement",
+    "selfcare": "Self Care",
+    "personalData": "Données personnelles",
+    "cookies": "Cookies",
+    "unsubscribe": "Désabonnement",
+    "contact": "Contact",
+    "myAccount": "Mon compte",
+    "downloadCgu": "Télécharger CGU",
+    "pricing": "Tarification",
+    "supportEmail": "Email support"
+  },
+  "toast": {
+    "saved": "Configuration enregistrée",
+    "error": "Échec de l'enregistrement",
+    "resetSuccess": "Configuration réinitialisée"
+  },
+  "validation": {
+    "cannotBeZero": "La valeur ne peut pas être 0"
+  }
+}

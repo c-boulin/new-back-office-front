@@ -1,0 +1,96 @@
+{
+  "list": {
+    "title": "Gestion des droits",
+    "description": "Définissez les rôles de l'équipe et contrôlez ce que chaque rôle peut faire."
+  },
+  "actions": {
+    "create": "Créer un rôle",
+    "edit": "Modifier",
+    "rename": "Renommer le r\u00f4le",
+    "pickColor": "Choisir une couleur",
+    "view": "Voir",
+    "delete": "Supprimer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "close": "Fermer"
+  },
+  "columns": {
+    "label": "Rôle",
+    "color": "Couleur",
+    "status": "Statut",
+    "created": "Créé le",
+    "actions": "Actions"
+  },
+  "locked": "Verrouillé",
+  "editable": "Modifiable",
+  "empty": {
+    "title": "Aucun rôle",
+    "description": "Créez votre premier rôle pour commencer à attribuer des permissions."
+  },
+  "form": {
+    "createTitle": "Créer un rôle",
+    "editTitle": "Modifier le rôle",
+    "viewTitle": "Détails du rôle",
+    "description": "Définissez un nom, une couleur et les permissions accordées à ce rôle.",
+    "labelField": "Nom",
+    "labelPlaceholder": "ex. Modérateur",
+    "labelRequired": "Veuillez saisir un nom.",
+    "colorField": "Couleur"
+  },
+  "matrix": {
+    "title": "Permissions",
+    "section": "Section"
+  },
+  "actionLabels": {
+    "create": "Créer",
+    "read": "Lire",
+    "update": "Modifier",
+    "delete": "Supprimer"
+  },
+  "sections": {
+    "dashboard": "Tableau de bord",
+    "users": "Utilisateurs",
+    "animators": "Animateurs",
+    "coachs": "Coachs",
+    "coach-ia": "Coach IA",
+    "statistics": "Statistiques",
+    "moderation": "Modération",
+    "signalement": "Signalement",
+    "product-config": "Configuration Produit",
+    "settings": "Gestion des droits"
+  },
+  "sectionGroups": {
+    "principal": "Principal",
+    "animation": "Animation",
+    "analyse": "Analyse",
+    "moderation": "Modération",
+    "configuration": "Configuration"
+  },
+  "tabs": {
+    "roles": "Configuration des rôles",
+    "users": "Affectation des utilisateurs"
+  },
+  "rolesCount": "Rôles ({{count}})",
+  "nonModifiable": "Non modifiable",
+  "permissionsGranted": "{{count}}/{{total}} permissions accordées",
+  "noRoleSelected": "Sélectionnez un rôle",
+  "noRoleSelectedDesc": "Cliquez sur un rôle dans la liste pour voir ses permissions.",
+  "colors": {
+    "error": "Rouge",
+    "warning": "Orange",
+    "info": "Bleu",
+    "success": "Vert",
+    "primary": "Primaire",
+    "secondary": "Gris"
+  },
+  "delete": {
+    "title": "Supprimer le rôle",
+    "description": "Voulez-vous vraiment supprimer « {{label}} » ? Cette action est irréversible."
+  },
+  "toast": {
+    "created": "Rôle créé",
+    "updated": "Rôle mis à jour",
+    "deleted": "Rôle supprimé",
+    "error": "Une erreur est survenue. Veuillez réessayer."
+  }
+}

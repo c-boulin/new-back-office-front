@@ -1,0 +1,14 @@
+{
+  "title": "Analytics",
+  "description": "Retention, funnel, and engagement patterns.",
+  "stats": {
+    "dau": "Daily active users",
+    "mau": "Monthly active users",
+    "stickiness": "Stickiness (DAU / MAU)"
+  },
+  "sections": {
+    "retention": "Retention curve",
+    "funnel": "Onboarding funnel",
+    "activity": "Activity by hour"
+  }
+}

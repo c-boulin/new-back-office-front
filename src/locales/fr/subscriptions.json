@@ -1,0 +1,20 @@
+{
+  "title": "Abonnements",
+  "description": "Revenus, plans et attrition sur ce tenant.",
+  "stats": {
+    "active": "Abonnés actifs",
+    "mrr": "Revenu mensuel récurrent",
+    "arpu": "ARPU",
+    "churn": "Taux d'attrition"
+  },
+  "sections": {
+    "plans": "Plans",
+    "revenue": "Revenus mensuels"
+  },
+  "columns": {
+    "plan": "Plan",
+    "price": "Prix",
+    "active": "Actifs",
+    "churn": "Attrition"
+  }
+}

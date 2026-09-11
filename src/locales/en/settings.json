@@ -1,0 +1,30 @@
+{
+  "title": "Tenant settings",
+  "description": "Manage this tenant's branding, contact, and feature flags.",
+  "sections": {
+    "general": "General",
+    "brand": "Branding",
+    "features": "Feature flags"
+  },
+  "fields": {
+    "tenantName": "Tenant name",
+    "supportEmail": "Support email",
+    "timezone": "Timezone",
+    "locale": "Default locale",
+    "brandPrimary": "Primary color (HSL)",
+    "brandAccent": "Accent color (HSL)"
+  },
+  "features": {
+    "premium": "Premium tier",
+    "moderation": "Automated moderation",
+    "video": "Video profiles",
+    "ai_matching": "AI matching"
+  },
+  "actions": {
+    "save": "Save changes",
+    "cancel": "Discard"
+  },
+  "toast": {
+    "saved": "Settings saved"
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "title": "Product configuration",
+  "subtitle": "Configure the behavior of this product: registration, matching, content, and legal links.",
+  "summary": {
+    "reset": "Discard changes",
+    "save": "Save changes",
+    "resetToDefault": "Reset to default",
+    "resetToDefaultDescription": "This will reset all configuration values to factory defaults. This action cannot be undone."
+  },
+  "cards": {
+    "registration": {
+      "title": "Registration",
+      "subtitle": "Sign-up requirements and rules"
+    },
+    "relations": {
+      "title": "Relations and Matching",
+      "subtitle": "Distance, inactivity, and proposition limits"
+    },
+    "suggestions": {
+      "title": "Suggestions",
+      "subtitle": "Suggestion period range"
+    },
+    "photos": {
+      "title": "Photos",
+      "subtitle": "Photo limits"
+    },
+    "quizz": {
+      "title": "Quizz",
+      "subtitle": "Onboarding questionnaire settings"
+    },
+    "contentTypes": {
+      "title": "Default Content Types",
+      "subtitle": "Which content types are enabled by default"
+    },
+    "likes": {
+      "title": "Likes",
+      "subtitle": "Limits for free users"
+    },
+    "legalLinks": {
+      "title": "Legal Links",
+      "subtitle": "URLs for legal pages shown in the app"
+    }
+  },
+  "fields": {
+    "identificationEmail": "Registration email",
+    "identificationPhoneNumber": "Registration phone number",
+    "allowSameSexRelationship": "Allow relationships same sex",
+    "matchUnlimitedMessages": "Match unlimited messages",
+    "defaultDistance": "Default distance",
+    "activePresentationDuration": "Inactivity timeframe",
+    "maxPropositionRequestPerUser": "Max proposition request per user",
+    "suggestionPeriodMin": "Suggestion period min (hours)",
+    "suggestionPeriodMax": "Suggestion period max (hours)",
+    "freeLikes": "Free likes",
+    "unlimitedLikes": "Unlimited likes",
+    "maxProfilePhotos": "Max profile photos",
+    "maxStoryPhotos": "Max story photos",
+    "quizzRequired": "Quizz required"
+  },
+  "suffixes": {
+    "hours": "h",
+    "photos": "photos"
+  },
+  "options": {
+    "required": "Required",
+    "not_required": "Not required"
+  },
+  "contentTypes": {
+    "photo": "Photo",
+    "story": "Story",
+    "event": "Event",
+    "externallink": "External Link"
+  },
+  "legalLinks": {
+    "cgu": "CGU",
+    "legal": "Legal",
+    "subscription": "Subscription",
+    "selfcare": "Self Care",
+    "personalData": "Personal Data",
+    "cookies": "Cookies",
+    "unsubscribe": "Unsubscribe",
+    "contact": "Contact",
+    "myAccount": "My Account",
+    "downloadCgu": "Download CGU",
+    "pricing": "Pricing",
+    "supportEmail": "Support email"
+  },
+  "toast": {
+    "saved": "Configuration saved",
+    "error": "Failed to save configuration",
+    "resetSuccess": "Configuration reset to default"
+  },
+  "validation": {
+    "cannotBeZero": "Value cannot be 0"
+  }
+}

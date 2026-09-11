@@ -1,0 +1,15 @@
+{
+  "title": "Matchs",
+  "description": "Analyses sur la façon dont les utilisateurs se connectent sur ce tenant.",
+  "stats": {
+    "total": "Matchs totaux",
+    "rate": "Taux de match",
+    "quality": "Qualité moyenne",
+    "median_messages": "Médiane messages / match"
+  },
+  "sections": {
+    "trend": "Matchs sur les 14 derniers jours",
+    "quality": "Distribution de qualité",
+    "geo": "Principaux pays"
+  }
+}
