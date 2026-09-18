@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { Users, UserPlus, CheckCircle } from "lucide-react";
+import { Users, UserPlus, CircleCheck as CheckCircle } from "lucide-react";
 import { StatCard } from "@/components/common/StatCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getUsersStats } from "@/features/statistics/api";

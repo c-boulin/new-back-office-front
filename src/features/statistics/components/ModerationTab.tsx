@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { AlertTriangle, Camera, ShieldAlert, Trash2 } from "lucide-react";
+import { TriangleAlert as AlertTriangle, Camera, ShieldAlert, Trash2 } from "lucide-react";
 import { StatCard } from "@/components/common/StatCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getModerationStats } from "@/features/statistics/api";

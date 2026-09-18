@@ -2,19 +2,7 @@ import { Outlet, useParams } from "react-router-dom";
 import { Suspense, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { LucideIcon } from "lucide-react";
-import {
-  BarChart3,
-  Flag,
-  LayoutDashboard,
-  MessageSquareHeart,
-  Mic,
-  Settings2,
-  ShieldAlert,
-  ShieldCheck,
-  Sparkles,
-  UserCog,
-  Users,
-} from "lucide-react";
+import { ChartBar as BarChart3, Flag, LayoutDashboard, MessageSquareHeart, Mic, Settings2, ShieldAlert, ShieldCheck, Sparkles, UserCog, Users } from "lucide-react";
 import { SidebarNav, type SidebarNavItem } from "./SidebarNav";
 import { SidebarSection } from "./SidebarSection";
 import { SidebarProductCard } from "./SidebarProductCard";
