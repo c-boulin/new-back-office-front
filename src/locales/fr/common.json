@@ -33,7 +33,7 @@
     "matches": "Matches",
     "messages": "Messages",
     "subscriptions": "Abonnements",
-    "analytics": "Analytique",
+    "statistics": "Statistiques",
     "settings": "Paramètres",
     "animators": "Animateurs",
     "coaches": "Coachs",
@@ -46,7 +46,7 @@
     "groups": {
       "main": "Principal",
       "animation": "Animation",
-      "analysis": "Analyse",
+      "statistics": "Statistiques",
       "moderation": "Modération",
       "configuration": "Configuration"
     }

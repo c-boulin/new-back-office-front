@@ -3,7 +3,7 @@ import { Suspense, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { LucideIcon } from "lucide-react";
 import {
-  ChartBar,
+  BarChart3,
   Flag,
   LayoutDashboard,
   MessageSquareHeart,
@@ -59,8 +59,8 @@ function buildGroups(
       ],
     },
     {
-      key: "analysis",
-      items: [item("analytics", ChartBar, "nav.analytics")],
+      key: "statistics",
+      items: [item("statistics", BarChart3, "nav.statistics")],
     },
     {
       key: "moderation",
