@@ -12,6 +12,17 @@
     "messages": "Messages",
     "reportsPending": "Reports pending"
   },
+  "hints": {
+    "activeUsers": "Last 24 hours",
+    "signups": "Last 24 hours",
+    "profilesValidated": "Last 24 hours",
+    "profilesPending": "Requires attention",
+    "likes": "Rolling 24h",
+    "matches": "Rolling 24h",
+    "conversations": "Rolling 24h",
+    "messages": "Rolling 24h",
+    "reportsPending": "Requires attention"
+  },
   "sections": {
     "urgentActions": "Urgent actions",
     "noUrgent": "Nothing urgent right now"

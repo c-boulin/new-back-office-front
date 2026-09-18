@@ -12,6 +12,17 @@
     "messages": "Messages",
     "reportsPending": "Signalements en attente"
   },
+  "hints": {
+    "activeUsers": "Dernières 24 heures",
+    "signups": "Dernières 24 heures",
+    "profilesValidated": "Dernières 24 heures",
+    "profilesPending": "Nécessite attention",
+    "likes": "Glissant 24h",
+    "matches": "Glissant 24h",
+    "conversations": "Glissant 24h",
+    "messages": "Glissant 24h",
+    "reportsPending": "Nécessite attention"
+  },
   "sections": {
     "urgentActions": "Actions urgentes",
     "noUrgent": "Rien d'urgent pour le moment"

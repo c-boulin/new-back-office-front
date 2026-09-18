@@ -1,7 +1,20 @@
 import { useMemo, type CSSProperties } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { Users, UserPlus, UserCheck, Clock, Heart, Handshake, MessageSquare, Mail, Flag, Camera, BookImage, TriangleAlert as AlertTriangle } from "lucide-react";
+import {
+  Users,
+  UserPlus,
+  UserCheck,
+  Clock,
+  Heart,
+  Handshake,
+  MessageSquare,
+  Mail,
+  Flag,
+  Camera,
+  BookImage,
+  TriangleAlert as AlertTriangle,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { StatCard } from "@/components/common/StatCard";
 import { EmptyState } from "@/components/common/EmptyState";
@@ -45,6 +58,8 @@ function formatVariation(variation: number): { direction: "up" | "down" | "flat"
   };
 }
 
+const TOP_ROW_KPIS = ["activeUsers", "matches", "reportsPending", "signups"];
+
 const KPI_ORDER = [
   "activeUsers",
   "signups",
@@ -79,6 +94,9 @@ export function DashboardContent() {
 
   const kpiList = useMemo(() => orderedKpis(data.kpis), [data.kpis]);
 
+  const topRow = kpiList.filter((k) => TOP_ROW_KPIS.includes(k.key)).slice(0, 4);
+  const remaining = kpiList.filter((k) => !TOP_ROW_KPIS.includes(k.key));
+
   const chartKpi = kpiList.find((k) => k.key === "activeUsers") ?? kpiList[0];
   const chartMax = useMemo(
     () => Math.max(...(chartKpi?.kpi.series.map((p) => p.count) ?? [1]), 1),
@@ -87,17 +105,33 @@ export function DashboardContent() {
 
   return (
     <>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {kpiList.map(({ key, kpi }) => (
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {topRow.map(({ key, kpi }) => (
           <StatCard
             key={key}
             label={t(`kpis.${key}`, key)}
             value={kpi.value.toLocaleString()}
+            hint={t(`hints.${key}`, "")}
             trend={formatVariation(kpi.variation)}
             icon={kpiIcon(key)}
           />
         ))}
       </div>
+
+      {remaining.length > 0 && (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {remaining.map(({ key, kpi }) => (
+            <StatCard
+              key={key}
+              label={t(`kpis.${key}`, key)}
+              value={kpi.value.toLocaleString()}
+              hint={t(`hints.${key}`, "")}
+              trend={formatVariation(kpi.variation)}
+              icon={kpiIcon(key)}
+            />
+          ))}
+        </div>
+      )}
 
       <div className="grid gap-4 lg:grid-cols-3">
         {chartKpi && chartKpi.kpi.series.length > 0 && (
