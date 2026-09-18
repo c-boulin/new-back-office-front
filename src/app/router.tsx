@@ -49,8 +49,8 @@ const SubscriptionsPage = lazy(() =>
     default: m.SubscriptionsPage,
   })),
 );
-const AnalyticsPage = lazy(() =>
-  import("@/features/analytics/pages/AnalyticsPage").then((m) => ({ default: m.AnalyticsPage })),
+const StatisticsPage = lazy(() =>
+  import("@/features/statistics/pages/StatisticsPage").then((m) => ({ default: m.StatisticsPage })),
 );
 const SettingsPage = lazy(() =>
   import("@/features/settings/pages/SettingsPage").then((m) => ({ default: m.SettingsPage })),
@@ -108,7 +108,7 @@ export const router = createBrowserRouter(
                 { path: "matches", element: <MatchesPage /> },
                 { path: "messages", element: <MessagesPage /> },
                 { path: "subscriptions", element: <SubscriptionsPage /> },
-                { path: "analytics", element: <AnalyticsPage /> },
+                { path: "statistics", element: <StatisticsPage /> },
                 { path: "settings", element: <SettingsPage /> },
                 { path: "animators", element: <AnimatorsPage /> },
                 { path: "coaches", element: <CoachesPage /> },

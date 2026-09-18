@@ -12,7 +12,7 @@ import enReports from "@/locales/en/reports.json";
 import enMatches from "@/locales/en/matches.json";
 import enMessages from "@/locales/en/messages.json";
 import enSubscriptions from "@/locales/en/subscriptions.json";
-import enAnalytics from "@/locales/en/analytics.json";
+import enStatistics from "@/locales/en/statistics.json";
 import enSettings from "@/locales/en/settings.json";
 import enRoles from "@/locales/en/roles.json";
 import enBoUsers from "@/locales/en/boUsers.json";
@@ -28,7 +28,7 @@ import frReports from "@/locales/fr/reports.json";
 import frMatches from "@/locales/fr/matches.json";
 import frMessages from "@/locales/fr/messages.json";
 import frSubscriptions from "@/locales/fr/subscriptions.json";
-import frAnalytics from "@/locales/fr/analytics.json";
+import frStatistics from "@/locales/fr/statistics.json";
 import frSettings from "@/locales/fr/settings.json";
 import frRoles from "@/locales/fr/roles.json";
 import frBoUsers from "@/locales/fr/boUsers.json";
@@ -48,7 +48,7 @@ const ns = [
   "matches",
   "messages",
   "subscriptions",
-  "analytics",
+  "statistics",
   "settings",
   "roles",
   "boUsers",
@@ -81,7 +81,7 @@ void i18n
         matches: enMatches,
         messages: enMessages,
         subscriptions: enSubscriptions,
-        analytics: enAnalytics,
+        statistics: enStatistics,
         settings: enSettings,
         roles: enRoles,
         boUsers: enBoUsers,
@@ -98,7 +98,7 @@ void i18n
         matches: frMatches,
         messages: frMessages,
         subscriptions: frSubscriptions,
-        analytics: frAnalytics,
+        statistics: frStatistics,
         settings: frSettings,
         roles: frRoles,
         boUsers: frBoUsers,

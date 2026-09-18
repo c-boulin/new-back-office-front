@@ -6,7 +6,6 @@ import type { RawMessageThread } from "@/features/messages/schemas";
 import type { RawTenantDashboard } from "@/features/dashboard/schemas";
 import type { RawMatchesOverview } from "@/features/matches/schemas";
 import type { RawSubscriptionsOverview } from "@/features/subscriptions/schemas";
-import type { RawAnalyticsOverview } from "@/features/analytics/schemas";
 import type { RawTenantSettings } from "@/features/settings/schemas";
 import type { RawPlatformAdmin } from "./seeds/tenantData";
 import { env } from "@/lib/env";
@@ -20,7 +19,6 @@ import {
   buildDashboard,
   buildMatches,
   buildSubscriptions,
-  buildAnalytics,
   buildSettings,
   buildPlatformAdmins,
 } from "./seeds/tenantData";
@@ -34,7 +32,6 @@ type MockDatabase = {
   dashboardByTenant: Record<string, RawTenantDashboard>;
   matchesByTenant: Record<string, RawMatchesOverview>;
   subscriptionsByTenant: Record<string, RawSubscriptionsOverview>;
-  analyticsByTenant: Record<string, RawAnalyticsOverview>;
   settingsByTenant: Record<string, RawTenantSettings>;
   accounts: MockAccount[];
   platformAdmins: RawPlatformAdmin[];
@@ -64,7 +61,6 @@ function seed(): MockDatabase {
     dashboardByTenant: seedTenantScoped(tenants, 5_000, buildDashboard),
     matchesByTenant: seedTenantScoped(tenants, 6_000, buildMatches),
     subscriptionsByTenant: seedTenantScoped(tenants, 7_000, buildSubscriptions),
-    analyticsByTenant: seedTenantScoped(tenants, 8_000, buildAnalytics),
     settingsByTenant: Object.fromEntries(tenants.map((t) => [t.id, buildSettings(t.id)])),
     accounts: JSON.parse(JSON.stringify(accountSeeds)) as MockAccount[],
     platformAdmins: buildPlatformAdmins(),
@@ -141,11 +137,6 @@ export const db = {
   subscriptionsFor(tenantId: string): RawSubscriptionsOverview {
     return ensure(dbRef.subscriptionsByTenant, tenantId, () =>
       buildSubscriptions(tenantId, 7_000 + tenantId.length),
-    );
-  },
-  analyticsFor(tenantId: string): RawAnalyticsOverview {
-    return ensure(dbRef.analyticsByTenant, tenantId, () =>
-      buildAnalytics(tenantId, 8_000 + tenantId.length),
     );
   },
   settingsFor(tenantId: string): RawTenantSettings {
