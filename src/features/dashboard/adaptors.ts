@@ -10,7 +10,7 @@ export function dashboardFromRaw(raw: RawTenantDashboard): TenantDashboard {
         series: kpi.series,
       }]),
     ),
-    urgentActions: raw.urgent_actions.map((a) => ({
+    urgentActions: (raw.urgent_actions ?? []).map((a) => ({
       type: a.type,
       count: a.count,
     })),

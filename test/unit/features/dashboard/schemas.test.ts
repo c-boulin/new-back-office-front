@@ -20,10 +20,14 @@ describe("tenantDashboardSchema", () => {
     ).not.toThrow();
   });
 
-  it("rejects missing urgent_actions", () => {
-    expect(() =>
-      tenantDashboardSchema.parse({ kpis: {} }),
-    ).toThrow();
+  it("rejects payload without urgent_actions (normalize in API layer)", () => {
+    expect(() => tenantDashboardSchema.parse({ kpis: {} })).toThrow();
+  });
+
+  it("ignores extra fields like compare", () => {
+    const withCompare = { ...valid, compare: "previous_period" };
+    const result = tenantDashboardSchema.parse(withCompare);
+    expect(result.kpis.activeUsers.value).toBe(5000);
   });
 
   it("rejects kpi with missing variation", () => {
