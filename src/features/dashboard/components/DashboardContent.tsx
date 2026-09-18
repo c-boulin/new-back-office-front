@@ -1,36 +1,71 @@
 import { useMemo, type CSSProperties } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { formatDistanceToNow } from "date-fns";
-import { Activity, Flag, Heart, Users } from "lucide-react";
+import { Users, UserPlus, UserCheck, Clock, Heart, Handshake, MessageSquare, Mail, Flag, Camera, BookImage, TriangleAlert as AlertTriangle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { StatCard } from "@/components/common/StatCard";
 import { EmptyState } from "@/components/common/EmptyState";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { getTenantDashboard } from "@/features/dashboard/api";
 import { useActiveTenant } from "@/hooks/useActiveTenant";
-import { sanitizeText } from "@/lib/sanitize";
+import type { Kpi } from "@/features/dashboard/types";
 
-const STAT_ICONS: Record<string, LucideIcon> = {
-  dau: Users,
-  matches: Heart,
-  reports_open: Flag,
-  sessions: Activity,
+const KPI_ICONS: Record<string, LucideIcon> = {
+  activeUsers: Users,
+  signups: UserPlus,
+  profilesValidated: UserCheck,
+  profilesPending: Clock,
+  likes: Heart,
+  matches: Handshake,
+  conversations: MessageSquare,
+  messages: Mail,
+  reportsPending: Flag,
 };
 
-function pickIcon(id: string): LucideIcon {
-  return STAT_ICONS[id] ?? Activity;
+const URGENT_ICONS: Record<string, LucideIcon> = {
+  reports: Flag,
+  photos: Camera,
+  stories: BookImage,
+};
+
+function kpiIcon(key: string): LucideIcon {
+  return KPI_ICONS[key] ?? Users;
 }
 
-function initials(name: string): string {
-  return name
-    .split(" ")
-    .map((part) => part[0])
-    .filter(Boolean)
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
+function urgentIcon(type: string): LucideIcon {
+  return URGENT_ICONS[type] ?? AlertTriangle;
+}
+
+function formatVariation(variation: number): { direction: "up" | "down" | "flat"; label: string } {
+  if (variation === 0) return { direction: "flat", label: "0%" };
+  const sign = variation > 0 ? "+" : "";
+  return {
+    direction: variation > 0 ? "up" : "down",
+    label: `${sign}${variation.toFixed(1)}%`,
+  };
+}
+
+const KPI_ORDER = [
+  "activeUsers",
+  "signups",
+  "profilesValidated",
+  "profilesPending",
+  "likes",
+  "matches",
+  "conversations",
+  "messages",
+  "reportsPending",
+];
+
+function orderedKpis(kpis: Record<string, Kpi>): Array<{ key: string; kpi: Kpi }> {
+  const ordered: Array<{ key: string; kpi: Kpi }> = [];
+  for (const key of KPI_ORDER) {
+    if (kpis[key]) ordered.push({ key, kpi: kpis[key] });
+  }
+  for (const key of Object.keys(kpis)) {
+    if (!KPI_ORDER.includes(key)) ordered.push({ key, kpi: kpis[key] });
+  }
+  return ordered;
 }
 
 export function DashboardContent() {
@@ -42,76 +77,78 @@ export function DashboardContent() {
     queryFn: getTenantDashboard,
   });
 
-  const engagementMax = useMemo(
-    () => Math.max(...data.engagement.map((p) => p.value), 1),
-    [data.engagement],
+  const kpiList = useMemo(() => orderedKpis(data.kpis), [data.kpis]);
+
+  const chartKpi = kpiList.find((k) => k.key === "activeUsers") ?? kpiList[0];
+  const chartMax = useMemo(
+    () => Math.max(...(chartKpi?.kpi.series.map((p) => p.count) ?? [1]), 1),
+    [chartKpi],
   );
 
   return (
     <>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {data.stats.map((stat) => (
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {kpiList.map(({ key, kpi }) => (
           <StatCard
-            key={stat.id}
-            label={sanitizeText(stat.label)}
-            value={sanitizeText(stat.formatted)}
-            hint={sanitizeText(stat.hint)}
-            trend={{ direction: stat.trend.direction, label: sanitizeText(stat.trend.label) }}
-            icon={pickIcon(stat.id)}
+            key={key}
+            label={t(`kpis.${key}`, key)}
+            value={kpi.value.toLocaleString()}
+            trend={formatVariation(kpi.variation)}
+            icon={kpiIcon(key)}
           />
         ))}
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>{t("sections.engagement")}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex h-64 items-end gap-1">
-              {data.engagement.map((point) => {
-                const heightPct = Math.max(4, (point.value / engagementMax) * 100);
-                return (
-                  <div
-                    key={point.label}
-                    className="group relative h-[var(--bar)] flex-1 rounded-t bg-gradient-to-t from-primary/40 to-primary/70 transition-all hover:from-primary/60 hover:to-primary"
-                    style={{ "--bar": `${heightPct}%` } as CSSProperties}
-                    title={`${point.label}: ${point.value.toLocaleString()}`}
-                  >
-                    <span className="sr-only">
-                      {point.label}: {point.value}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
+        {chartKpi && chartKpi.kpi.series.length > 0 && (
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle>{t(`kpis.${chartKpi.key}`, chartKpi.key)}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex h-64 items-end gap-1">
+                {chartKpi.kpi.series.map((point) => {
+                  const heightPct = Math.max(4, (point.count / chartMax) * 100);
+                  return (
+                    <div
+                      key={point.date}
+                      className="group relative h-[var(--bar)] flex-1 rounded-t bg-gradient-to-t from-primary/40 to-primary/70 transition-all hover:from-primary/60 hover:to-primary"
+                      style={{ "--bar": `${heightPct}%` } as CSSProperties}
+                      title={`${point.date}: ${point.count.toLocaleString()}`}
+                    >
+                      <span className="sr-only">
+                        {point.date}: {point.count}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <Card>
           <CardHeader>
-            <CardTitle>{t("sections.activity")}</CardTitle>
+            <CardTitle>{t("sections.urgentActions")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {data.recentActivity.length === 0 ? (
-              <EmptyState title={t("sections.activity")} />
+            {data.urgentActions.length === 0 ? (
+              <EmptyState title={t("sections.noUrgent")} />
             ) : (
-              data.recentActivity.map((event) => (
-                <div key={event.id} className="flex items-center gap-3">
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback>{initials(event.actorName)}</AvatarFallback>
-                  </Avatar>
-                  <div className="min-w-0 flex-1 text-sm">
-                    <p className="truncate font-medium">{sanitizeText(event.actorName)}</p>
-                    <p className="truncate text-xs text-muted-foreground">
-                      {t(`activity.${event.action}`)} {sanitizeText(event.target)}
-                    </p>
+              data.urgentActions.map((action) => {
+                const Icon = urgentIcon(action.type);
+                return (
+                  <div key={action.type} className="flex items-center gap-3">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-destructive/10">
+                      <Icon className="h-4 w-4 text-destructive" aria-hidden />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium">{t(`urgent.${action.type}`, action.type)}</p>
+                    </div>
+                    <span className="text-lg font-semibold tabular-nums">{action.count.toLocaleString()}</span>
                   </div>
-                  <time className="whitespace-nowrap text-xs text-muted-foreground">
-                    {formatDistanceToNow(new Date(event.createdAt), { addSuffix: true })}
-                  </time>
-                </div>
-              ))
+                );
+              })
             )}
           </CardContent>
         </Card>

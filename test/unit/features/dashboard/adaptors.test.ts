@@ -2,37 +2,34 @@ import { describe, it, expect } from "vitest";
 import { dashboardFromRaw } from "@/features/dashboard/adaptors";
 
 describe("dashboardFromRaw", () => {
-  it("passes stats & engagement through and maps activity", () => {
-    const out = dashboardFromRaw({
-      stats: [
-        {
-          id: "s1",
-          label: "Users",
-          value: 1,
-          formatted: "1",
-          hint: "",
-          trend: { direction: "up", label: "+1" },
+  it("maps kpis and urgent_actions", () => {
+    const raw = {
+      kpis: {
+        activeUsers: {
+          value: 5000,
+          variation: 3.2,
+          series: [{ date: "2026-09-01", count: 5000 }],
         },
+      },
+      urgent_actions: [
+        { type: "reports", count: 12 },
+        { type: "photos", count: 3 },
       ],
-      engagement: [{ label: "Mon", value: 10 }],
-      recent_activity: [
-        {
-          id: "a1",
-          actor_name: "Alice",
-          action: "match",
-          target: "u2",
-          created_at: "2024-01-01",
-        },
-      ],
-    });
-    expect(out.stats).toHaveLength(1);
-    expect(out.engagement[0]).toEqual({ label: "Mon", value: 10 });
-    expect(out.recentActivity[0]).toEqual({
-      id: "a1",
-      actorName: "Alice",
-      action: "match",
-      target: "u2",
-      createdAt: "2024-01-01",
-    });
+    };
+    const result = dashboardFromRaw(raw);
+
+    expect(result.kpis.activeUsers.value).toBe(5000);
+    expect(result.kpis.activeUsers.variation).toBe(3.2);
+    expect(result.kpis.activeUsers.series).toHaveLength(1);
+
+    expect(result.urgentActions).toHaveLength(2);
+    expect(result.urgentActions[0]).toEqual({ type: "reports", count: 12 });
+    expect(result.urgentActions[1]).toEqual({ type: "photos", count: 3 });
+  });
+
+  it("handles empty kpis and actions", () => {
+    const result = dashboardFromRaw({ kpis: {}, urgent_actions: [] });
+    expect(Object.keys(result.kpis)).toHaveLength(0);
+    expect(result.urgentActions).toHaveLength(0);
   });
 });

@@ -10,7 +10,22 @@ export function engagementStatsFromRaw(raw: RawEngagementStats): EngagementStats
 }
 
 export function moderationStatsFromRaw(raw: RawModerationStats): ModerationStats {
-  return raw;
+  return {
+    reportsReceived: raw.reportsReceived,
+    reportsPending: raw.reportsPending,
+    reportsAccepted: raw.reportsAccepted,
+    reportsRefused: raw.reportsRefused,
+    reportsByReason: raw.reportsByReason,
+    volumeByType: raw.volumeByType,
+    photosPending: raw.photosPending,
+    storiesPending: raw.storiesPending,
+    blockedUsers: raw.blockedUsers,
+    deletedUsers: raw.deletedUsers,
+    usersWithMultipleReports: raw.usersWithMultipleReports,
+    confirmationRate: raw.confirmationRate,
+    revertRate: raw.revertRate,
+    averageDurationSeconds: raw.averageDurationSeconds,
+  };
 }
 
 export function retentionStatsFromRaw(raw: RawRetentionStats): RetentionStats {

@@ -93,6 +93,12 @@ describe("moderationStatsSchema", () => {
   it("rejects non-integer reportsPending", () => {
     expect(() => moderationStatsSchema.parse({ ...valid, reportsPending: 1.5 })).toThrow();
   });
+
+  it("parses without compare field", () => {
+    const noCompare = { ...valid };
+    delete (noCompare as Record<string, unknown>).compare;
+    expect(() => moderationStatsSchema.parse(noCompare)).not.toThrow();
+  });
 });
 
 describe("retentionStatsSchema", () => {

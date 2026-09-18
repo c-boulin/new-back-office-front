@@ -1,6 +1,5 @@
 import { AppError } from "@/lib/httpClient";
 import { db } from "../db";
-import type { RawTenantDashboard } from "@/features/dashboard/schemas";
 import type { RawMatchesOverview } from "@/features/matches/schemas";
 import type { RawSubscriptionsOverview } from "@/features/subscriptions/schemas";
 import type { RawTenantSettings } from "@/features/settings/schemas";
@@ -11,10 +10,6 @@ type RawPlatformAdminList = { items: RawPlatformAdmin[]; total: number };
 function requireTenant(tenantId: string | null): string {
   if (!tenantId) throw new AppError("validation", "Missing tenant scope", 422);
   return tenantId;
-}
-
-export function dashboard(tenantId: string | null): RawTenantDashboard {
-  return db.dashboardFor(requireTenant(tenantId));
 }
 
 export function matches(tenantId: string | null): RawMatchesOverview {

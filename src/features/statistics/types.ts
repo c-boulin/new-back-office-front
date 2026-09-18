@@ -62,7 +62,6 @@ export type EngagementStats = {
 export type VolumeByType = { type: string; count: number };
 
 export type ModerationStats = {
-  compare: string;
   reportsReceived: number;
   reportsPending: number;
   reportsAccepted: number;

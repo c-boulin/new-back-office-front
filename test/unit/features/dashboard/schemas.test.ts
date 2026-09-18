@@ -1,47 +1,37 @@
 import { describe, it, expect } from "vitest";
-import {
-  activityEventSchema,
-  dashboardStatSchema,
-  tenantDashboardSchema,
-} from "@/features/dashboard/schemas";
-
-describe("activityEventSchema", () => {
-  it("rejects unknown action", () => {
-    expect(() =>
-      activityEventSchema.parse({
-        id: "a",
-        actor_name: "A",
-        action: "burp",
-        target: "t",
-        created_at: "x",
-      }),
-    ).toThrow();
-  });
-});
-
-describe("dashboardStatSchema", () => {
-  it("rejects unknown trend direction", () => {
-    expect(() =>
-      dashboardStatSchema.parse({
-        id: "s",
-        label: "x",
-        value: 1,
-        formatted: "1",
-        hint: "",
-        trend: { direction: "sideways", label: "" },
-      }),
-    ).toThrow();
-  });
-});
+import { tenantDashboardSchema } from "@/features/dashboard/schemas";
 
 describe("tenantDashboardSchema", () => {
-  it("parses a valid dashboard", () => {
+  const valid = {
+    kpis: {
+      activeUsers: { value: 5000, variation: 3.2, series: [{ date: "2026-09-01", count: 5000 }] },
+      signups: { value: 120, variation: -1.5, series: [] },
+    },
+    urgent_actions: [{ type: "reports", count: 12 }],
+  };
+
+  it("parses valid dashboard payload", () => {
+    expect(() => tenantDashboardSchema.parse(valid)).not.toThrow();
+  });
+
+  it("accepts empty kpis and urgent_actions", () => {
+    expect(() =>
+      tenantDashboardSchema.parse({ kpis: {}, urgent_actions: [] }),
+    ).not.toThrow();
+  });
+
+  it("rejects missing urgent_actions", () => {
+    expect(() =>
+      tenantDashboardSchema.parse({ kpis: {} }),
+    ).toThrow();
+  });
+
+  it("rejects kpi with missing variation", () => {
     expect(() =>
       tenantDashboardSchema.parse({
-        stats: [],
-        engagement: [],
-        recent_activity: [],
+        kpis: { x: { value: 1, series: [] } },
+        urgent_actions: [],
       }),
-    ).not.toThrow();
+    ).toThrow();
   });
 });

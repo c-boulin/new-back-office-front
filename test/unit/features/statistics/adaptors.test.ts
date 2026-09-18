@@ -81,6 +81,7 @@ describe("moderationStatsFromRaw", () => {
     const result = moderationStatsFromRaw(raw);
     expect(result.reportsPending).toBe(10);
     expect(result.confirmationRate).toBe(0.9);
+    expect("compare" in result).toBe(false);
   });
 });
 

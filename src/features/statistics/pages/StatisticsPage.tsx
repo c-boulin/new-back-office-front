@@ -104,7 +104,7 @@ export function StatisticsPage() {
 
         <TabsContent value="moderation" className="mt-6">
           <RouteBoundary loadingFallback={<LoadingCards count={4} />}>
-            <ModerationTab dateParams={dateParams} />
+            <ModerationTab />
           </RouteBoundary>
         </TabsContent>
 

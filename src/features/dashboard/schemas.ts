@@ -1,32 +1,24 @@
 import { z } from "zod";
 
-export const statTrendSchema = z.object({
-  direction: z.enum(["up", "down", "flat"]),
-  label: z.string(),
+const dailyCountSchema = z.object({
+  date: z.string(),
+  count: z.number().int(),
 });
 
-export const dashboardStatSchema = z.object({
-  id: z.string(),
-  label: z.string(),
+const kpiSchema = z.object({
   value: z.number(),
-  formatted: z.string(),
-  hint: z.string(),
-  trend: statTrendSchema,
+  variation: z.number(),
+  series: z.array(dailyCountSchema),
 });
 
-export const activityEventSchema = z.object({
-  id: z.string(),
-  actor_name: z.string(),
-  action: z.enum(["match", "message", "report", "signup", "verify", "ban"]),
-  target: z.string(),
-  created_at: z.string(),
+const urgentActionSchema = z.object({
+  type: z.string(),
+  count: z.number().int(),
 });
 
 export const tenantDashboardSchema = z.object({
-  stats: z.array(dashboardStatSchema),
-  engagement: z.array(z.object({ label: z.string(), value: z.number() })),
-  recent_activity: z.array(activityEventSchema),
+  kpis: z.record(z.string(), kpiSchema),
+  urgent_actions: z.array(urgentActionSchema),
 });
 
 export type RawTenantDashboard = z.infer<typeof tenantDashboardSchema>;
-export type RawActivityEvent = z.infer<typeof activityEventSchema>;

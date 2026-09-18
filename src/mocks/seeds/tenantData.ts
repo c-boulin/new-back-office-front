@@ -2,7 +2,6 @@ import { createRng } from "../rng";
 import type { RawModerationItem } from "@/features/moderation/schemas";
 import type { RawReport } from "@/features/reports/schemas";
 import type { RawMessageThread } from "@/features/messages/schemas";
-import type { RawTenantDashboard } from "@/features/dashboard/schemas";
 import type { RawMatchesOverview } from "@/features/matches/schemas";
 import type { RawSubscriptionsOverview } from "@/features/subscriptions/schemas";
 import type { RawTenantSettings } from "@/features/settings/schemas";
@@ -196,67 +195,6 @@ export function buildMessageThreadSeeds(tenantId: string, seed: number): RawMess
   }));
 }
 
-export function buildDashboard(tenantId: string, seed: number): RawTenantDashboard {
-  const rng = createRng(seed);
-  const dau = rng.int(4_000, 22_000);
-  const matches = rng.int(800, 3_200);
-  const reportsOpen = rng.int(2, 40);
-  const sessions = rng.int(20_000, 60_000);
-
-  return {
-    stats: [
-      {
-        id: "dau",
-        label: "Active users",
-        value: dau,
-        formatted: dau.toLocaleString(),
-        hint: "Last 24 hours",
-        trend: {
-          direction: rng.bool(0.7) ? "up" : "down",
-          label: `${rng.bool() ? "+" : "-"}${(rng.next() * 10).toFixed(1)}% vs previous`,
-        },
-      },
-      {
-        id: "matches",
-        label: "New matches",
-        value: matches,
-        formatted: matches.toLocaleString(),
-        hint: "Rolling 24h",
-        trend: { direction: "up", label: `+${(rng.next() * 6 + 1).toFixed(1)}%` },
-      },
-      {
-        id: "reports_open",
-        label: "Reports open",
-        value: reportsOpen,
-        formatted: reportsOpen.toString(),
-        hint: "Requires attention",
-        trend: { direction: "flat", label: "No change" },
-      },
-      {
-        id: "sessions",
-        label: "Sessions",
-        value: sessions,
-        formatted: sessions.toLocaleString(),
-        hint: "Rolling 24h",
-        trend: {
-          direction: rng.bool(0.6) ? "up" : "down",
-          label: `${rng.bool() ? "+" : "-"}${(rng.next() * 4).toFixed(1)}%`,
-        },
-      },
-    ],
-    engagement: Array.from({ length: 14 }, (_, i) => ({
-      label: isoAt(13 - i).slice(0, 10),
-      value: rng.int(3_000, 18_000),
-    })),
-    recent_activity: Array.from({ length: 8 }, (_, i) => ({
-      id: `evt_${tenantId}_${i + 1}`,
-      actor_name: fullName(rng),
-      action: rng.pick(["match", "message", "report", "signup", "verify", "ban"]),
-      target: fullName(rng),
-      created_at: isoAt(0, i + 1),
-    })),
-  };
-}
 
 export function buildMatches(_tenantId: string, seed: number): RawMatchesOverview {
   const rng = createRng(seed);

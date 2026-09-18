@@ -1,16 +1,24 @@
 {
   "title": "Tableau de bord",
   "description": "Vue en temps réel de l'activité, de la croissance et de la sécurité sur ce tenant.",
-  "sections": {
-    "engagement": "Engagement dans le temps",
-    "activity": "Activité récente"
+  "kpis": {
+    "activeUsers": "Utilisateurs actifs",
+    "signups": "Inscriptions",
+    "profilesValidated": "Profils validés",
+    "profilesPending": "Profils en attente",
+    "likes": "Likes",
+    "matches": "Matchs",
+    "conversations": "Conversations",
+    "messages": "Messages",
+    "reportsPending": "Signalements en attente"
   },
-  "activity": {
-    "match": "a matché avec",
-    "message": "a envoyé un message à",
-    "report": "a signalé",
-    "signup": "s'est inscrit",
-    "verify": "a été vérifié",
-    "ban": "a été banni"
+  "sections": {
+    "urgentActions": "Actions urgentes",
+    "noUrgent": "Rien d'urgent pour le moment"
+  },
+  "urgent": {
+    "reports": "Signalements en attente de revue",
+    "photos": "Photos en attente de modération",
+    "stories": "Stories en attente de modération"
   }
 }

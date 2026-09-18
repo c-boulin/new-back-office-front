@@ -59,7 +59,6 @@ const routes: Array<{ method: string; pattern: string; handler: Route }> = [
   { method: "POST", pattern: "/users/:id/unban", handler: (r, p) => ok(users.unban(tenantHeader(r), p.id)) },
   { method: "POST", pattern: "/users/:id/verify", handler: (r, p) => ok(users.verify(tenantHeader(r), p.id)) },
 
-  { method: "GET", pattern: "/dashboard", handler: (r) => ok(tenantData.dashboard(tenantHeader(r))) },
   { method: "GET", pattern: "/matches/overview", handler: (r) => ok(tenantData.matches(tenantHeader(r))) },
   { method: "GET", pattern: "/subscriptions/overview", handler: (r) => ok(tenantData.subscriptions(tenantHeader(r))) },
   { method: "GET", pattern: "/settings", handler: (r) => ok(tenantData.settings(tenantHeader(r))) },

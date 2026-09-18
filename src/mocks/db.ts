@@ -3,7 +3,6 @@ import type { RawUserRecord } from "@/features/users/schemas";
 import type { RawModerationItem } from "@/features/moderation/schemas";
 import type { RawReport } from "@/features/reports/schemas";
 import type { RawMessageThread } from "@/features/messages/schemas";
-import type { RawTenantDashboard } from "@/features/dashboard/schemas";
 import type { RawMatchesOverview } from "@/features/matches/schemas";
 import type { RawSubscriptionsOverview } from "@/features/subscriptions/schemas";
 import type { RawTenantSettings } from "@/features/settings/schemas";
@@ -16,7 +15,6 @@ import {
   buildModerationSeeds,
   buildReportSeeds,
   buildMessageThreadSeeds,
-  buildDashboard,
   buildMatches,
   buildSubscriptions,
   buildSettings,
@@ -29,7 +27,6 @@ type MockDatabase = {
   moderationByTenant: Record<string, RawModerationItem[]>;
   reportsByTenant: Record<string, RawReport[]>;
   threadsByTenant: Record<string, RawMessageThread[]>;
-  dashboardByTenant: Record<string, RawTenantDashboard>;
   matchesByTenant: Record<string, RawMatchesOverview>;
   subscriptionsByTenant: Record<string, RawSubscriptionsOverview>;
   settingsByTenant: Record<string, RawTenantSettings>;
@@ -58,7 +55,6 @@ function seed(): MockDatabase {
     moderationByTenant: seedTenantScoped(tenants, 2_000, buildModerationSeeds),
     reportsByTenant: seedTenantScoped(tenants, 3_000, buildReportSeeds),
     threadsByTenant: seedTenantScoped(tenants, 4_000, buildMessageThreadSeeds),
-    dashboardByTenant: seedTenantScoped(tenants, 5_000, buildDashboard),
     matchesByTenant: seedTenantScoped(tenants, 6_000, buildMatches),
     subscriptionsByTenant: seedTenantScoped(tenants, 7_000, buildSubscriptions),
     settingsByTenant: Object.fromEntries(tenants.map((t) => [t.id, buildSettings(t.id)])),
@@ -122,11 +118,6 @@ export const db = {
   threadsFor(tenantId: string): RawMessageThread[] {
     return ensure(dbRef.threadsByTenant, tenantId, () =>
       buildMessageThreadSeeds(tenantId, 4_000 + tenantId.length),
-    );
-  },
-  dashboardFor(tenantId: string): RawTenantDashboard {
-    return ensure(dbRef.dashboardByTenant, tenantId, () =>
-      buildDashboard(tenantId, 5_000 + tenantId.length),
     );
   },
   matchesFor(tenantId: string): RawMatchesOverview {

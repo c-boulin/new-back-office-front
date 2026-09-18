@@ -32,8 +32,8 @@ export async function getEngagementStats(params?: StatsDateParams): Promise<Enga
   return validateAndAdapt(data.data, engagementStatsSchema, engagementStatsFromRaw);
 }
 
-export async function getModerationStats(params?: StatsDateParams): Promise<ModerationStats> {
-  const { data } = await httpClient.get("/v1/stats/moderation", { params: dateParams(params) });
+export async function getModerationStats(): Promise<ModerationStats> {
+  const { data } = await httpClient.get("/v1/stats/moderation");
   return validateAndAdapt(data.data, moderationStatsSchema, moderationStatsFromRaw);
 }
 

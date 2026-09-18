@@ -5,15 +5,14 @@ import { StatCard } from "@/components/common/StatCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getModerationStats } from "@/features/statistics/api";
 import { useActiveTenant } from "@/hooks/useActiveTenant";
-import type { StatsDateParams } from "@/features/statistics/types";
 
-export function ModerationTab({ dateParams }: { dateParams: StatsDateParams }) {
+export function ModerationTab() {
   const { t } = useTranslation("statistics");
   const { id: tenantId } = useActiveTenant();
 
   const { data } = useSuspenseQuery({
-    queryKey: ["tenant", tenantId, "stats", "moderation", dateParams],
-    queryFn: () => getModerationStats(dateParams),
+    queryKey: ["tenant", tenantId, "stats", "moderation"],
+    queryFn: () => getModerationStats(),
   });
 
   return (

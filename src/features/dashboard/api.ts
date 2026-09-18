@@ -5,6 +5,6 @@ import { dashboardFromRaw } from "./adaptors";
 import type { TenantDashboard } from "./types";
 
 export async function getTenantDashboard(): Promise<TenantDashboard> {
-  const { data } = await httpClient.get("/dashboard");
-  return validateAndAdapt(data, tenantDashboardSchema, dashboardFromRaw);
+  const { data } = await httpClient.get("/v1/stats/dashboard");
+  return validateAndAdapt(data.data, tenantDashboardSchema, dashboardFromRaw);
 }

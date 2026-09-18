@@ -1,16 +1,24 @@
 {
   "title": "Dashboard",
   "description": "Real-time overview of activity, growth, and safety on this tenant.",
-  "sections": {
-    "engagement": "Engagement over time",
-    "activity": "Recent activity"
+  "kpis": {
+    "activeUsers": "Active users",
+    "signups": "Signups",
+    "profilesValidated": "Profiles validated",
+    "profilesPending": "Profiles pending",
+    "likes": "Likes",
+    "matches": "Matches",
+    "conversations": "Conversations",
+    "messages": "Messages",
+    "reportsPending": "Reports pending"
   },
-  "activity": {
-    "match": "matched with",
-    "message": "sent a message to",
-    "report": "reported",
-    "signup": "signed up",
-    "verify": "was verified",
-    "ban": "was banned"
+  "sections": {
+    "urgentActions": "Urgent actions",
+    "noUrgent": "Nothing urgent right now"
+  },
+  "urgent": {
+    "reports": "Reports awaiting review",
+    "photos": "Photos awaiting moderation",
+    "stories": "Stories awaiting moderation"
   }
 }

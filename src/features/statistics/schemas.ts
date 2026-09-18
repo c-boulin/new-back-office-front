@@ -66,7 +66,7 @@ export type RawEngagementStats = z.infer<typeof engagementStatsSchema>;
 // --- Moderation ---
 
 export const moderationStatsSchema = z.object({
-  compare: compareSchema,
+  compare: compareSchema.optional(),
   reportsReceived: z.number().int(),
   reportsPending: z.number().int(),
   reportsAccepted: z.number().int(),
