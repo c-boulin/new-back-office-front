@@ -1,0 +1,82 @@
+{
+  "title": "Statistiques",
+  "description": "Activite des utilisateurs, engagement, moderation et retention.",
+  "tabs": {
+    "users": "Utilisateurs",
+    "engagement": "Engagement",
+    "moderation": "Moderation",
+    "retention": "Retention"
+  },
+  "filters": {
+    "from": "Du",
+    "to": "Au",
+    "compare": "Comparer",
+    "previousPeriod": "Periode precedente",
+    "sameWeekday": "Meme jour de la semaine",
+    "none": "Pas de comparaison"
+  },
+  "users": {
+    "signups": "Inscriptions",
+    "activeUsers": "Utilisateurs actifs",
+    "completeProfileRate": "Taux de profils complets",
+    "signupsSeries": "Inscriptions dans le temps",
+    "activeUsersSeries": "Utilisateurs actifs dans le temps",
+    "genderBreakdown": "Repartition par genre",
+    "gender": {
+      "male": "Homme",
+      "female": "Femme",
+      "unknown": "Inconnu"
+    },
+    "ageBreakdown": "Repartition par age",
+    "lastConnection": "Derniere connexion",
+    "last1Day": "Dernieres 24 heures",
+    "last7Days": "7 derniers jours",
+    "last30Days": "30 derniers jours",
+    "profileStatus": "Statut des profils",
+    "otherMetrics": "Autres metriques",
+    "profilesWithoutPhoto": "Profils sans photo",
+    "becameActive": "Devenus actifs apres inscription",
+    "topCountries": "Top pays"
+  },
+  "engagement": {
+    "matchRate": "Taux de match",
+    "conversationRate": "Taux de conversation",
+    "responseRate": "Taux de reponse",
+    "likes": "Likes",
+    "matches": "Matchs",
+    "conversations": "Conversations",
+    "messages": "Messages",
+    "funnel": {
+      "title": "Entonnoir dating",
+      "activeUsers": "Utilisateurs actifs",
+      "liked": "Ont like",
+      "matched": "Ont matche",
+      "conversation": "Ont demarre une conversation",
+      "reply": "Ont recu une reponse"
+    }
+  },
+  "moderation": {
+    "reportsPending": "Signalements en attente",
+    "photosPending": "Photos en attente",
+    "blockedUsers": "Utilisateurs bloques",
+    "deletedUsers": "Utilisateurs supprimes",
+    "reportsSummary": "Resume des signalements",
+    "reportsReceived": "Signalements recus",
+    "reportsAccepted": "Signalements acceptes",
+    "reportsRefused": "Signalements refuses",
+    "storiesPending": "Stories en attente",
+    "usersMultipleReports": "Utilisateurs avec signalements multiples",
+    "rates": "Taux de traitement",
+    "confirmationRate": "Taux de confirmation",
+    "revertRate": "Taux de revert",
+    "avgDuration": "Temps de traitement moyen",
+    "volumeByType": "Volume par type"
+  },
+  "retention": {
+    "day1": "Retention J+1",
+    "day7": "Retention J+7",
+    "day30": "Retention J+30",
+    "churn": "Taux de churn",
+    "curve": "Courbe de retention"
+  }
+}

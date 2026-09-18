@@ -1,0 +1,82 @@
+{
+  "title": "Statistics",
+  "description": "User activity, engagement, moderation and retention metrics.",
+  "tabs": {
+    "users": "Users",
+    "engagement": "Engagement",
+    "moderation": "Moderation",
+    "retention": "Retention"
+  },
+  "filters": {
+    "from": "From",
+    "to": "To",
+    "compare": "Compare",
+    "previousPeriod": "Previous period",
+    "sameWeekday": "Same weekday",
+    "none": "No comparison"
+  },
+  "users": {
+    "signups": "Signups",
+    "activeUsers": "Active users",
+    "completeProfileRate": "Complete profile rate",
+    "signupsSeries": "Signups over time",
+    "activeUsersSeries": "Active users over time",
+    "genderBreakdown": "Gender breakdown",
+    "gender": {
+      "male": "Male",
+      "female": "Female",
+      "unknown": "Unknown"
+    },
+    "ageBreakdown": "Age breakdown",
+    "lastConnection": "Last connection",
+    "last1Day": "Last 24 hours",
+    "last7Days": "Last 7 days",
+    "last30Days": "Last 30 days",
+    "profileStatus": "Profile status",
+    "otherMetrics": "Other metrics",
+    "profilesWithoutPhoto": "Profiles without photo",
+    "becameActive": "Became active after signup",
+    "topCountries": "Top countries"
+  },
+  "engagement": {
+    "matchRate": "Match rate",
+    "conversationRate": "Conversation rate",
+    "responseRate": "Response rate",
+    "likes": "Likes",
+    "matches": "Matches",
+    "conversations": "Conversations",
+    "messages": "Messages",
+    "funnel": {
+      "title": "Dating funnel",
+      "activeUsers": "Active users",
+      "liked": "Users who liked",
+      "matched": "Users who matched",
+      "conversation": "Started conversation",
+      "reply": "Got a reply"
+    }
+  },
+  "moderation": {
+    "reportsPending": "Reports pending",
+    "photosPending": "Photos pending",
+    "blockedUsers": "Blocked users",
+    "deletedUsers": "Deleted users",
+    "reportsSummary": "Reports summary",
+    "reportsReceived": "Reports received",
+    "reportsAccepted": "Reports accepted",
+    "reportsRefused": "Reports refused",
+    "storiesPending": "Stories pending",
+    "usersMultipleReports": "Users with multiple reports",
+    "rates": "Processing rates",
+    "confirmationRate": "Confirmation rate",
+    "revertRate": "Revert rate",
+    "avgDuration": "Avg. processing time",
+    "volumeByType": "Volume by type"
+  },
+  "retention": {
+    "day1": "Day-1 retention",
+    "day7": "Day-7 retention",
+    "day30": "Day-30 retention",
+    "churn": "Churn rate",
+    "curve": "Retention curve"
+  }
+}

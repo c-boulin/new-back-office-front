@@ -21,7 +21,7 @@ describe("usePermissions", () => {
     const { result } = renderHook(() => usePermissions());
     expect(result.current.isSuperAdmin).toBe(true);
     expect(result.current.can(PERMISSIONS.SETTINGS_WRITE)).toBe(true);
-    expect(result.current.can([PERMISSIONS.USERS_MODERATE, PERMISSIONS.ANALYTICS_READ])).toBe(true);
+    expect(result.current.can([PERMISSIONS.USERS_MODERATE, PERMISSIONS.STATISTICS_READ])).toBe(true);
   });
 
   it("returns scoped permissions of the active tenant membership", () => {

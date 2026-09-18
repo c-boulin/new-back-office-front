@@ -8,7 +8,7 @@ export const PERMISSIONS = {
   USERS_MODERATE: "users.moderate",
   MODERATION_READ: "moderation.read",
   MODERATION_ACT: "moderation.act",
-  ANALYTICS_READ: "analytics.read",
+  STATISTICS_READ: "statistics.read",
   SUBSCRIPTIONS_READ: "subscriptions.read",
   SUBSCRIPTIONS_WRITE: "subscriptions.write",
   SETTINGS_CREATE: "settings.create",

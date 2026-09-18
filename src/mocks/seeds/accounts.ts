@@ -22,7 +22,7 @@ const FULL_PERMISSIONS = [
   "users.moderate",
   "moderation.read",
   "moderation.act",
-  "analytics.read",
+  "statistics.read",
   "subscriptions.read",
   "subscriptions.write",
   "settings.write",

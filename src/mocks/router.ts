@@ -62,7 +62,6 @@ const routes: Array<{ method: string; pattern: string; handler: Route }> = [
   { method: "GET", pattern: "/dashboard", handler: (r) => ok(tenantData.dashboard(tenantHeader(r))) },
   { method: "GET", pattern: "/matches/overview", handler: (r) => ok(tenantData.matches(tenantHeader(r))) },
   { method: "GET", pattern: "/subscriptions/overview", handler: (r) => ok(tenantData.subscriptions(tenantHeader(r))) },
-  { method: "GET", pattern: "/analytics/overview", handler: (r) => ok(tenantData.analytics(tenantHeader(r))) },
   { method: "GET", pattern: "/settings", handler: (r) => ok(tenantData.settings(tenantHeader(r))) },
   { method: "PATCH", pattern: "/settings", handler: (r) => ok(tenantData.updateSettings(tenantHeader(r), r.body)) },
 

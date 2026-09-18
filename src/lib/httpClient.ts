@@ -51,6 +51,7 @@ const ALWAYS_REAL_BACKEND_PREFIXES = [
   "/v1/roles",
   "/v1/bo-users",
   "/v1/product-config",
+  "/v1/stats",
 ] as const;
 
 function shouldBypassMockAdapter(url: string | undefined): boolean {

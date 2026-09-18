@@ -62,7 +62,7 @@
   "sectionGroups": {
     "principal": "Principal",
     "animation": "Animation",
-    "analyse": "Analytics",
+    "analyse": "Statistics",
     "moderation": "Moderation",
     "configuration": "Configuration"
   },
