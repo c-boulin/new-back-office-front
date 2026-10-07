@@ -12,13 +12,29 @@ const kpiSchema = z.object({
 });
 
 const urgentActionSchema = z.object({
-  type: z.string(),
+  type: z.enum(["reports", "photos", "stories"]),
   count: z.number().int(),
 });
 
+const activityActorSchema = z.object({
+  id: z.number().int(),
+  name: z.string(),
+  initials: z.string(),
+});
+
+const recentActivityItemSchema = z.object({
+  id: z.string(),
+  type: z.enum(["signup", "match", "message", "verified", "report"]),
+  occurredAt: z.string().datetime({ offset: true }),
+  actor: activityActorSchema,
+  target: activityActorSchema.nullable(),
+});
+
 export const tenantDashboardSchema = z.object({
+  compare: z.enum(["previous_period", "same_weekday", "none"]),
   kpis: z.record(z.string(), kpiSchema),
-  urgent_actions: z.array(urgentActionSchema),
+  urgentActions: z.array(urgentActionSchema),
+  recentActivity: z.array(recentActivityItemSchema),
 });
 
 export type RawTenantDashboard = z.infer<typeof tenantDashboardSchema>;

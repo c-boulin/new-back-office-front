@@ -3,33 +3,32 @@
   "description": "Real-time overview of activity, growth, and safety on this tenant.",
   "kpis": {
     "activeUsers": "Active users",
-    "signups": "Signups",
-    "profilesValidated": "Profiles validated",
-    "profilesPending": "Profiles pending",
-    "likes": "Likes",
-    "matches": "Matches",
-    "conversations": "Conversations",
-    "messages": "Messages",
-    "reportsPending": "Reports pending"
+    "matches": "New matches",
+    "reportsPending": "Reports open",
+    "sessions": "Sessions"
   },
   "hints": {
-    "activeUsers": "Last 24 hours",
-    "signups": "Last 24 hours",
-    "profilesValidated": "Last 24 hours",
-    "profilesPending": "Requires attention",
-    "likes": "Rolling 24h",
-    "matches": "Rolling 24h",
-    "conversations": "Rolling 24h",
-    "messages": "Rolling 24h",
-    "reportsPending": "Requires attention"
+    "activeUsers": "Last 7 days",
+    "matches": "Rolling 7 days",
+    "reportsPending": "Requires attention",
+    "sessions": "Rolling 7 days"
+  },
+  "trend": {
+    "noChange": "No change"
   },
   "sections": {
-    "urgentActions": "Urgent actions",
-    "noUrgent": "Nothing urgent right now"
+    "engagementOverTime": "Engagement over time",
+    "recentActivity": "Recent activity",
+    "noActivity": "No recent activity"
   },
-  "urgent": {
-    "reports": "Reports awaiting review",
-    "photos": "Photos awaiting moderation",
-    "stories": "Stories awaiting moderation"
+  "activity": {
+    "match": "{{actor}} matched with {{target}}",
+    "matchNoTarget": "{{actor}} got a new match",
+    "signup": "{{actor}} signed up",
+    "message": "{{actor}} sent a message to {{target}}",
+    "messageNoTarget": "{{actor}} sent a message",
+    "verified": "{{actor}} was verified",
+    "report": "{{actor}} reported {{target}}",
+    "reportNoTarget": "{{actor}} filed a report"
   }
 }

@@ -1,41 +1,45 @@
 import { describe, it, expect } from "vitest";
 import { tenantDashboardSchema } from "@/features/dashboard/schemas";
+import { dashboardPayload } from "./fixtures";
 
 describe("tenantDashboardSchema", () => {
-  const valid = {
-    kpis: {
-      activeUsers: { value: 5000, variation: 3.2, series: [{ date: "2026-09-01", count: 5000 }] },
-      signups: { value: 120, variation: -1.5, series: [] },
-    },
-    urgent_actions: [{ type: "reports", count: 12 }],
-  };
-
-  it("parses valid dashboard payload", () => {
-    expect(() => tenantDashboardSchema.parse(valid)).not.toThrow();
+  it("accepts the real camelCase payload", () => {
+    const result = tenantDashboardSchema.safeParse(dashboardPayload);
+    expect(result.success).toBe(true);
   });
 
-  it("accepts empty kpis and urgent_actions", () => {
-    expect(() =>
-      tenantDashboardSchema.parse({ kpis: {}, urgent_actions: [] }),
-    ).not.toThrow();
+  it("strips undeclared fields such as products", () => {
+    const parsed = tenantDashboardSchema.parse(dashboardPayload);
+    expect(parsed).not.toHaveProperty("products");
   });
 
-  it("rejects payload without urgent_actions (normalize in API layer)", () => {
-    expect(() => tenantDashboardSchema.parse({ kpis: {} })).toThrow();
+  it("accepts an activity item with a null target", () => {
+    const parsed = tenantDashboardSchema.parse(dashboardPayload);
+    expect(parsed.recentActivity[1].target).toBeNull();
   });
 
-  it("ignores extra fields like compare", () => {
-    const withCompare = { ...valid, compare: "previous_period" };
-    const result = tenantDashboardSchema.parse(withCompare);
-    expect(result.kpis.activeUsers.value).toBe(5000);
+  it("rejects snake_case urgent_actions", () => {
+    const { urgentActions, ...rest } = dashboardPayload;
+    const result = tenantDashboardSchema.safeParse({ ...rest, urgent_actions: urgentActions });
+    expect(result.success).toBe(false);
   });
 
-  it("rejects kpi with missing variation", () => {
-    expect(() =>
-      tenantDashboardSchema.parse({
-        kpis: { x: { value: 1, series: [] } },
-        urgent_actions: [],
-      }),
-    ).toThrow();
+  it("rejects snake_case occurred_at", () => {
+    const [first] = dashboardPayload.recentActivity;
+    const { occurredAt, ...item } = first;
+    const result = tenantDashboardSchema.safeParse({
+      ...dashboardPayload,
+      recentActivity: [{ ...item, occurred_at: occurredAt }],
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects an unknown activity type", () => {
+    const [first] = dashboardPayload.recentActivity;
+    const result = tenantDashboardSchema.safeParse({
+      ...dashboardPayload,
+      recentActivity: [{ ...first, type: "like" }],
+    });
+    expect(result.success).toBe(false);
   });
 });

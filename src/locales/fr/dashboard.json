@@ -3,33 +3,32 @@
   "description": "Vue en temps réel de l'activité, de la croissance et de la sécurité sur ce tenant.",
   "kpis": {
     "activeUsers": "Utilisateurs actifs",
-    "signups": "Inscriptions",
-    "profilesValidated": "Profils validés",
-    "profilesPending": "Profils en attente",
-    "likes": "Likes",
-    "matches": "Matchs",
-    "conversations": "Conversations",
-    "messages": "Messages",
-    "reportsPending": "Signalements en attente"
+    "matches": "Nouveaux matchs",
+    "reportsPending": "Signalements ouverts",
+    "sessions": "Sessions"
   },
   "hints": {
-    "activeUsers": "Dernières 24 heures",
-    "signups": "Dernières 24 heures",
-    "profilesValidated": "Dernières 24 heures",
-    "profilesPending": "Nécessite attention",
-    "likes": "Glissant 24h",
-    "matches": "Glissant 24h",
-    "conversations": "Glissant 24h",
-    "messages": "Glissant 24h",
-    "reportsPending": "Nécessite attention"
+    "activeUsers": "7 derniers jours",
+    "matches": "Glissant 7 jours",
+    "reportsPending": "Nécessite attention",
+    "sessions": "Glissant 7 jours"
+  },
+  "trend": {
+    "noChange": "Aucun changement"
   },
   "sections": {
-    "urgentActions": "Actions urgentes",
-    "noUrgent": "Rien d'urgent pour le moment"
+    "engagementOverTime": "Engagement dans le temps",
+    "recentActivity": "Activité récente",
+    "noActivity": "Aucune activité récente"
   },
-  "urgent": {
-    "reports": "Signalements en attente de revue",
-    "photos": "Photos en attente de modération",
-    "stories": "Stories en attente de modération"
+  "activity": {
+    "match": "{{actor}} a matché avec {{target}}",
+    "matchNoTarget": "{{actor}} a un nouveau match",
+    "signup": "{{actor}} s'est inscrit",
+    "message": "{{actor}} a envoyé un message à {{target}}",
+    "messageNoTarget": "{{actor}} a envoyé un message",
+    "verified": "{{actor}} a été vérifié",
+    "report": "{{actor}} a signalé {{target}}",
+    "reportNoTarget": "{{actor}} a fait un signalement"
   }
 }
