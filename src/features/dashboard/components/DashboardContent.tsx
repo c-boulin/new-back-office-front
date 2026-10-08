@@ -14,12 +14,14 @@ export function DashboardContent() {
     queryFn: getTenantDashboard,
   });
 
+  const series = chartSeries(data.kpis);
+
   return (
     <>
       <DashboardKpiRow kpis={data.kpis} />
       <div className="grid gap-4 lg:grid-cols-3">
-        <EngagementChart series={chartSeries(data.kpis)} className="lg:col-span-2" />
-        <RecentActivityList items={data.recentActivity} />
+        <EngagementChart series={series} className="lg:col-span-2" />
+        <RecentActivityList items={data.recentActivity} fitRowHeight={series.length > 0} />
       </div>
     </>
   );

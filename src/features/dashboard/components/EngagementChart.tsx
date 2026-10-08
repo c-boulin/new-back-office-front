@@ -2,6 +2,7 @@ import { useMemo, type CSSProperties } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { DailyCount } from "@/features/dashboard/types";
+import { cn } from "@/lib/utils";
 
 type Props = { series: DailyCount[]; className?: string };
 
@@ -14,7 +15,7 @@ export function EngagementChart({ series, className }: Props) {
   const numberFormat = new Intl.NumberFormat(i18n.language);
 
   return (
-    <Card className={className}>
+    <Card className={cn("self-start", className)}>
       <CardHeader>
         <CardTitle>{t("sections.engagementOverTime")}</CardTitle>
       </CardHeader>

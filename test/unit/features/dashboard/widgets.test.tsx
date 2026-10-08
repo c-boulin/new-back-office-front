@@ -80,6 +80,14 @@ describe("RecentActivityList", () => {
     expect(screen.getByText("about 2 hours ago")).toBeInTheDocument();
   });
 
+  it("renders the activity rows inside a scrollable area", () => {
+    renderWithProviders(<RecentActivityList items={dashboard.recentActivity} fitRowHeight />);
+
+    const list = screen.getByRole("list");
+    expect(list.closest("[data-radix-scroll-area-viewport]")).not.toBeNull();
+    expect(within(list).getAllByRole("listitem")).toHaveLength(2);
+  });
+
   it("omits the target part when target is null", () => {
     const [first] = dashboard.recentActivity;
     renderWithProviders(
